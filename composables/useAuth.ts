@@ -5,6 +5,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
   type User,
 } from "firebase/auth";
 
@@ -23,7 +26,6 @@ export const useAuth = () => {
   });
 
   const signUp = async (email: string, password: string) => {
-    // eslint-disable-next-line no-useless-catch
     try {
       const userCredential = await createUserWithEmailAndPassword(
         $firebase.auth,
@@ -49,6 +51,17 @@ export const useAuth = () => {
     }
   };
 
+  const loginWithGoogle = async (): Promise<User | null> => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup($firebase.auth, provider);
+      return result.user;
+    } catch (error) {
+      console.error("Google Sign-In error:", error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut($firebase.auth);
@@ -62,6 +75,7 @@ export const useAuth = () => {
     loading,
     signUp,
     login,
+    loginWithGoogle,
     logout,
   };
 };
