@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-catch */
-// composables/useAuth.ts
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,7 +6,6 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   type User,
 } from "firebase/auth";
 
@@ -16,10 +14,19 @@ export const useAuth = () => {
   const user = ref<User | null>(null);
   const loading = ref(true);
 
+  // Router instance
+  const router = useRouter();
+
   onMounted(() => {
     const unsubscribe = onAuthStateChanged($firebase.auth, (newUser) => {
       user.value = newUser;
       loading.value = false;
+
+      // Redirect to landing only if on login/auth pages
+      const publicPages = ["/login", "/verify"];
+      if (newUser && publicPages.includes(router.currentRoute.value.path)) {
+        router.push("/landing");
+      }
     });
 
     onUnmounted(() => unsubscribe());
@@ -32,6 +39,7 @@ export const useAuth = () => {
         email,
         password
       );
+      router.push("/landing"); // Redirect after successful sign-up
       return userCredential.user;
     } catch (error) {
       throw error;
@@ -45,6 +53,7 @@ export const useAuth = () => {
         email,
         password
       );
+      router.push("/landing"); // Redirect after successful login
       return userCredential.user;
     } catch (error) {
       throw error;
@@ -55,6 +64,7 @@ export const useAuth = () => {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup($firebase.auth, provider);
+      router.push("/landing"); // Redirect after successful Google login
       return result.user;
     } catch (error) {
       console.error("Google Sign-In error:", error);
@@ -65,6 +75,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       await signOut($firebase.auth);
+      router.push("/login"); // Redirect to login page after logout
     } catch (error) {
       throw error;
     }

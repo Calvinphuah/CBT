@@ -1,21 +1,20 @@
 <template>
-  <div>
-    <h1>Login</h1>
-    <button @click="handleGoogleSignIn">Sign in with Google</button>
-    <p v-if="user">Logged in as: {{ user.email }}</p>
-    {{ user?.displayName }}
+  <div class="flex min-h-screen flex-wrap-reverse md:flex-row">
+    <!-- Left Side (Bottom on small screens) -->
+    <div class="w-full md:w-1/2 order-1">
+      <LoginLeftSide />
+    </div>
+    <!-- Right Side (Top on small screens) -->
+    <div class="w-full md:w-1/2 order-2">
+      <LoginRightSide />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { user, loginWithGoogle } = useAuth();
-
-const handleGoogleSignIn = async () => {
-  try {
-    const loggedInUser = await loginWithGoogle();
-    console.log("Google Sign-In successful:", loggedInUser);
-  } catch (error) {
-    console.error("Error during Google Sign-In:", error);
-  }
-};
+definePageMeta({
+  layout: false,
+});
 </script>
+
+<style scoped></style>
