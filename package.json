@@ -1,0 +1,40 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "dev:prod": "nuxi dev --dotenv .env.production",
+    "dev:dev": "nuxi dev --dotenv .env.development",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "start": "nuxt start",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
+    "@nuxt/eslint": "^0.7.2",
+    "@nuxt/fonts": "^0.10.3",
+    "@nuxt/icon": "^1.10.1",
+    "@nuxtjs/seo": "^2.0.2",
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@vueuse/nuxt": "^12.0.0",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.16.0",
+    "firebase": "^11.0.2",
+    "nuxt": "^3.14.1592",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.15.1",
+    "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.20",
+    "happy-dom": "^15.11.7",
+    "playwright-core": "^1.49.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "vitest": "^2.1.8"
+  }
+}
