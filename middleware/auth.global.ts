@@ -1,8 +1,8 @@
 // middleware/auth.ts
 export default defineNuxtRouteMiddleware((to) => {
-  console.log("In middleware");
+  // console.log("In middleware");
   const { user, loading } = useAuth();
-  console.log(user.value, loading);
+  // console.log(user.value, loading);
   const publicPages = ["/login", "/verify"];
   const authRequired = !publicPages.includes(to.path);
 

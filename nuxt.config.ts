@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@nuxtjs/seo",
     "@nuxt/icon",
+    "@pinia/nuxt",
   ],
   runtimeConfig: {
     public: {

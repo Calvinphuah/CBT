@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 
 export const useAuth = () => {
-  const { $firebase } = useNuxtApp();
+  const { $auth } = useNuxtApp();
   const user = ref<User | null>(null);
   const loading = ref(true);
 
@@ -18,7 +18,7 @@ export const useAuth = () => {
   const router = useRouter();
 
   onMounted(() => {
-    const unsubscribe = onAuthStateChanged($firebase.auth, (newUser) => {
+    const unsubscribe = onAuthStateChanged($auth, (newUser) => {
       user.value = newUser;
       loading.value = false;
 
@@ -35,7 +35,7 @@ export const useAuth = () => {
   const signUp = async (email: string, password: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
-        $firebase.auth,
+        $auth,
         email,
         password
       );
@@ -49,7 +49,7 @@ export const useAuth = () => {
   const login = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
-        $firebase.auth,
+        $auth,
         email,
         password
       );
@@ -63,7 +63,7 @@ export const useAuth = () => {
   const loginWithGoogle = async (): Promise<User | null> => {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup($firebase.auth, provider);
+      const result = await signInWithPopup($auth, provider);
       router.push("/landing"); // Redirect after successful Google login
       return result.user;
     } catch (error) {
@@ -74,7 +74,7 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
-      await signOut($firebase.auth);
+      await signOut($auth);
       router.push("/login"); // Redirect to login page after logout
     } catch (error) {
       throw error;
