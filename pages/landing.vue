@@ -1,9 +1,7 @@
 <template>
   <div class="w-full mb-4 md:mb-0">
     <!-- Header Section -->
-    <h1 class="text-2xl font-bold mb-6 text-center">
-      Welcome, {{ user?.displayName }}
-    </h1>
+    <h1 class="text-2xl font-bold mb-6 text-center"></h1>
 
     <!-- Responsive Cards Layout -->
     <div
@@ -23,10 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from "@/composables/useAuth";
-
-const { user } = useAuth();
-
 const cards = [
   {
     title: "Cognitive Behavioural Therapy",
@@ -47,6 +41,10 @@ const cards = [
     link: "/breathing",
   },
 ];
+
+definePageMeta({
+  middleware: ["auth"],
+});
 </script>
 
 <style scoped></style>

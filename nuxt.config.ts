@@ -32,4 +32,5 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
+  plugins: ["@/plugins/firebase.client.ts", "@/plugins/authSetup.client.ts"],
 });

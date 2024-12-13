@@ -6,61 +6,70 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { format } from "date-fns";
 
 export const useDataStore = defineStore("dataStore", {
   state: () => ({
     data: [],
+    error: null,
   }),
   // Functions we call on the store to update state
   actions: {
     // Fetching all data
     // Call this when the page first starts
     async fetchAllData() {
-      const { $auth } = useNuxtApp();
-      const { $db } = useNuxtApp();
+      this.error = null;
 
-      if (!$auth) {
-        console.error("Firebase Auth is not initialized");
+      const { $auth, $db } = useNuxtApp();
+      const authStore = useAuthStore();
+
+      // Wait for auth to be ready
+      if (!authStore.initialAuthValueReady) {
+        await new Promise<void>((resolve) => {
+          const unwatch = authStore.$subscribe((mutation, state) => {
+            if (state.initialAuthValueReady) {
+              unwatch();
+              resolve();
+            }
+          });
+        });
+      }
+
+      // Check if we have a user after auth is ready
+      if (!$auth.currentUser?.uid) {
+        console.log("No authenticated user found");
+        this.data = [];
         return;
       }
 
-      if (!$db) {
-        console.error("Firebase DB is not initialized");
-        return;
+      try {
+        const dataQuery = query(
+          collection($db, "data"),
+          where("userId", "==", $auth.currentUser?.uid)
+        );
+        const snapshot = await getDocs(dataQuery);
+        this.data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      } catch (error) {
+        this.error = error.message;
+        console.error("Error fetching data:", error);
       }
-
-      const snapshot = await getDocs(collection($db, "data"));
-      this.data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     },
 
     // Adding new data
     async addData(data: object): Promise<void> {
       console.log("Adding New Data...");
-      const { $auth } = useNuxtApp();
-      const { $db } = useNuxtApp();
+      this.error = null;
 
-      if (!$auth) {
-        console.error("Firebase Auth is not initialized");
-        return;
-      }
-
-      if (!$db) {
-        console.error("Firebase DB is not initialized");
-        return;
-      }
-
-      if (!$auth.currentUser) {
-        console.error("User is not authenticated");
-        throw new Error("You need to be authenticated to add data");
-      }
+      const { $db, $auth } = useNuxtApp();
 
       const compiledData = {
         ...data,
-        createdData: new Date(),
-        createdByUid: $auth.currentUser.uid,
-        createdByEmail: $auth.currentUser.email,
+        createdDate: new Date(),
+        userId: $auth.currentUser.uid,
+        createdBy: $auth.currentUser.email,
       };
 
       try {
@@ -68,12 +77,15 @@ export const useDataStore = defineStore("dataStore", {
 
         this.data.push({ id: docRef.id, ...compiledData });
       } catch (error) {
+        this.error = error.message;
         console.error("Error adding document:", error);
       }
     },
 
     // Updating data
     async updateData(id, updates) {
+      this.error = null;
+
       const { $db } = useNuxtApp();
 
       const docRef = doc($db, "data", id);
@@ -85,26 +97,29 @@ export const useDataStore = defineStore("dataStore", {
           this.data[index] = { ...this.data[index], ...updates };
         }
       } catch (error) {
+        this.error = error.message;
+
         console.error("Error updating document:", error);
       }
     },
 
     // Deleting data
     async deleteData(id) {
+      this.error = null;
       const { $db } = useNuxtApp();
-
       const docRef = doc($db, "data", id);
       try {
         await deleteDoc(docRef);
         this.data = this.data.filter((item) => item.id !== id);
       } catch (error) {
+        this.error = error.message;
         console.error("Error deleting document:", error);
       }
     },
   },
   getters: {
     onlyEmails(): Array<string> {
-      return this.data.map((item) => item.createdByEmail);
+      return this.data.map((item) => item.createdBy);
     },
   },
 });

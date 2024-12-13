@@ -6,7 +6,7 @@
     </div>
     <!-- Right Side (Top on small screens) -->
     <div class="w-full md:w-1/2 order-2">
-      <LoginRightSide />
+      <!-- <LoginRightSide /> -->
     </div>
   </div>
 </template>
@@ -14,6 +14,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: false,
+  middleware: ["guest"],
 });
 </script>
 

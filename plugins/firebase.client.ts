@@ -21,9 +21,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const db = getFirestore(app);
 
   // nuxtApp.provide("firebase", { auth, db }); // we provide auth and db to the whole app
-  nuxtApp.provide("db", db);
-  nuxtApp.provide("auth", auth);
+  return { provide: { auth, db } };
+  //   nuxtApp.provide("db", db);
+  //   nuxtApp.provide("auth", auth);
 });
-
-// Access using useNuxtApp
-// const { $firestore } = useNuxtApp(); //$ is a convnetion for globally provided value

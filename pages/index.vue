@@ -17,9 +17,8 @@
 </template>
 
 <script setup lang="ts">
-const { user } = useAuth();
-
 const dataStore = useDataStore();
+const { user } = useAuthStore();
 const name = ref("");
 
 onMounted(async () => {
@@ -39,4 +38,8 @@ async function handleDelete(id) {
 }
 
 const emails = computed(() => dataStore.onlyEmails);
+
+definePageMeta({
+  middleware: ["guest"],
+});
 </script>
