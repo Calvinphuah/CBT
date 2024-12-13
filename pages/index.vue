@@ -1,64 +1,45 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold underline">Welcome to Nuxt Firebase Auth</h1>
-
-    <!-- Show loading state -->
-    <div v-if="loading">Loading...</div>
-
-    <!-- Show user details if logged in -->
-    <div v-else-if="user">
-      <p>Logged in as: {{ user.email }}</p>
-      <button @click="handleLogout">Logout</button>
-    </div>
-
-    <!-- Show login/signup form if not logged in -->
+    <p v-if="user">Logged in as: {{ user.email }}</p>
+    {{ user?.displayName }}
+    <input v-model="name" type="text" />
+    <button @click="handleSubmit">Submit</button>
+    <div v-if="dataStore.data.length === 0">Loading data...</div>
     <div v-else>
-      <input v-model="email" type="email" placeholder="Email" />
-      <input v-model="password" type="password" placeholder="Password" />
-
-      <button @click="handleSignUp">Sign Up</button>
-      <button @click="handleLogin">Login</button>
+      <div v-for="data in dataStore.data" :key="data.id">
+        {{ data }}
+        <button @click="() => handleDelete(data.id)">Delete</button>
+      </div>
     </div>
+    hi
+    {{ emails }}
   </div>
 </template>
 
 <script setup lang="ts">
-import type { User } from "firebase/auth";
+const dataStore = useDataStore();
+const { user } = useAuthStore();
+const name = ref("");
 
-// Access `useAuth` directly
-const { user, loading, signUp, login, logout } = useAuth();
+onMounted(async () => {
+  await dataStore.fetchAllData();
+});
 
-// Reactive form data with types
-const email = ref<string>("");
-const password = ref<string>("");
+async function handleSubmit() {
+  const data = {
+    name: name.value,
+    age: 30,
+  };
+  await dataStore.addData(data);
+}
 
-// Sign-up handler
-const handleSignUp = async (): Promise<void> => {
-  try {
-    const newUser: User = await signUp(email.value, password.value);
-    console.log("Signed up user:", newUser);
-  } catch (error: unknown) {
-    console.error("Sign-up error:", (error as Error).message);
-  }
-};
+async function handleDelete(id) {
+  await dataStore.deleteData(id);
+}
 
-// Login handler
-const handleLogin = async (): Promise<void> => {
-  try {
-    const loggedInUser: User = await login(email.value, password.value);
-    console.log("Logged in user:", loggedInUser);
-  } catch (error: unknown) {
-    console.error("Login error:", (error as Error).message);
-  }
-};
+const emails = computed(() => dataStore.onlyEmails);
 
-// Logout handler
-const handleLogout = async (): Promise<void> => {
-  try {
-    await logout();
-    console.log("User logged out");
-  } catch (error: unknown) {
-    console.error("Logout error:", (error as Error).message);
-  }
-};
+definePageMeta({
+  middleware: ["guest"],
+});
 </script>

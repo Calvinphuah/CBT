@@ -6,16 +6,6 @@ import { getFirestore } from "firebase/firestore";
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
 
-  // Add console.log to debug configuration
-  //   console.log("Firebase Config:", {
-  //     apiKey: config.public.firebaseApiKey,
-  //     authDomain: config.public.firebaseAuthDomain,
-  //     projectId: config.public.firebaseProjectId,
-  //     storageBucket: config.public.firebaseStorageBucket,
-  //     messagingSenderId: config.public.firebaseMessagingSenderId,
-  //     appId: config.public.firebaseAppId,
-  //   });
-
   const firebaseConfig = {
     apiKey: config.public.firebaseApiKey,
     authDomain: config.public.firebaseAuthDomain,
@@ -28,7 +18,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const firestore = getFirestore(app);
+  const db = getFirestore(app);
 
-  nuxtApp.provide("firebase", { auth, firestore });
+  // nuxtApp.provide("firebase", { auth, db }); // we provide auth and db to the whole app
+  return { provide: { auth, db } };
+  //   nuxtApp.provide("db", db);
+  //   nuxtApp.provide("auth", auth);
 });

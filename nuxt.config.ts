@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@nuxtjs/seo",
     "@nuxt/icon",
+    "@pinia/nuxt",
   ],
   runtimeConfig: {
     public: {
@@ -30,4 +31,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  ssr: false,
+  plugins: ["@/plugins/firebase.client.ts", "@/plugins/authSetup.client.ts"],
 });
