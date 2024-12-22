@@ -5,16 +5,25 @@
 </template>
 
 <script setup lang="ts">
-const { outline, color, padding, shadow, backgroundColor, width } = defineProps(
-  {
-    outline: { type: Boolean, default: true },
-    color: { type: String, default: "#d4d2c9" },
-    padding: { type: String, default: "p-6" }, // More padding by default
-    shadow: { type: Boolean, default: true }, // Enable shadow by default
-    backgroundColor: { type: String, default: "#f5f4ef" }, // Light background color
-    width: { type: String, default: "300px" }, // Minimum width
-  }
-);
+interface Props {
+  outline?: boolean;
+  color?: string;
+  padding?: string;
+  shadow?: boolean;
+  backgroundColor?: string;
+  width?: string;
+}
+
+const props = defineProps<Props>();
+
+const {
+  outline = true,
+  color = "#d4d2c9",
+  padding = "p-6",
+  shadow = true,
+  backgroundColor = "#f5f4ef",
+  width = "300px",
+} = props;
 
 const boxClasses = computed(() => {
   return `

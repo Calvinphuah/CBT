@@ -9,24 +9,39 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { format } from "date-fns";
+import type { HasId } from "~/types/store";
+
+// Define interfaces
+interface DataItem extends HasId {
+  createdDate: Date;
+  userId: string;
+  createdBy: string;
+  [key: string]: any; // For any additional fields
+}
+
+interface DataState {
+  data: DataItem[];
+  error: string | null;
+}
+
+// Define type for new data input
+interface NewDataInput {
+  [key: string]: any;
+}
 
 export const useDataStore = defineStore("dataStore", {
-  state: () => ({
+  state: (): DataState => ({
     data: [],
     error: null,
   }),
-  // Functions we call on the store to update state
+
   actions: {
-    // Fetching all data
-    // Call this when the page first starts
     async fetchAllData() {
       this.error = null;
 
       const { $auth, $db } = useNuxtApp();
       const authStore = useAuthStore();
 
-      // Wait for auth to be ready
       if (!authStore.initialAuthValueReady) {
         await new Promise<void>((resolve) => {
           const unwatch = authStore.$subscribe((mutation, state) => {
@@ -38,7 +53,6 @@ export const useDataStore = defineStore("dataStore", {
         });
       }
 
-      // Check if we have a user after auth is ready
       if (!$auth.currentUser?.uid) {
         console.log("No authenticated user found");
         this.data = [];
@@ -51,39 +65,47 @@ export const useDataStore = defineStore("dataStore", {
           where("userId", "==", $auth.currentUser?.uid)
         );
         const snapshot = await getDocs(dataQuery);
-        this.data = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        this.data = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as DataItem[];
       } catch (error) {
-        this.error = error.message;
+        this.error =
+          error instanceof Error ? error.message : "An unknown error occurred";
         console.error("Error fetching data:", error);
       }
     },
 
-    // Adding new data
-    async addData(data: object): Promise<void> {
+    async addData(data: NewDataInput): Promise<void> {
       console.log("Adding New Data...");
       this.error = null;
 
       const { $db, $auth } = useNuxtApp();
 
-      const compiledData = {
+      if (!$auth.currentUser?.uid || !$auth.currentUser?.email) {
+        throw new Error("User not authenticated");
+      }
+
+      const compiledData: DataItem = {
         ...data,
         createdDate: new Date(),
         userId: $auth.currentUser.uid,
         createdBy: $auth.currentUser.email,
+        id: "", // Will be updated after adding to Firestore
       };
 
       try {
         const docRef = await addDoc(collection($db, "data"), compiledData);
-
-        this.data.push({ id: docRef.id, ...compiledData });
+        const newData = { ...compiledData, id: docRef.id };
+        this.data.push(newData);
       } catch (error) {
-        this.error = error.message;
+        this.error =
+          error instanceof Error ? error.message : "An unknown error occurred";
         console.error("Error adding document:", error);
       }
     },
 
-    // Updating data
-    async updateData(id, updates) {
+    async updateData(id: string, updates: Partial<DataItem>) {
       this.error = null;
 
       const { $db } = useNuxtApp();
@@ -97,14 +119,13 @@ export const useDataStore = defineStore("dataStore", {
           this.data[index] = { ...this.data[index], ...updates };
         }
       } catch (error) {
-        this.error = error.message;
-
+        this.error =
+          error instanceof Error ? error.message : "An unknown error occurred";
         console.error("Error updating document:", error);
       }
     },
 
-    // Deleting data
-    async deleteData(id) {
+    async deleteData(id: string) {
       this.error = null;
       const { $db } = useNuxtApp();
       const docRef = doc($db, "data", id);
@@ -112,13 +133,15 @@ export const useDataStore = defineStore("dataStore", {
         await deleteDoc(docRef);
         this.data = this.data.filter((item) => item.id !== id);
       } catch (error) {
-        this.error = error.message;
+        this.error =
+          error instanceof Error ? error.message : "An unknown error occurred";
         console.error("Error deleting document:", error);
       }
     },
   },
+
   getters: {
-    onlyEmails(): Array<string> {
+    onlyEmails(): string[] {
       return this.data.map((item) => item.createdBy);
     },
   },

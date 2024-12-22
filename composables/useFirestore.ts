@@ -3,11 +3,11 @@ import {
   onSnapshot,
   doc,
   query,
-  where,
+  // where,
   updateDoc,
   addDoc,
   deleteDoc,
-  type Query,
+  // type Query,
   type DocumentData,
 } from "firebase/firestore";
 

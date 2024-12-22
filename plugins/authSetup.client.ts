@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "~/stores/auth.store";
 
 const PROTECTED_ROUTES = ["/landing"];
 const GUEST_ONLY_ROUTES = ["/loginTest", "/signup"];
