@@ -7,13 +7,15 @@
 
         <!-- Navigation -->
         <div class="flex gap-4">
-          <NuxtLink to="/landing"
-            ><span class="hover:text-white">hi</span></NuxtLink
+          <NuxtLink to="/cbt"
+            ><span class="hover:text-blue-500">CBT</span></NuxtLink
           >
-          <NuxtLink to="/loginTest" class="hover:text-blue-500"
-            >loginTest</NuxtLink
+          <NuxtLink to="/gratitude" class="hover:text-blue-500"
+            >Gratitude</NuxtLink
           >
-          <NuxtLink to="/signup" class="hover:text-blue-500">Signup</NuxtLink>
+          <NuxtLink to="/breathing" class="hover:text-blue-500"
+            >Breathing</NuxtLink
+          >
         </div>
 
         <!-- Logout Button -->

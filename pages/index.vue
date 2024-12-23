@@ -22,6 +22,7 @@ const { user } = useAuthStore();
 const name = ref("");
 
 onMounted(async () => {
+  console.log("Mounted");
   await dataStore.fetchAllData();
 });
 
@@ -33,13 +34,13 @@ async function handleSubmit() {
   await dataStore.addData(data);
 }
 
-async function handleDelete(id) {
+async function handleDelete(id: string) {
   await dataStore.deleteData(id);
 }
 
 const emails = computed(() => dataStore.onlyEmails);
 
 definePageMeta({
-  middleware: ["guest"],
+  middleware: ["auth"],
 });
 </script>
