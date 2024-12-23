@@ -7,13 +7,11 @@
 
         <!-- Navigation -->
         <div class="flex gap-4">
-          <NuxtLink to="/cbt"
-            ><span class="hover:text-blue-500">CBT</span></NuxtLink
-          >
-          <NuxtLink to="/gratitude" class="hover:text-blue-500"
+          <NuxtLink to="/cbt" active-class="text-orange-600">CBT</NuxtLink>
+          <NuxtLink to="/gratitude" active-class="text-orange-600"
             >Gratitude</NuxtLink
           >
-          <NuxtLink to="/breathing" class="hover:text-blue-500"
+          <NuxtLink to="/breathing" active-class="text-orange-600"
             >Breathing</NuxtLink
           >
         </div>

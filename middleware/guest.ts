@@ -1,10 +1,23 @@
 import { useAuthStore } from "~/stores/auth.store";
 
-export default defineNuxtRouteMiddleware(() => {
-  const { user } = useAuthStore();
+export default defineNuxtRouteMiddleware(async () => {
+  const authStore = useAuthStore();
 
-  if (user) {
-    console.log("Middleware pushing to landing page");
-    return navigateTo("/landing");
+  // Wait for authentication state to be resolved
+  if (!authStore.initialAuthValueReady) {
+    await new Promise<void>((resolve) => {
+      const unwatch = authStore.$subscribe((mutation, state) => {
+        if (state.initialAuthValueReady) {
+          unwatch();
+          resolve();
+        }
+      });
+    });
+  }
+
+  // Redirect if the user is not authenticated
+  if (authStore.user) {
+    console.log("Middleware pushing to landing");
+    return navigateTo("/");
   }
 });

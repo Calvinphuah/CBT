@@ -1,46 +1,46 @@
 <template>
-  <div>
-    <p v-if="user">Logged in as: {{ user.email }}</p>
-    {{ user?.displayName }}
-    <input v-model="name" type="text" />
-    <button @click="handleSubmit">Submit</button>
-    <div v-if="dataStore.data.length === 0">Loading data...</div>
-    <div v-else>
-      <div v-for="data in dataStore.data" :key="data.id">
-        {{ data }}
-        <button @click="() => handleDelete(data.id)">Delete</button>
-      </div>
+  <div class="w-full mb-4 md:mb-0">
+    <!-- Header Section -->
+    <h1 class="text-2xl font-bold mb-6 text-center"></h1>
+
+    <!-- Responsive Cards Layout -->
+    <div
+      class="flex flex-col md:flex-row md:justify-center md:items-start gap-4 px-4 md:px-4"
+    >
+      <CommonCard
+        v-for="(card, index) in cards"
+        :key="index"
+        :title="card.title"
+        image="../../assets/images/meditate.png"
+        :link="card.link"
+      >
+        <p class="text-gray-600 mt-3">{{ card.description }}</p>
+      </CommonCard>
     </div>
-    hi
-    {{ emails }}
   </div>
 </template>
 
 <script setup lang="ts">
-const dataStore = useDataStore();
-const { user } = useAuthStore();
-const name = ref("");
-
-onMounted(async () => {
-  console.log("Mounted");
-  await dataStore.fetchAllData();
-});
-
-async function handleSubmit() {
-  const data = {
-    name: name.value,
-    age: 30,
-  };
-  await dataStore.addData(data);
-}
-
-async function handleDelete(id: string) {
-  await dataStore.deleteData(id);
-}
-
-const emails = computed(() => dataStore.onlyEmails);
-
-definePageMeta({
-  middleware: ["auth"],
-});
+const cards = [
+  {
+    title: "Cognitive Behavioural Therapy",
+    image: "../../assets/images/meditate.png",
+    description: "Engage in exercises to calm your thoughts and emotions.",
+    link: "/cbt",
+  },
+  {
+    title: "Gratitude",
+    image: "../../assets/images/meditate.png",
+    description: "Keep track of your daily thoughts and feelings.",
+    link: "/gratitude",
+  },
+  {
+    title: "Breathing Exercise",
+    image: "../../assets/images/meditate.png",
+    description: "Explore guided sessions for mindfulness and therapy.",
+    link: "/breathing",
+  },
+];
 </script>
+
+<style scoped></style>
