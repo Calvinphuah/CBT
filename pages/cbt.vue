@@ -48,6 +48,8 @@
 <script setup lang="ts">
 const { user } = useAuthStore();
 
+console.log("user", user);
+
 // definePageMeta({
 //   middleware: ["auth"],
 // });
