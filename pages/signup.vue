@@ -23,7 +23,4 @@ const handleSignup = async () => {
   if (!email.value || !password.value) return;
   await authStore.signup(email.value, password.value);
 };
-definePageMeta({
-  middleware: ["guest"],
-});
 </script>

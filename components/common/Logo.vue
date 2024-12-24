@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink to="/landing">
+  <NuxtLink to="/">
     <div class="flex items-center gap-3">
       <!-- Logo -->
       <img

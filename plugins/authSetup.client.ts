@@ -1,7 +1,7 @@
 import { useAuthStore } from "~/stores/auth.store";
 
-const PROTECTED_ROUTES = ["/landing"];
-const GUEST_ONLY_ROUTES = ["/loginTest", "/signup"];
+const PROTECTED_ROUTES = ["/", "/gratitude", "/cbt", "/breathing"];
+const GUEST_ONLY_ROUTES = ["/login", "/signup"];
 
 export default defineNuxtPlugin(() => {
   const authStore = useAuthStore();
@@ -15,14 +15,14 @@ export default defineNuxtPlugin(() => {
     if (authStore.user) {
       console.log("Redirecting to landing page");
       if (GUEST_ONLY_ROUTES.includes(path)) {
-        router.push("/landing");
+        router.push("/");
       }
     }
 
     if (!authStore.user) {
       console.log("Redirecting to login page");
       if (PROTECTED_ROUTES.includes(path)) {
-        router.push("/loginTest");
+        router.push("/login");
       }
     }
   };

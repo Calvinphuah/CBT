@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   type User,
 } from "firebase/auth";
@@ -74,6 +76,22 @@ export const useAuthStore = defineStore("auth", {
       } catch (err) {
         this.loginError =
           err instanceof Error ? err.message : "An unknown error occurred";
+        throw err;
+      }
+    },
+
+    async loginWithGoogle(): Promise<void> {
+      const { $auth } = useNuxtApp();
+
+      try {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup($auth, provider);
+        this.user = result.user;
+      } catch (err) {
+        console.error(
+          "Google login error:",
+          err instanceof Error ? err.message : err
+        );
         throw err;
       }
     },

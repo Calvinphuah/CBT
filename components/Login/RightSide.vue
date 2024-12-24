@@ -52,46 +52,57 @@
         <button
           type="submit"
           class="bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-600 transition-all w-full disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-orange-500"
-          :disabled="!isValidEmail"
+          :disabled="loading"
         >
           Continue with email
         </button>
+        <p v-if="loginError" class="text-red-500 text-center">
+          {{ loginError }}
+        </p>
       </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAuth } from "@/composables/useAuth";
+import { ref, computed } from "vue";
+import { useAuthStore } from "@/stores/auth.store";
 
-const { login, loginWithGoogle } = useAuth();
+// Use the auth store
+const authStore = useAuthStore();
 
 // State for form inputs
 const email = ref("");
 
+// Computed properties for loading and error state
+const loading = computed(() => authStore.initialAuthValueReady === false);
+const loginError = computed(() => authStore.loginError);
+
 // Handle Email Login
 const handleEmailLogin = async () => {
   try {
-    const user = await login(email.value, "");
-    console.log("Logged in user:", user);
-    // Redirect or perform actions after login
+    await authStore.login(email.value, ""); // Provide an appropriate password or implement passwordless login
+    console.log("Logged in user:", authStore.user);
   } catch (error) {
-    console.error("Email login failed:", error.message);
+    if (error instanceof Error) {
+      console.error("Email login failed:", error.message);
+    } else {
+      console.error("Unknown error occurred:", error);
+    }
   }
 };
 
 // Handle Google Login
 const handleGoogleLogin = async () => {
   try {
-    const user = await loginWithGoogle();
-    console.log("Google Sign-In successful:", user);
-    // Redirect or perform actions after login
+    await authStore.loginWithGoogle?.();
+    console.log("Google Sign-In successful:", authStore.user);
   } catch (error) {
-    console.error("Google login failed:", error.message);
+    if (error instanceof Error) {
+      console.error("Email login failed:", error.message);
+    } else {
+      console.error("Unknown error occurred:", error);
+    }
   }
 };
 </script>
-
-<style scoped>
-/* Add additional styling if necessary */
-</style>
