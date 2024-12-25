@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-md p-4 mx-auto space-y-4">
-    <h2 class="mb-4 text-lg font-semibold">for you today</h2>
+  <div class="max-w-md p-4 mx-auto space-y-4 mb-10">
+    <!-- <h2 class="mb-4 text-lg font-semibold">for you today</h2> -->
 
     <div
       v-for="(card, index) in cards"
@@ -11,7 +11,9 @@
         <!-- White header section -->
         <div class="flex items-center justify-between p-4 bg-white">
           <span class="font-medium text-gray-800">{{ card.title }}</span>
-          <span class="text-xs text-gray-500">{{ card.time }}</span>
+          <!-- <div class="inline-block px-2 py-1 bg-gray-600 rounded-full">
+          </div> -->
+          <span class="text-xs text-gray-800">{{ card.time }}</span>
         </div>
 
         <!-- Image content section -->
@@ -25,41 +27,18 @@
             <p class="pr-4 text-sm text-white">{{ card.description }}</p>
             <span class="text-2xl">{{ card.icon }}</span>
           </div>
-
-          <div class="mt-3">
-            <button
-              class="p-2 transition-colors rounded-full bg-white/30 hover:bg-white/40"
-            >
-              <PlayIcon class="w-5 h-5 text-white" />
-            </button>
-          </div>
         </div>
       </NuxtLink>
     </div>
-
-    <MobileNav />
   </div>
 </template>
 
 <script setup>
-import { PlayIcon } from "@heroicons/vue/24/solid";
-
 defineProps({
   cards: {
     type: Array,
     required: true,
-    default: () => [
-      {
-        title: "your morning meditation",
-        description: "an exclusive meditation each day for you!",
-        image:
-          "https://cdn.pixabay.com/photo/2024/04/19/22/25/man-8707406_640.png",
-        icon: "🐬",
-        time: "8 min",
-        link: "/meditation",
-      },
-      // Add more cards...
-    ],
+    // default: () => [],
   },
 });
 </script>
