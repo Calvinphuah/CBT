@@ -14,12 +14,66 @@ import type { CBTEntry, CBTState } from "@/types/cbt";
 
 export const useCBTStore = defineStore("cbtStore", {
   state: (): CBTState => ({
-    cbtEntries: [], // renamed from data/entries to cbtEntries
+    cbtEntries: [],
+    currentStep: 0,
+    steps: [
+      { title: "Activating Event", completed: false },
+      { title: "Beliefs", completed: false },
+      { title: "Consequent Feelings", completed: false },
+      { title: "Dispute Negative Thoughts", completed: false },
+    ],
+    formData: {
+      activating: "",
+      beliefs: "",
+      consequentFeelings: "",
+      dispute: "",
+    },
     loading: false,
     error: null,
   }),
 
   actions: {
+    nextStep() {
+      if (this.currentStep < this.steps.length - 1) {
+        this.steps[this.currentStep].completed = true;
+        this.currentStep++;
+      }
+    },
+
+    previousStep() {
+      if (this.currentStep > 0) {
+        this.currentStep--;
+      }
+    },
+
+    updateStepData(value: string) {
+      switch (this.currentStep) {
+        case 0:
+          this.formData.activating = value;
+          break;
+        case 1:
+          this.formData.beliefs = value;
+          break;
+        case 2:
+          this.formData.consequentFeelings = value;
+          break;
+        case 3:
+          this.formData.dispute = value;
+          break;
+      }
+    },
+
+    resetForm() {
+      this.currentStep = 0;
+      this.formData = {
+        activating: "",
+        beliefs: "",
+        consequentFeelings: "",
+        dispute: "",
+      };
+      this.steps.forEach((step) => (step.completed = false));
+    },
+
     async waitForAuth() {
       const authStore = useAuthStore();
       if (!authStore.initialAuthValueReady) {
@@ -40,7 +94,6 @@ export const useCBTStore = defineStore("cbtStore", {
 
       const { $auth, $db } = useNuxtApp();
 
-      // Wait for auth to be ready
       await this.waitForAuth();
 
       if (!$auth.currentUser?.uid) {
@@ -54,7 +107,7 @@ export const useCBTStore = defineStore("cbtStore", {
         const entriesQuery = query(
           collection($db, "cbtEntries"),
           where("userId", "==", $auth.currentUser.uid),
-          orderBy("createdAt", "desc") // Newest first
+          orderBy("createdAt", "desc")
         );
 
         const snapshot = await getDocs(entriesQuery);
@@ -71,8 +124,26 @@ export const useCBTStore = defineStore("cbtStore", {
       }
     },
 
+    async submitCurrentEntry() {
+      if (!this.isCurrentStepValid) return;
+
+      const entry = {
+        activatingEvent: this.formData.activating,
+        beliefs: this.formData.beliefs,
+        consequentFeelings: this.formData.consequentFeelings,
+        disputes: this.formData.dispute,
+      };
+
+      try {
+        await this.addEntry(entry);
+        this.resetForm();
+      } catch (error) {
+        console.error("Error submitting entry:", error);
+        throw error;
+      }
+    },
+
     async addEntry(entry: Omit<CBTEntry, "id" | "createdAt" | "userId">) {
-      // Omit types id, creataedAt and userId because they are auto-generated
       this.loading = true;
       this.error = null;
 
@@ -107,8 +178,7 @@ export const useCBTStore = defineStore("cbtStore", {
       this.error = null;
 
       const { $db } = useNuxtApp();
-
-      const docRef = doc($db, "cbt_entries", id);
+      const docRef = doc($db, "cbtEntries", id);
 
       try {
         await updateDoc(docRef, updates);
@@ -131,7 +201,6 @@ export const useCBTStore = defineStore("cbtStore", {
       this.error = null;
 
       const { $db } = useNuxtApp();
-
       const docRef = doc($db, "cbtEntries", id);
 
       try {
@@ -149,8 +218,46 @@ export const useCBTStore = defineStore("cbtStore", {
   },
 
   getters: {
-    getEntryById: (state) => (id: string) => {
-      return state.cbtEntries.find((entry) => entry.id === id);
+    remainingChars(): number {
+      const maxChars = 400;
+      const currentText = (() => {
+        switch (this.currentStep) {
+          case 0:
+            return this.formData.activating;
+          case 1:
+            return this.formData.beliefs;
+          case 2:
+            return this.formData.consequentFeelings;
+          case 3:
+            return this.formData.dispute;
+          default:
+            return "";
+        }
+      })();
+      return maxChars - currentText.length;
     },
+
+    currentStepData(): string {
+      switch (this.currentStep) {
+        case 0:
+          return this.formData.activating;
+        case 1:
+          return this.formData.beliefs;
+        case 2:
+          return this.formData.consequentFeelings;
+        case 3:
+          return this.formData.dispute;
+        default:
+          return "";
+      }
+    },
+
+    isCurrentStepValid(): boolean {
+      return this.currentStepData !== "";
+    },
+
+    // getEntryById: () => (id: string) => {
+    //   return this.cbtEntries.find((entry) => entry.id === id);
+    // },
   },
 });

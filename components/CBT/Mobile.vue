@@ -3,7 +3,7 @@
     <MobileTopNav />
     <div v-if="selectedEntry">
       <!-- Detailed View -->
-      <CBTEntryDetail :entry="selectedEntry" @close="closeDetail" />
+      <!-- <CBTEntryDetail :entry="selectedEntry" @close="closeDetail" /> -->
     </div>
     <div v-else-if="isNewEntry">
       <!-- New Entry View -->
@@ -56,9 +56,9 @@ const selectEntry = (entry) => {
 };
 
 // Close the detail view
-const closeDetail = () => {
-  selectedEntry.value = null;
-};
+// const closeDetail = () => {
+//   selectedEntry.value = null;
+// };
 
 // Open the new entry view
 const createNewEntry = () => {

@@ -12,4 +12,7 @@ export interface CBTState {
   cbtEntries: CBTEntry[];
   loading: boolean;
   error: string | null;
+  steps: { title: string; completed: boolean }[];
+  formData: { [key: string]: string };
+  currentStep: number;
 }
