@@ -17,20 +17,44 @@
 
     <div class="relative">
       <textarea
+        v-model="currentInput"
         class="w-full h-40 p-4 border resize-none rounded-xl"
         placeholder="Write your challenges here"
       />
-      <div class="absolute text-sm text-gray-400 bottom-4 right-4"></div>
+      <div class="absolute text-sm text-gray-400 bottom-4 right-4">
+        {{ remainingChars }} characters remaining
+      </div>
     </div>
 
-    <div class="fixed left-0 right-0 px-6 bottom-20">
+    <div class="mt-2">
       <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
+        @click="handleNextStep"
       >
-        Next
+        Save
       </button>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const store = useCBTStore();
+
+// Computed binding for the current step input
+const currentInput = computed({
+  get: () => store.currentStepData,
+  set: (value: string) => store.updateStepData(value),
+});
+
+// Getter for remaining characters
+const remainingChars = computed(() => store.remainingChars);
+
+// Function to handle the "Next" button click
+const handleNextStep = () => {
+  if (store.isCurrentStepValid) {
+    store.nextStep();
+  } else {
+    alert("Please fill out this step before proceeding.");
+  }
+};
+</script>

@@ -17,15 +17,15 @@
     <div class="relative">
       <textarea
         v-model="currentInput"
-        class="w-full h-40 p-4 border resize-none rounded-xl"
+        class="w-full resize-none rounded-xl border p-4 h-[calc(10rem-24px)]"
         placeholder="Type something"
+        maxlength="400"
       />
-      <div class="absolute text-sm text-gray-400 bottom-4 right-4">
+      <div class="h-6 mt-1 text-sm text-right text-gray-400">
         {{ remainingChars }} characters remaining
       </div>
     </div>
-
-    <div class="fixed left-0 right-0 px-6 bottom-20">
+    <div class="mt-2">
       <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
         @click="handleNextStep"

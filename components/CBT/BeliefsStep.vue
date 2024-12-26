@@ -16,6 +16,7 @@
 
     <div class="relative">
       <textarea
+        v-model="currentInput"
         class="w-full h-40 p-4 border resize-none rounded-xl"
         placeholder="Type your thoughts here"
       />
@@ -24,9 +25,10 @@
       </div>
     </div>
 
-    <div class="fixed left-0 right-0 px-6 bottom-20">
+    <div class="mt-2">
       <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
+        @click="handleNextStep"
       >
         Next
       </button>

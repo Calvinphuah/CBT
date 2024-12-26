@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MobileTopNav />
+    <CBTTopNav />
     <div v-if="selectedEntry">
       <!-- Detailed View -->
       <!-- <CBTEntryDetail :entry="selectedEntry" @close="closeDetail" /> -->
