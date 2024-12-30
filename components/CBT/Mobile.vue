@@ -7,12 +7,12 @@
     </div>
     <div v-else-if="isNewEntry">
       <!-- New Entry View -->
-      <CBTNewEntry @save="saveNewEntry" @cancel="cancelNewEntry" />
+      <CBTNewEntry @cancel="cancelNewEntry" />
     </div>
     <div v-else>
       <!-- List View -->
       <CBTEntries
-        :entries="entries"
+        :entries="cbtStore.cbtEntries"
         @select="selectEntry"
         @new="createNewEntry"
       />
@@ -21,37 +21,14 @@
   </div>
 </template>
 
-<script setup>
-// List of existing entries
-const entries = ref([
-  {
-    id: 1,
-    date: new Date("2024-12-25T10:00:00"),
-    time: "10:00 PM",
-    title: "Entry 1",
-    description: "Description 1",
-  },
-  {
-    id: 2,
-    date: new Date("2024-12-25T12:00:00"),
-    time: "12:00 AM",
-    title: "Entry 2",
-    description: "Description 2",
-  },
-  {
-    id: 3,
-    date: new Date("2025-12-25T10:00:00"),
-    time: "10:00 PM",
-    title: "Entry 3",
-    description: "Description 3",
-  },
-]);
+<script setup lang="ts">
+import type { CBTEntry } from "~/types/cbt";
 
-const selectedEntry = ref(null);
-const isNewEntry = ref(true);
+const selectedEntry = ref<CBTEntry | null>(null);
+const isNewEntry = ref(false);
 
 // Select an existing entry for detail view
-const selectEntry = (entry) => {
+const selectEntry = (entry: CBTEntry) => {
   selectedEntry.value = entry;
 };
 
@@ -71,11 +48,18 @@ const cancelNewEntry = () => {
 };
 
 // Save the new entry
-const saveNewEntry = (newEntry) => {
-  entries.value.push({
-    id: entries.value.length + 1,
-    ...newEntry,
-  });
-  isNewEntry.value = false;
-};
+// const saveNewEntry = (newEntry: Omit<CBTEntry, "id" | "createdAt">) => {
+//   entries.value.push({
+//     ...newEntry,
+//     id: String(entries.value.length + 1),
+//     createdAt: new Date(),
+//   });
+//   isNewEntry.value = false;
+// };
+
+const cbtStore = useCBTStore();
+
+onMounted(() => {
+  cbtStore.fetchEntries();
+});
 </script>

@@ -1,10 +1,11 @@
+import type { Timestamp } from "firebase/firestore";
 export interface CBTEntry {
   id: string;
   activatingEvent: string;
   beliefs: string;
   consequentFeelings: string;
   disputes: string;
-  createdAt: Date;
+  createdAt: Timestamp;
   userId: string;
 }
 
