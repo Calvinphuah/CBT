@@ -7,7 +7,8 @@
     </div>
     <div v-else-if="isNewEntry">
       <!-- New Entry View -->
-      <CBTNewEntry @cancel="cancelNewEntry" />
+      <!-- <CBTNewEntry @cancel="cancelNewEntry" /> -->
+      <CBTForm />
     </div>
     <div v-else>
       <!-- List View -->
@@ -25,7 +26,7 @@
 import type { CBTEntry } from "~/types/cbt";
 
 const selectedEntry = ref<CBTEntry | null>(null);
-const isNewEntry = ref(false);
+const isNewEntry = ref(true);
 
 // Select an existing entry for detail view
 const selectEntry = (entry: CBTEntry) => {
