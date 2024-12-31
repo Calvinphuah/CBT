@@ -12,7 +12,7 @@
       <div
         v-for="entry in group"
         :key="entry.id"
-        class="flex items-center justify-between px-4 py-2 bg-white"
+        class="flex items-center justify-between px-4 py-2 bg-white hover:cursor-pointer"
         @click="$emit('select', entry)"
       >
         <div>

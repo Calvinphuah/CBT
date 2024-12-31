@@ -1,6 +1,10 @@
 <template>
   <div>
-    <CBTTopNav @back="handleBack" @new="handleNewEntry" />
+    <CBTTopNav
+      :show-back-button="isNewEntry || selectedEntry"
+      @back="handleBack"
+      @new="handleNewEntry"
+    />
 
     <CBTForm
       v-if="isNewEntry || selectedEntry"

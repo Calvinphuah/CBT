@@ -1,8 +1,18 @@
 <template>
   <div class="mb-6">
     <h2 class="mb-4 text-2xl font-medium text-blue-500">{{ title }}</h2>
-    <p class="mb-6 text-gray-600">{{ description }}</p>
-    <p v-if="example" class="mb-8 italic text-gray-500">{{ example }}</p>
+    <p class="flex items-center mb-4 text-gray-600">
+      {{ description }}
+      <button
+        class="flex items-center ml-2 text-blue-500 hover:text-blue-700"
+        @click="toggleExample"
+      >
+        <InformationCircleIcon class="w-5 h-5" />
+      </button>
+    </p>
+    <p v-if="showExample" class="mb-4 mr-4 italic text-gray-500">
+      {{ example }}
+    </p>
 
     <div class="relative">
       <textarea
@@ -19,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { InformationCircleIcon } from "@heroicons/vue/24/solid";
 const props = defineProps({
   title: {
     type: String,
@@ -69,4 +80,10 @@ watch(
 const remainingChars = computed(
   () => props.maxlength - (localValue.value?.length || 0)
 );
+
+// State for toggling the example
+const showExample = ref(false);
+const toggleExample = () => {
+  showExample.value = !showExample.value;
+};
 </script>
