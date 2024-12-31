@@ -9,24 +9,24 @@
       </div>
 
       <!-- Entries for the Date -->
-      <div v-for="entry in group" :key="entry.id">
-        <NuxtLink
-          :to="`/cbt/${entry.id}`"
-          class="flex items-center justify-between px-4 py-2 bg-white"
-        >
-          <div>
-            <div class="mb-1 text-sm text-blue-500">
-              {{ formatFirestoreTimestampTime(entry.createdAt) }}
-            </div>
-            <h3 class="mb-1 text-l">
-              {{ truncateText(entry.activatingEvent, 5) }}
-            </h3>
-            <p class="text-gray-600 text-m">
-              {{ truncateText(entry.disputes, 10) }}
-            </p>
+      <div
+        v-for="entry in group"
+        :key="entry.id"
+        class="flex items-center justify-between px-4 py-2 bg-white"
+        @click="$emit('select', entry)"
+      >
+        <div>
+          <div class="mb-1 text-sm text-blue-500">
+            {{ formatFirestoreTimestampTime(entry.createdAt) }}
           </div>
-          <ChevronRightIcon class="size-7" />
-        </NuxtLink>
+          <h3 class="mb-1 text-l">
+            {{ truncateText(entry.activatingEvent, 5) }}
+          </h3>
+          <p class="text-gray-600 text-m">
+            {{ truncateText(entry.disputes, 10) }}
+          </p>
+        </div>
+        <ChevronRightIcon class="size-7" />
       </div>
     </div>
   </div>
@@ -38,6 +38,11 @@ import type { CBTEntry } from "@/types/cbt";
 
 const props = defineProps<{
   entries: CBTEntry[];
+}>();
+
+defineEmits<{
+  new: [];
+  select: [entry: CBTEntry];
 }>();
 
 // Group entries by date

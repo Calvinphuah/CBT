@@ -1,17 +1,24 @@
 <template>
-  {{ store.formData }}
   <div class="min-h-screen p-6 bg-gray-50 rounded-t-3xl">
-    <!-- Toggle Examples Button -->
-    <div class="flex justify-end mb-4">
+    <!-- Header Controls -->
+    <div class="flex justify-between mb-4">
       <button
         class="px-4 py-2 font-medium text-white bg-blue-500 rounded-lg"
         @click="toggleExamples"
       >
         {{ showExamples ? "Hide Examples" : "Show Examples" }}
       </button>
+
+      <button
+        v-if="entry"
+        class="px-4 py-2 font-medium text-white bg-red-500 rounded-lg"
+        @click="handleDelete"
+      >
+        Delete
+      </button>
     </div>
 
-    <!-- Input Fields Rendered Dynamically -->
+    <!-- Input Fields -->
     <CBTInputField
       v-for="(field, index) in inputFields"
       :key="index"
@@ -22,31 +29,70 @@
       :placeholder="field.placeholder"
     />
 
-    <!-- Save Button -->
-    <div class="mt-4">
+    <!-- Action Buttons -->
+    <div class="mt-4 space-y-4">
       <button
-        class="w-full py-4 mb-10 font-medium text-white bg-blue-400 rounded-full"
-        @click="handleSave"
+        class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
+        :disabled="!isFormValid"
+        @click="$emit('save')"
       >
-        Save
+        {{ entry ? "Update" : "Save" }}
+      </button>
+
+      <button
+        class="w-full py-4 font-medium text-gray-600 bg-gray-200 rounded-full"
+        @click="$emit('cancel')"
+      >
+        Cancel
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Use the store
-const store = useCBTStore();
+import type { CBTEntry } from "~/types/cbt";
 
-// State to toggle examples visibility
+// Props & Emits
+const props = defineProps<{
+  entry?: CBTEntry | null;
+}>();
+
+const emit = defineEmits<{
+  save: [];
+  cancel: [];
+}>();
+
+// Store & State
+const store = useCBTStore();
 const showExamples = ref(true);
 
-// Function to toggle the examples
+// Computed
+const isFormValid = computed(() => {
+  return Object.values(store.formData).every(
+    (value) => value.trim().length > 0
+  );
+});
+
+// Methods
 const toggleExamples = () => {
   showExamples.value = !showExamples.value;
 };
 
-// Define input field configurations
+const handleDelete = async () => {
+  if (!props.entry) return;
+
+  if (confirm("Are you sure you want to delete this entry?")) {
+    try {
+      await store.deleteEntry(props.entry.id);
+      emit("cancel");
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      // You might want to show an error notification here
+    }
+  }
+};
+
+// Input Field Configurations
 const inputFields = [
   {
     model: "activating",
@@ -85,13 +131,34 @@ const inputFields = [
   },
 ];
 
-// Submit handler
-const handleSave = async () => {
-  try {
-    await store.submitCurrentEntry();
-    alert("Form submitted successfully!");
-  } catch (error) {
-    console.error("Error submitting form:", error);
+// Lifecycle Hooks
+onMounted(() => {
+  // If we have an entry, populate the form
+  if (props.entry) {
+    store.formData = {
+      activating: props.entry.activatingEvent,
+      beliefs: props.entry.beliefs,
+      consequentFeelings: props.entry.consequentFeelings,
+      dispute: props.entry.disputes,
+    };
   }
-};
+});
+
+onBeforeUnmount(() => {
+  // Clean up form data when component is destroyed
+  if (!props.entry) {
+    store.resetForm();
+  }
+});
 </script>
+
+<style scoped>
+.min-h-screen {
+  min-height: calc(100vh - 64px); /* Adjust based on your nav height */
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+</style>

@@ -1,23 +1,21 @@
 <template>
   <div>
-    <CBTTopNav />
-    <div v-if="selectedEntry">
-      <!-- Detailed View -->
-      <!-- <CBTEntryDetail :entry="selectedEntry" @close="closeDetail" /> -->
-    </div>
-    <div v-else-if="isNewEntry">
-      <!-- New Entry View -->
-      <!-- <CBTNewEntry @cancel="cancelNewEntry" /> -->
-      <CBTForm />
-    </div>
-    <div v-else>
-      <!-- List View -->
-      <CBTEntries
-        :entries="cbtStore.cbtEntries"
-        @select="selectEntry"
-        @new="createNewEntry"
-      />
-    </div>
+    <CBTTopNav @back="handleBack" @new="handleNewEntry" />
+
+    <CBTForm
+      v-if="isNewEntry || selectedEntry"
+      :entry="selectedEntry"
+      @save="handleSave"
+      @cancel="handleBack"
+    />
+
+    <CBTEntries
+      v-else
+      :entries="cbtStore.cbtEntries"
+      @select="handleEntrySelect"
+      @new="handleNewEntry"
+    />
+
     <MobileBottomNav />
   </div>
 </template>
@@ -25,42 +23,54 @@
 <script setup lang="ts">
 import type { CBTEntry } from "~/types/cbt";
 
-const selectedEntry = ref<CBTEntry | null>(null);
-const isNewEntry = ref(true);
-
-// Select an existing entry for detail view
-const selectEntry = (entry: CBTEntry) => {
-  selectedEntry.value = entry;
-};
-
-// Close the detail view
-// const closeDetail = () => {
-//   selectedEntry.value = null;
-// };
-
-// Open the new entry view
-const createNewEntry = () => {
-  isNewEntry.value = true;
-};
-
-// Cancel the new entry view
-const cancelNewEntry = () => {
-  isNewEntry.value = false;
-};
-
-// Save the new entry
-// const saveNewEntry = (newEntry: Omit<CBTEntry, "id" | "createdAt">) => {
-//   entries.value.push({
-//     ...newEntry,
-//     id: String(entries.value.length + 1),
-//     createdAt: new Date(),
-//   });
-//   isNewEntry.value = false;
-// };
-
 const cbtStore = useCBTStore();
+const isNewEntry = ref(false);
+const selectedEntry = ref<CBTEntry | null>(null);
 
 onMounted(() => {
   cbtStore.fetchEntries();
 });
+
+// Navigation handlers
+const handleNewEntry = () => {
+  selectedEntry.value = null;
+  isNewEntry.value = true;
+  cbtStore.resetForm();
+};
+
+const handleBack = () => {
+  selectedEntry.value = null;
+  isNewEntry.value = false;
+  cbtStore.resetForm();
+};
+
+const handleEntrySelect = (entry: CBTEntry) => {
+  selectedEntry.value = entry;
+  isNewEntry.value = false;
+  // Populate form with entry data
+  cbtStore.formData = {
+    activating: entry.activatingEvent,
+    beliefs: entry.beliefs,
+    consequentFeelings: entry.consequentFeelings,
+    dispute: entry.disputes,
+  };
+};
+
+const handleSave = async () => {
+  try {
+    if (selectedEntry.value) {
+      await cbtStore.updateEntry(selectedEntry.value.id, {
+        activatingEvent: cbtStore.formData.activating,
+        beliefs: cbtStore.formData.beliefs,
+        consequentFeelings: cbtStore.formData.consequentFeelings,
+        disputes: cbtStore.formData.dispute,
+      });
+    } else {
+      await cbtStore.submitCurrentEntry();
+    }
+    handleBack();
+  } catch (error) {
+    console.error("Error saving entry:", error);
+  }
+};
 </script>
