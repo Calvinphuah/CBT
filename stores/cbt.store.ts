@@ -9,6 +9,7 @@ import {
   query,
   where,
   orderBy,
+  Timestamp,
 } from "firebase/firestore";
 import type { CBTEntry, CBTState } from "@/types/cbt";
 
@@ -124,6 +125,7 @@ export const useCBTStore = defineStore("cbtStore", {
       }
     },
 
+    // Adds to firestore and resets form
     async submitCurrentEntry() {
       if (!this.isCurrentStepValid) return;
 
@@ -155,7 +157,7 @@ export const useCBTStore = defineStore("cbtStore", {
 
       const newEntry: Omit<CBTEntry, "id"> = {
         ...entry,
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
         userId: $auth.currentUser.uid,
       };
 

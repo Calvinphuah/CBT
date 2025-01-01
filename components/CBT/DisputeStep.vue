@@ -29,11 +29,17 @@
     <div class="mt-2">
       <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
-        @click="handleNextStep"
+        @click="isOpen = true"
       >
         Save
       </button>
     </div>
+
+    <CBTConfirmationModal
+      :is-open="isOpen"
+      @confirm="handleSave"
+      @cancel="handleCancel"
+    />
   </div>
 </template>
 
@@ -49,12 +55,19 @@ const currentInput = computed({
 // Getter for remaining characters
 const remainingChars = computed(() => store.remainingChars);
 
-// Function to handle the "Next" button click
-const handleNextStep = () => {
-  if (store.isCurrentStepValid) {
-    store.nextStep();
-  } else {
-    alert("Please fill out this step before proceeding.");
+const isOpen = ref(false);
+
+const handleSave = () => {
+  try {
+    store.submitCurrentEntry();
+  } catch (error) {
+    console.error("Error saving CBT entry:", error);
+  } finally {
+    isOpen.value = false;
   }
+};
+
+const handleCancel = () => {
+  isOpen.value = false;
 };
 </script>

@@ -1,20 +1,34 @@
 <template>
   <div class="flex items-center justify-between p-4 text-white bg-purple-400">
     <ArrowLeftIcon
+      v-if="showBackButton"
       class="size-7 text-light-100 hover:cursor-pointer"
-      @click="store.previousStep"
+      @click="$emit('back')"
     />
+    <div v-else class="size-7" />
+    <!-- Empty div for spacing -->
+
     <h1 class="text-xl font-medium">CBT</h1>
-    <ArrowLeftIcon
+
+    <PlusIcon
+      v-if="!showBackButton"
       class="size-7 text-light-100 hover:cursor-pointer"
-      @click="store.previousStep"
+      @click="$emit('new')"
     />
+    <div v-else class="size-7" />
+    <!-- Empty div for spacing -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ArrowLeftIcon } from "@heroicons/vue/24/solid";
-const store = useCBTStore();
-</script>
+import { ArrowLeftIcon, PlusIcon } from "@heroicons/vue/24/solid";
 
-<style scoped></style>
+defineProps<{
+  showBackButton?: boolean;
+}>();
+
+defineEmits<{
+  back: [];
+  new: [];
+}>();
+</script>
