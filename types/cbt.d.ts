@@ -11,9 +11,10 @@ export interface CBTEntry {
 
 export interface CBTState {
   cbtEntries: CBTEntry[];
+  isEditing: boolean;
+  isNewEntry: boolean;
+  selectedEntry: CBTEntry | null;
   loading: boolean;
   error: string | null;
-  steps: { title: string; completed: boolean }[];
   formData: { [key: string]: string };
-  currentStep: number;
 }

@@ -3,13 +3,6 @@
     <!-- Header Controls -->
     <div class="flex justify-between mb-4">
       <button
-        class="px-4 py-2 font-medium text-white bg-blue-500 rounded-lg"
-        @click="toggleExamples"
-      >
-        {{ showExamples ? "Hide Examples" : "Show Examples" }}
-      </button>
-
-      <button
         v-if="entry"
         class="px-4 py-2 font-medium text-white bg-red-500 rounded-lg"
         @click="handleDelete"
@@ -74,9 +67,6 @@ const isFormValid = computed(() => {
 });
 
 // Methods
-const toggleExamples = () => {
-  showExamples.value = !showExamples.value;
-};
 
 const handleDelete = async () => {
   if (!props.entry) return;
@@ -96,7 +86,8 @@ const handleDelete = async () => {
 const inputFields = [
   {
     model: "activating",
-    title: "What's worrying you right now and why?",
+    // title: "What's worrying you right now and why?",
+    title: "A: Activating Event",
     description:
       "Describe the situation and why you're worried about it. Be as specific as you can with your reasoning.",
     example:
@@ -154,7 +145,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .min-h-screen {
-  min-height: calc(100vh - 64px); /* Adjust based on your nav height */
+  min-height: calc(100vh - 64px);
 }
 
 button:disabled {
