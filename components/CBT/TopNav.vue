@@ -1,8 +1,10 @@
 <template>
-  <div class="flex items-center justify-between p-4 text-white bg-purple-400">
+  <div
+    class="sticky top-0 z-50 flex items-center justify-between p-4 text-white bg-purple-400"
+  >
     <!-- Back Icon -->
     <ArrowLeftIcon
-      v-if="cbtStore.isNewEntry"
+      v-if="cbtStore.isNewEntry || cbtStore.isEditing"
       class="size-7 text-light-100 hover:cursor-pointer"
       @click="cbtStore.handleCancelEntry"
     />
@@ -11,16 +13,25 @@
       <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />
     </NuxtLink>
 
-    <div
-      v-else-if="cbtStore.isEditing"
-      class="ml-2 hover:cursor-pointer"
-      @click="cbtStore.handleCancelEntry"
-    >
-      Cancel
-    </div>
-
     <!-- Title -->
-    <h1 class="flex-1 text-xl font-medium text-center">CBT</h1>
+    <h1
+      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry"
+      class="flex-1 text-xl font-medium text-center"
+    >
+      CBT
+    </h1>
+    <h1
+      v-if="cbtStore.isEditing"
+      class="flex-1 text-xl font-medium text-center"
+    >
+      Editing Entry
+    </h1>
+    <h1
+      v-if="cbtStore.isNewEntry"
+      class="flex-1 text-xl font-medium text-center"
+    >
+      New Entry
+    </h1>
 
     <!-- Action Icons -->
     <PlusIcon
@@ -30,7 +41,7 @@
     />
     <div
       v-else-if="cbtStore.isEditing || cbtStore.isNewEntry"
-      class="mr-3 hover:cursor-pointer"
+      class="hover:cursor-pointer"
       @click="cbtStore.submitCurrentEntry"
     >
       Save

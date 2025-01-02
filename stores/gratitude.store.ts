@@ -11,17 +11,12 @@ import {
   orderBy,
   Timestamp,
 } from "firebase/firestore";
-import type { CBTEntry, CBTState } from "@/types/cbt";
+import type { GratitudeEntry, GratitudeState } from "@/types/gratitude";
 
 export const useCBTStore = defineStore("cbtStore", {
-  state: (): CBTState => ({
-    cbtEntries: [],
-    formData: {
-      activating: "",
-      beliefs: "",
-      consequentFeelings: "",
-      dispute: "",
-    },
+  state: (): GratitudeState => ({
+    newEntry: "",
+    gratitudeEntries: [],
     isEditing: false,
     isNewEntry: false,
     selectedEntry: null,
@@ -31,12 +26,7 @@ export const useCBTStore = defineStore("cbtStore", {
 
   actions: {
     resetForm() {
-      this.formData = {
-        activating: "",
-        beliefs: "",
-        consequentFeelings: "",
-        dispute: "",
-      };
+      this.newEntry = "";
     },
 
     async waitForAuth() {
@@ -53,18 +43,6 @@ export const useCBTStore = defineStore("cbtStore", {
       }
     },
 
-    populateForm(entry: CBTEntry) {
-      this.formData = {
-        activating: entry.activatingEvent,
-        beliefs: entry.beliefs,
-        consequentFeelings: entry.consequentFeelings,
-        dispute: entry.disputes,
-      };
-      this.isEditing = true;
-      this.isNewEntry = false;
-      this.selectedEntry = entry;
-    },
-
     async fetchEntries() {
       this.loading = true;
       this.error = null;
@@ -75,23 +53,23 @@ export const useCBTStore = defineStore("cbtStore", {
 
       if (!$auth.currentUser?.uid) {
         console.log("No authenticated user found");
-        this.cbtEntries = [];
+        this.gratitudeEntries = [];
         this.loading = false;
         return;
       }
 
       try {
         const entriesQuery = query(
-          collection($db, "cbtEntries"),
+          collection($db, "gratitudeEntries"),
           where("userId", "==", $auth.currentUser.uid),
           orderBy("createdAt", "desc")
         );
 
         const snapshot = await getDocs(entriesQuery);
-        this.cbtEntries = snapshot.docs.map((doc) => ({
+        this.gratitudeEntries = snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
-        })) as CBTEntry[];
+        })) as GratitudeEntry[];
       } catch (error) {
         this.error =
           error instanceof Error ? error.message : "Failed to fetch entries";
@@ -103,17 +81,7 @@ export const useCBTStore = defineStore("cbtStore", {
 
     // Adds to firestore and resets form
     async submitCurrentEntry() {
-      if (!this.isFormValid) {
-        alert("Form is invalid, please fill out all fields.");
-        return;
-      }
-
-      const entry = {
-        activatingEvent: this.formData.activating,
-        beliefs: this.formData.beliefs,
-        consequentFeelings: this.formData.consequentFeelings,
-        disputes: this.formData.dispute,
-      };
+      const entry = this.newEntry.trim();
 
       try {
         if (this.isEditing && this.selectedEntry) {
@@ -129,7 +97,7 @@ export const useCBTStore = defineStore("cbtStore", {
       }
     },
 
-    async addEntry(entry: Omit<CBTEntry, "id" | "createdAt" | "userId">) {
+    async addEntry(entry: GratitudeEntry) {
       this.loading = true;
       this.error = null;
 
@@ -257,19 +225,5 @@ export const useCBTStore = defineStore("cbtStore", {
     },
   },
 
-  getters: {
-    remainingChars(): number {
-      const maxChars = 400;
-      return maxChars - 100;
-    },
-
-    isFormValid(): boolean {
-      return (
-        this.formData.activating.trim().length > 0 &&
-        this.formData.beliefs.trim().length > 0 &&
-        this.formData.consequentFeelings.trim().length > 0 &&
-        this.formData.dispute.trim().length > 0
-      );
-    },
-  },
+  getters: {},
 });
