@@ -122,7 +122,8 @@ export const useCBTStore = defineStore("cbtStore", {
         } else {
           await this.addEntry(entry);
         }
-        this.resetForm();
+        this.handleBackToList();
+        console.log("Entry submitted successfully");
       } catch (error) {
         console.error("Error submitting entry:", error);
         throw error;
@@ -210,6 +211,50 @@ export const useCBTStore = defineStore("cbtStore", {
       } catch (error) {
         console.error("Error handling new entry:", error);
       }
+    },
+
+    handleUpdateEntry(entry: CBTEntry) {
+      try {
+        this.isEditing = true;
+        this.isNewEntry = false;
+        this.populateForm(entry);
+      } catch (error) {
+        console.error("Error handling update entry:", error);
+      }
+    },
+
+    handleCancelEntry() {
+      if (this.isEditing) {
+        // For editing, simply reset the state and form without a prompt
+        this.isEditing = false;
+        this.isNewEntry = false;
+        this.resetForm();
+      } else if (this.isNewEntry) {
+        // For new entries, check for unsaved changes
+        const hasUnsavedChanges = Object.values(this.formData).some(
+          (value) => value.trim().length > 0
+        );
+
+        if (hasUnsavedChanges) {
+          // Ask for confirmation before discarding changes
+          const confirmDiscard = confirm(
+            "You have unsaved changes. Are you sure you want to cancel?"
+          );
+          if (!confirmDiscard) {
+            return; // Do nothing if the user cancels the prompt
+          }
+        }
+
+        // Reset states and form if confirmed or no changes
+        this.isNewEntry = false;
+        this.resetForm();
+      }
+    },
+
+    handleBackToList() {
+      this.isEditing = false;
+      this.isNewEntry = false;
+      this.resetForm();
     },
   },
 

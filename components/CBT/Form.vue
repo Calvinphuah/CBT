@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen p-6 bg-gray-50 rounded-t-3xl">
+  <div class="min-h-screen bg-gray-50">
     <!-- Header Controls -->
     <div class="flex justify-between mb-4">
       <button
@@ -15,7 +15,7 @@
     <CBTInputField
       v-for="(field, index) in inputFields"
       :key="index"
-      v-model="store.formData[field.model]"
+      v-model="cbtStore.formData[field.model]"
       :title="field.title"
       :description="field.description"
       :example="showExamples ? field.example : null"
@@ -23,18 +23,18 @@
     />
 
     <!-- Action Buttons -->
-    <div class="mt-4 space-y-4">
+    <div v-if="!cbtStore.isEditing" class="mt-4 space-y-4">
       <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
         :disabled="!isFormValid"
-        @click="$emit('save')"
+        @click="cbtStore.submitCurrentEntry"
       >
         {{ entry ? "Update" : "Save" }}
       </button>
 
       <button
         class="w-full py-4 font-medium text-gray-600 bg-gray-200 rounded-full"
-        @click="$emit('cancel')"
+        @click="cbtStore.handleCancelEntry"
       >
         Cancel
       </button>
@@ -56,12 +56,12 @@ const emit = defineEmits<{
 }>();
 
 // Store & State
-const store = useCBTStore();
+const cbtStore = useCBTStore();
 const showExamples = ref(true);
 
 // Computed
 const isFormValid = computed(() => {
-  return Object.values(store.formData).every(
+  return Object.values(cbtStore.formData).every(
     (value) => value.trim().length > 0
   );
 });
@@ -73,7 +73,7 @@ const handleDelete = async () => {
 
   if (confirm("Are you sure you want to delete this entry?")) {
     try {
-      await store.deleteEntry(props.entry.id);
+      await cbtStore.deleteEntry(props.entry.id);
       emit("cancel");
     } catch (error) {
       console.error("Error deleting entry:", error);
@@ -126,7 +126,7 @@ const inputFields = [
 onMounted(() => {
   // If we have an entry, populate the form
   if (props.entry) {
-    store.formData = {
+    cbtStore.formData = {
       activating: props.entry.activatingEvent,
       beliefs: props.entry.beliefs,
       consequentFeelings: props.entry.consequentFeelings,
@@ -138,7 +138,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // Clean up form data when component is destroyed
   if (!props.entry) {
-    store.resetForm();
+    cbtStore.resetForm();
   }
 });
 </script>

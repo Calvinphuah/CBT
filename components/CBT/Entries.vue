@@ -13,7 +13,7 @@
         v-for="entry in group"
         :key="entry.id"
         class="flex items-center justify-between px-4 py-2 bg-white hover:cursor-pointer"
-        @click="$emit('select', entry)"
+        @click="cbtStore.handleUpdateEntry(entry)"
       >
         <div>
           <div class="mb-1 text-sm text-blue-500">
@@ -40,10 +40,7 @@ const props = defineProps<{
   entries: CBTEntry[];
 }>();
 
-defineEmits<{
-  new: [];
-  select: [entry: CBTEntry];
-}>();
+const cbtStore = useCBTStore();
 
 // Group entries by date
 const groupedEntries = computed(() => {
@@ -73,7 +70,7 @@ const sortedGroupedEntries = computed(() => {
       acc[date] = group.sort((a, b) => {
         const dateA = a.createdAt.toDate();
         const dateB = b.createdAt.toDate();
-        return dateA.getTime() - dateB.getTime();
+        return dateB.getTime() - dateA.getTime();
       });
       return acc;
     }, {} as Record<string, CBTEntry[]>);

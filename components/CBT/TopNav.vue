@@ -4,13 +4,18 @@
     <ArrowLeftIcon
       v-if="cbtStore.isNewEntry"
       class="size-7 text-light-100 hover:cursor-pointer"
+      @click="cbtStore.handleCancelEntry"
     />
 
     <NuxtLink v-else-if="!cbtStore.isEditing && !cbtStore.isNewEntry" to="/">
       <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />
     </NuxtLink>
 
-    <div v-else-if="cbtStore.isEditing" class="ml-2 hover:cursor-pointer">
+    <div
+      v-else-if="cbtStore.isEditing"
+      class="ml-2 hover:cursor-pointer"
+      @click="cbtStore.handleCancelEntry"
+    >
       Cancel
     </div>
 
@@ -23,10 +28,11 @@
       class="size-7 text-light-100 hover:cursor-pointer"
       @click="cbtStore.handleNewEntry"
     />
-    <div v-else-if="cbtStore.isEditing" class="mr-3 hover:cursor-pointer">
-      Save
-    </div>
-    <div v-else-if="cbtStore.isNewEntry" class="mr-3 hover:cursor-pointer">
+    <div
+      v-else-if="cbtStore.isEditing || cbtStore.isNewEntry"
+      class="mr-3 hover:cursor-pointer"
+      @click="cbtStore.submitCurrentEntry"
+    >
       Save
     </div>
   </div>
