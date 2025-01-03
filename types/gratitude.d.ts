@@ -1,4 +1,4 @@
-import type { Timestamp } from "firebase/firestore";
+import type { QueryDocumentSnapshot, Timestamp } from "firebase/firestore";
 export interface GratitudeEntry {
   id: string;
   entry: string;
@@ -14,4 +14,6 @@ export interface GratitudeState {
   selectedEntry: GratitudeEntry | null;
   loading: boolean;
   error: string | null;
+  lastVisible: QueryDocumentSnapshot | null;
+  allLoaded: boolean;
 }
