@@ -9,6 +9,9 @@ import {
   startAfter,
   limit,
   Timestamp,
+  updateDoc,
+  doc,
+  deleteDoc,
   type QueryDocumentSnapshot,
   type DocumentData,
 } from "firebase/firestore";
@@ -18,6 +21,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
   state: (): GratitudeState => ({
     newEntry: "",
     gratitudeEntries: [],
+    currentEntry: null,
     isEditing: false,
     isNewEntry: false,
     selectedEntry: null,
@@ -167,11 +171,56 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
       this.resetForm();
     },
 
-    // handleEditEntry(entry: GratitudeEntry) {
-    //   this.isEditing = true;
-    //   this.isNewEntry = false;
-    //   // this.entry = entry.entry;
-    // },
+    handleEditEntry(entry: GratitudeEntry) {
+      this.isEditing = true;
+      this.isNewEntry = false;
+      this.currentEntry = entry;
+      this.newEntry = entry.entry;
+      console.log("Editing entry:", entry);
+    },
+
+    async submitEditedEntry() {
+      if (!this.currentEntry || !this.currentEntry.id) {
+        throw new Error("No entry to update");
+      }
+
+      if (!this.newEntry) {
+        alert("Entry cannot be empty");
+        return;
+      }
+      this.loading = true;
+      this.error = null;
+
+      const { $db } = useNuxtApp();
+
+      try {
+        const docRef = collection($db, "gratitudeEntries");
+        await updateDoc(doc(docRef, this.currentEntry.id), {
+          entry: this.newEntry,
+        });
+
+        // Update the Pinia store
+        const index = this.gratitudeEntries.findIndex(
+          (entry) => entry.id === this.currentEntry?.id
+        );
+        if (index !== -1) {
+          this.gratitudeEntries[index].entry = this.newEntry;
+        }
+
+        // Reset the form and flags
+        this.handleResetEntry();
+        console.log("Entry successfully updated!");
+      } catch (error) {
+        this.error =
+          error instanceof Error
+            ? error.message
+            : "Failed to update the entry in Firestore.";
+        console.error("Error updating Gratitude entry:", error);
+        throw error; // Optional, if you want to propagate the error
+      } finally {
+        this.loading = false;
+      }
+    },
 
     async generateGratitudeEntry() {
       // List of gratitude ideas
@@ -213,6 +262,41 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
       const randomEntry = gratitudeIdeas[randomIndex];
 
       this.newEntry = randomEntry;
+    },
+
+    async deleteEntry() {
+      if (!this.currentEntry || !this.currentEntry.id) {
+        throw new Error("No entry selected for deletion");
+      }
+
+      this.loading = true;
+      this.error = null;
+
+      const { $db } = useNuxtApp();
+
+      try {
+        // Remove the document from Firestore
+        const docRef = doc($db, "gratitudeEntries", this.currentEntry.id);
+        await deleteDoc(docRef);
+
+        // Remove the entry from the Pinia store
+        this.gratitudeEntries = this.gratitudeEntries.filter(
+          (entry) => entry.id !== this.currentEntry?.id
+        );
+
+        // Reset the current entry and form state
+        this.handleResetEntry();
+        console.log("Entry successfully deleted!");
+      } catch (error) {
+        this.error =
+          error instanceof Error
+            ? error.message
+            : "Failed to delete the entry from Firestore.";
+        console.error("Error deleting Gratitude entry:", error);
+        throw error;
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });

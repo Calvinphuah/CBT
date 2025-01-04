@@ -16,4 +16,5 @@ export interface GratitudeState {
   error: string | null;
   lastVisible: QueryDocumentSnapshot | null;
   allLoaded: boolean;
+  currentEntry: GratitudeEntry | null;
 }

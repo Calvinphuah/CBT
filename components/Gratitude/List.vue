@@ -1,8 +1,6 @@
 <template>
-  <GratitudeModal
-    v-if="gratitudeStore.isNewEntry || gratitudeStore.isEditing"
-    class="p-4"
-  />
+  <GratitudeNewEntryModal v-if="gratitudeStore.isNewEntry" class="p-4" />
+  <GratitudeEditEntryModal v-if="gratitudeStore.isEditing" class="p-4" />
 
   <div class="h-full px-4 py-6 space-y-4 overflow-y-auto">
     <GratitudeCard
@@ -10,6 +8,7 @@
       :key="entry.id"
       :date="entry.createdAt"
       :content="entry.entry"
+      @click="gratitudeStore.handleEditEntry(entry)"
     />
 
     <!-- Loading spinner -->
