@@ -1,34 +1,56 @@
 <template>
-  <div class="flex items-center justify-between p-4 text-white bg-purple-400">
+  <div
+    class="sticky top-0 z-50 flex items-center justify-between p-4 text-white bg-purple-400"
+  >
+    <!-- Back Icon -->
     <ArrowLeftIcon
-      v-if="showBackButton"
+      v-if="cbtStore.isNewEntry || cbtStore.isEditing"
       class="size-7 text-light-100 hover:cursor-pointer"
-      @click="$emit('back')"
+      @click="cbtStore.handleCancelEntry"
     />
-    <div v-else class="size-7" />
-    <!-- Empty div for spacing -->
 
-    <h1 class="text-xl font-medium">CBT</h1>
+    <NuxtLink v-else-if="!cbtStore.isEditing && !cbtStore.isNewEntry" to="/">
+      <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />
+    </NuxtLink>
 
+    <!-- Title -->
+    <h1
+      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry"
+      class="flex-1 text-xl font-medium text-center"
+    >
+      CBT
+    </h1>
+    <h1
+      v-if="cbtStore.isEditing"
+      class="flex-1 text-xl font-medium text-center"
+    >
+      Editing Entry
+    </h1>
+    <h1
+      v-if="cbtStore.isNewEntry"
+      class="flex-1 text-xl font-medium text-center"
+    >
+      New Entry
+    </h1>
+
+    <!-- Action Icons -->
     <PlusIcon
-      v-if="!showBackButton"
+      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry"
       class="size-7 text-light-100 hover:cursor-pointer"
-      @click="$emit('new')"
+      @click="cbtStore.handleNewEntry"
     />
-    <div v-else class="size-7" />
-    <!-- Empty div for spacing -->
+    <div
+      v-else-if="cbtStore.isEditing || cbtStore.isNewEntry"
+      class="hover:cursor-pointer"
+      @click="cbtStore.submitCurrentEntry"
+    >
+      Save
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ArrowLeftIcon, PlusIcon } from "@heroicons/vue/24/solid";
 
-defineProps<{
-  showBackButton?: boolean;
-}>();
-
-defineEmits<{
-  back: [];
-  new: [];
-}>();
+const cbtStore = useCBTStore();
 </script>

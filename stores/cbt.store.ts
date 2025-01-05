@@ -16,63 +16,27 @@ import type { CBTEntry, CBTState } from "@/types/cbt";
 export const useCBTStore = defineStore("cbtStore", {
   state: (): CBTState => ({
     cbtEntries: [],
-    currentStep: 0,
-    steps: [
-      { title: "Activating Event", completed: false },
-      { title: "Beliefs", completed: false },
-      { title: "Consequent Feelings", completed: false },
-      { title: "Dispute Negative Thoughts", completed: false },
-    ],
     formData: {
       activating: "",
       beliefs: "",
       consequentFeelings: "",
       dispute: "",
     },
+    isEditing: false,
+    isNewEntry: false,
+    selectedEntry: null,
     loading: false,
     error: null,
   }),
 
   actions: {
-    nextStep() {
-      if (this.currentStep < this.steps.length - 1) {
-        this.steps[this.currentStep].completed = true;
-        this.currentStep++;
-      }
-    },
-
-    previousStep() {
-      if (this.currentStep > 0) {
-        this.currentStep--;
-      }
-    },
-
-    updateStepData(value: string) {
-      switch (this.currentStep) {
-        case 0:
-          this.formData.activating = value;
-          break;
-        case 1:
-          this.formData.beliefs = value;
-          break;
-        case 2:
-          this.formData.consequentFeelings = value;
-          break;
-        case 3:
-          this.formData.dispute = value;
-          break;
-      }
-    },
-
     resetForm() {
-      this.currentStep = 0;
       this.formData = {
         activating: "",
         beliefs: "",
         consequentFeelings: "",
         dispute: "",
       };
-      this.steps.forEach((step) => (step.completed = false));
     },
 
     async waitForAuth() {
@@ -87,6 +51,18 @@ export const useCBTStore = defineStore("cbtStore", {
           });
         });
       }
+    },
+
+    populateForm(entry: CBTEntry) {
+      this.formData = {
+        activating: entry.activatingEvent,
+        beliefs: entry.beliefs,
+        consequentFeelings: entry.consequentFeelings,
+        dispute: entry.disputes,
+      };
+      this.isEditing = true;
+      this.isNewEntry = false;
+      this.selectedEntry = entry;
     },
 
     async fetchEntries() {
@@ -127,7 +103,10 @@ export const useCBTStore = defineStore("cbtStore", {
 
     // Adds to firestore and resets form
     async submitCurrentEntry() {
-      if (!this.isCurrentStepValid) return;
+      if (!this.isFormValid) {
+        alert("Form is invalid, please fill out all fields.");
+        return;
+      }
 
       const entry = {
         activatingEvent: this.formData.activating,
@@ -137,8 +116,13 @@ export const useCBTStore = defineStore("cbtStore", {
       };
 
       try {
-        await this.addEntry(entry);
-        this.resetForm();
+        if (this.isEditing && this.selectedEntry) {
+          await this.updateEntry(this.selectedEntry.id, entry);
+        } else {
+          await this.addEntry(entry);
+        }
+        this.handleBackToList();
+        console.log("Entry submitted successfully");
       } catch (error) {
         console.error("Error submitting entry:", error);
         throw error;
@@ -217,49 +201,75 @@ export const useCBTStore = defineStore("cbtStore", {
         this.loading = false;
       }
     },
+
+    handleNewEntry() {
+      try {
+        this.isEditing = false;
+        this.isNewEntry = true;
+        this.resetForm();
+      } catch (error) {
+        console.error("Error handling new entry:", error);
+      }
+    },
+
+    handleUpdateEntry(entry: CBTEntry) {
+      try {
+        this.isEditing = true;
+        this.isNewEntry = false;
+        this.populateForm(entry);
+      } catch (error) {
+        console.error("Error handling update entry:", error);
+      }
+    },
+
+    handleCancelEntry() {
+      if (this.isEditing) {
+        // For editing, simply reset the state and form without a prompt
+        this.isEditing = false;
+        this.isNewEntry = false;
+        this.resetForm();
+      } else if (this.isNewEntry) {
+        // For new entries, check for unsaved changes
+        const hasUnsavedChanges = Object.values(this.formData).some(
+          (value) => value.trim().length > 0
+        );
+
+        if (hasUnsavedChanges) {
+          // Ask for confirmation before discarding changes
+          const confirmDiscard = confirm(
+            "You have unsaved changes. Are you sure you want to cancel?"
+          );
+          if (!confirmDiscard) {
+            return; // Do nothing if the user cancels the prompt
+          }
+        }
+
+        // Reset states and form if confirmed or no changes
+        this.isNewEntry = false;
+        this.resetForm();
+      }
+    },
+
+    handleBackToList() {
+      this.isEditing = false;
+      this.isNewEntry = false;
+      this.resetForm();
+    },
   },
 
   getters: {
     remainingChars(): number {
       const maxChars = 400;
-      const currentText = (() => {
-        switch (this.currentStep) {
-          case 0:
-            return this.formData.activating;
-          case 1:
-            return this.formData.beliefs;
-          case 2:
-            return this.formData.consequentFeelings;
-          case 3:
-            return this.formData.dispute;
-          default:
-            return "";
-        }
-      })();
-      return maxChars - currentText.length;
+      return maxChars - 100;
     },
 
-    currentStepData(): string {
-      switch (this.currentStep) {
-        case 0:
-          return this.formData.activating;
-        case 1:
-          return this.formData.beliefs;
-        case 2:
-          return this.formData.consequentFeelings;
-        case 3:
-          return this.formData.dispute;
-        default:
-          return "";
-      }
+    isFormValid(): boolean {
+      return (
+        this.formData.activating.trim().length > 0 &&
+        this.formData.beliefs.trim().length > 0 &&
+        this.formData.consequentFeelings.trim().length > 0 &&
+        this.formData.dispute.trim().length > 0
+      );
     },
-
-    isCurrentStepValid(): boolean {
-      return this.currentStepData !== "";
-    },
-
-    // getEntryById: () => (id: string) => {
-    //   return this.cbtEntries.find((entry) => entry.id === id);
-    // },
   },
 });
