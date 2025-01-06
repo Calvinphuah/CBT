@@ -1,17 +1,30 @@
 <template>
   <div
-    class="sticky top-0 z-50 flex items-center justify-between p-4 text-white bg-purple-400"
+    class="sticky top-0 z-50 flex items-center justify-between p-4 text-white bg-gray-800"
   >
     <!-- Back Icon -->
     <ArrowLeftIcon
-      v-if="cbtStore.isNewEntry || cbtStore.isEditing"
+      v-if="cbtStore.isNewEntry || cbtStore.isViewing"
       class="size-7 text-light-100 hover:cursor-pointer"
       @click="cbtStore.handleCancelEntry"
     />
 
-    <NuxtLink v-else-if="!cbtStore.isEditing && !cbtStore.isNewEntry" to="/">
+    <NuxtLink
+      v-else-if="
+        !cbtStore.isEditing && !cbtStore.isNewEntry && !cbtStore.isViewing
+      "
+      to="/"
+    >
       <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />
     </NuxtLink>
+
+    <div
+      v-else-if="cbtStore.isEditing"
+      class="hover:cursor-pointer"
+      @click="cbtStore.cancelUpdateEntry"
+    >
+      Cancel
+    </div>
 
     <!-- Title -->
     <h1
@@ -35,7 +48,7 @@
 
     <!-- Action Icons -->
     <PlusIcon
-      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry"
+      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry && !cbtStore.isViewing"
       class="size-7 text-light-100 hover:cursor-pointer"
       @click="cbtStore.handleNewEntry"
     />
@@ -45,6 +58,13 @@
       @click="cbtStore.submitCurrentEntry"
     >
       Save
+    </div>
+    <div
+      v-else-if="cbtStore.isViewing"
+      class="hover:cursor-pointer"
+      @click="cbtStore.handleUpdateEntry"
+    >
+      Edit
     </div>
   </div>
 </template>

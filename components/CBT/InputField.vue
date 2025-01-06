@@ -14,7 +14,7 @@
       {{ example }}
     </p>
 
-    <div class="relative">
+    <div v-if="cbtStore.isEditing || cbtStore.isNewEntry" class="relative">
       <textarea
         v-model="localValue"
         :placeholder="placeholder"
@@ -24,6 +24,9 @@
       <div class="h-6 mt-1 text-sm text-right text-gray-400">
         {{ remainingChars }} characters remaining
       </div>
+    </div>
+    <div v-if="cbtStore.isViewing" class="relative">
+      <p>{{ localValue }}</p>
     </div>
   </div>
 </template>
@@ -86,4 +89,6 @@ const showExample = ref(false);
 const toggleExample = () => {
   showExample.value = !showExample.value;
 };
+
+const cbtStore = useCBTStore();
 </script>

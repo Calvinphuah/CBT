@@ -13,17 +13,17 @@
         v-for="entry in group"
         :key="entry.id"
         class="flex items-center justify-between px-4 py-2 bg-white hover:cursor-pointer"
-        @click="cbtStore.handleUpdateEntry(entry)"
+        @click="cbtStore.handleViewEntry(entry)"
       >
         <div>
           <div class="mb-1 text-sm text-blue-500">
             {{ formatFirestoreTimestampTime(entry.createdAt) }}
           </div>
           <h3 class="mb-1 text-l">
-            {{ truncateText(entry.activatingEvent, 5) }}
+            {{ truncateText(entry.activatingEvent, 36) }}
           </h3>
           <p class="text-gray-600 text-m">
-            {{ truncateText(entry.disputes, 10) }}
+            {{ truncateText(entry.disputes, 36) }}
           </p>
         </div>
         <ChevronRightIcon class="size-7" />

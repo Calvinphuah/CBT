@@ -1,7 +1,9 @@
 <template>
   <div class="w-full mb-4 md:mb-0">
     <!-- Header Section -->
-    <h1 class="mb-6 text-2xl font-bold text-center"></h1>
+    <h1 class="mb-6 text-2xl font-bold text-center">
+      How are you today, {{ auth.user?.displayName }}?
+    </h1>
 
     <div>
       <CommonCard :cards="cards" />
@@ -60,6 +62,8 @@ const cards = [
     image: "https://cdn.pixabay.com/photo/2024/04/19/22/25/man-8707406_640.png",
   },
 ];
+
+const auth = useAuthStore();
 </script>
 
 <style scoped></style>
