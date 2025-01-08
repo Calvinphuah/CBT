@@ -5,39 +5,44 @@
   >
     <!-- Modal Content -->
     <div
-      class="relative w-full h-full text-white bg-black sm:h-auto sm:max-w-lg sm:rounded-lg"
+      class="relative flex flex-col items-center justify-between w-full h-full py-6 text-white bg-black sm:h-auto sm:max-w-lg sm:rounded-lg"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between p-6">
-        <button class="p-2" @click="closeModal">
-          <Icon name="heroicons:x-mark" class="w-6 h-6" />
+      <div class="flex items-center justify-between w-full px-6 py-4">
+        <button class="p-2" @click="toggleFavorite">
+          <Icon
+            :name="isFavorite ? 'heroicons:heart-solid' : 'heroicons:heart'"
+            class="w-6 h-6"
+          />
         </button>
-        <div class="text-center">
+        <div class="flex-1 text-center">
           <h2 class="text-xl font-semibold">{{ meditation.title }}</h2>
           <p class="text-sm text-gray-400">{{ meditation.time }}</p>
         </div>
-        <button class="p-2">
-          <Icon name="heroicons:heart" class="w-6 h-6" />
+        <button class="p-2" @click="closeModal">
+          <Icon name="heroicons:x-mark" class="w-6 h-6" />
         </button>
       </div>
 
-      <!-- Placeholder Image -->
-      <div class="flex justify-center my-6">
-        <img
-          src="https://via.placeholder.com/300"
-          alt="Placeholder"
-          class="w-48 h-48 rounded-full"
-        />
+      <!-- Video Section -->
+      <div class="flex items-center justify-center flex-1">
+        <video
+          ref="videoPlayer"
+          src="/videos/meditation.mp4"
+          loop
+          muted
+          class="w-3/4 max-w-sm sm:max-w-md sm:rounded-lg"
+        ></video>
       </div>
 
-      <!-- Audio Controls -->
-      <div class="px-6 pb-6 space-y-6">
+      <!-- Controls Section -->
+      <div class="w-full px-6 py-6 space-y-4 bg-black sm:rounded-b-lg">
         <!-- Progress Bar -->
         <div class="slider">
           <input
             v-model="currentTime"
             type="range"
-            class="level"
+            class="w-full level"
             min="0"
             :max="duration"
             step="0.1"
@@ -69,68 +74,81 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
-
+<script setup lang="ts">
 // Props for modal content
 const meditation = {
   title: "Breathing Meditation",
   time: "5 mins",
   audioSrc: "/audio/breathing-meditation.mp3",
+  id: 1,
 };
 
-// State for audio player
-const audioPlayer = ref(null);
+// State for audio and video players
+const audioPlayer = ref<HTMLAudioElement | null>(null);
+const videoPlayer = ref<HTMLVideoElement | null>(null);
 const isPlaying = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
 
-// Close Modal Function (Stub)
+// Close Modal Function
 function closeModal() {
   console.log("Modal Closed");
 }
 
-// Audio Control Methods
+// Audio and Video Control Methods
 function togglePlay() {
-  if (audioPlayer.value.paused) {
-    audioPlayer.value.play();
-    isPlaying.value = true;
-  } else {
-    audioPlayer.value.pause();
-    isPlaying.value = false;
+  if (audioPlayer.value && videoPlayer.value) {
+    if (audioPlayer.value.paused) {
+      audioPlayer.value.play();
+      videoPlayer.value.play();
+      isPlaying.value = true;
+    } else {
+      audioPlayer.value.pause();
+      videoPlayer.value.pause();
+      isPlaying.value = false;
+    }
   }
 }
 
 function updateTime() {
-  currentTime.value = audioPlayer.value.currentTime;
+  if (audioPlayer.value) {
+    currentTime.value = audioPlayer.value.currentTime;
+  }
 }
 
 function setDuration() {
-  duration.value = audioPlayer.value.duration;
+  if (audioPlayer.value) {
+    duration.value = audioPlayer.value.duration;
+  }
 }
 
 function seekAudio() {
-  audioPlayer.value.currentTime = currentTime.value;
+  if (audioPlayer.value) {
+    audioPlayer.value.currentTime = currentTime.value;
+  }
 }
 
 function rewind() {
-  audioPlayer.value.currentTime = Math.max(
-    0,
-    audioPlayer.value.currentTime - 15
-  );
-  currentTime.value = audioPlayer.value.currentTime;
+  if (audioPlayer.value) {
+    audioPlayer.value.currentTime = Math.max(
+      0,
+      audioPlayer.value.currentTime - 15
+    );
+    currentTime.value = audioPlayer.value.currentTime;
+  }
 }
 
 function forward() {
-  audioPlayer.value.currentTime = Math.min(
-    duration.value,
-    audioPlayer.value.currentTime + 15
-  );
-  currentTime.value = audioPlayer.value.currentTime;
+  if (audioPlayer.value) {
+    audioPlayer.value.currentTime = Math.min(
+      duration.value,
+      audioPlayer.value.currentTime + 15
+    );
+    currentTime.value = audioPlayer.value.currentTime;
+  }
 }
-
 // Format Time (MM:SS)
-function formatTime(seconds) {
+function formatTime(seconds: number) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60)
     .toString()
@@ -138,9 +156,11 @@ function formatTime(seconds) {
   return `${mins}:${secs}`;
 }
 
-// Set up audio player
+// Load Meditation Audio
 onMounted(() => {
   audioPlayer.value = new Audio(meditation.audioSrc);
+  videoPlayer.value = document.querySelector("video");
+
   audioPlayer.value.addEventListener("loadedmetadata", setDuration);
   audioPlayer.value.addEventListener("timeupdate", updateTime);
 });
@@ -151,6 +171,37 @@ onBeforeUnmount(() => {
     audioPlayer.value.removeEventListener("loadedmetadata", setDuration);
     audioPlayer.value.removeEventListener("timeupdate", updateTime);
   }
+
+  if (videoPlayer.value) {
+    videoPlayer.value.pause();
+  }
+});
+
+const isFavorite = ref(false);
+
+// Favorite Management
+function toggleFavorite() {
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const favoriteIndex = favorites.indexOf(meditation.id);
+
+  if (favoriteIndex !== -1) {
+    // Found so remove from favorites
+    favorites.splice(favoriteIndex, 1);
+    isFavorite.value = false;
+  } else {
+    // Add to favorites
+    favorites.push(meditation.id);
+    isFavorite.value = true;
+  }
+
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+// Check if it is favorite on component mount
+onMounted(() => {
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+  isFavorite.value = favorites.includes(meditation.id);
 });
 </script>
 
@@ -163,36 +214,39 @@ input[type="range"] {
   width: 100%;
   margin: 10px 0;
   position: relative;
+  height: 16px; /* Increased height for better touch targets */
+  cursor: pointer;
 }
 
 /* Track styles */
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 4px;
-  background: rgb(82, 82, 82);
+  background: rgba(255, 255, 255, 0.2); /* Slightly visible background */
   border-radius: 2px;
   cursor: pointer;
-  background: linear-gradient(
-    to right,
-    white 0%,
-    white var(--progress-value, 0%),
-    rgb(82, 82, 82) var(--progress-value, 0%),
-    rgb(82, 82, 82) 100%
-  );
 }
 
 input[type="range"]::-moz-range-track {
   width: 100%;
   height: 4px;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
   cursor: pointer;
-  background: linear-gradient(
-    to right,
-    white 0%,
-    white var(--progress-value, 0%),
-    rgb(82, 82, 82) var(--progress-value, 0%),
-    rgb(82, 82, 82) 100%
-  );
+}
+
+/* Progress bar overlay */
+input[type="range"]::before {
+  content: "";
+  position: absolute;
+  background: white;
+  width: var(--progress-value, 0%);
+  height: 4px;
+  border-radius: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* Thumb styles */
@@ -201,13 +255,14 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   height: 12px;
   width: 12px;
-  margin-top: -4px;
   background: white;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.15s ease;
+  margin-top: -4px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -217,22 +272,45 @@ input[type="range"]::-moz-range-thumb {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.15s ease;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Hover state */
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  transform: scale(1.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Active state */
 input[type="range"]:active::-webkit-slider-thumb {
-  transform: scale(1.2);
+  transform: scale(1.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 input[type="range"]:active::-moz-range-thumb {
-  transform: scale(1.2);
+  transform: scale(1.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 /* Focus state */
 input[type="range"]:focus {
   outline: none;
+}
+
+/* Change the color when hovering */
+input[type="range"]:hover::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+input[type="range"]:hover::-moz-range-track {
+  background: rgba(255, 255, 255, 0.3);
 }
 </style>

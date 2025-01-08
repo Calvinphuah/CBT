@@ -23,11 +23,15 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  cards: {
-    type: Array,
-    required: true,
-  },
-});
+<script setup lang="ts">
+interface Card {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+}
+
+defineProps<{
+  cards: Card[];
+}>();
 </script>

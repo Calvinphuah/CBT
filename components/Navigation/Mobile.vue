@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 md:hidden">
+  <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 md:hidden z-[9999]">
     <div class="flex justify-around p-2">
       <NuxtLink
         v-for="(item, index) in navItems"
@@ -9,7 +9,7 @@
         active-class="text-white"
       >
         <span v-if="item.icon">
-          <component :is="item.icon" class="w-6 h-6" />
+          <Icon :name="item.icon" class="w-6 h-6 mb-1" />
         </span>
         <span class="text-xs">{{ item.label }}</span>
       </NuxtLink>
@@ -18,33 +18,27 @@
 </template>
 
 <script setup lang="ts">
-import {
-  HomeIcon,
-  ChartBarIcon,
-  HeartIcon,
-  CloudIcon,
-} from "@heroicons/vue/24/solid";
-
 const navItems = [
   {
     label: "Home",
     to: "/",
-    icon: HomeIcon,
+    icon: "heroicons:home-20-solid",
   },
   {
     label: "CBT",
     to: "/cbt",
-    icon: ChartBarIcon,
+    icon: "fa6-solid:brain",
   },
   {
     label: "Gratitude",
     to: "/gratitude",
-    icon: HeartIcon,
+    icon: "fa6-solid:brain",
   },
   {
     label: "Meditation",
     to: "/meditation",
-    icon: CloudIcon,
+    icon: "fa6-solid:brain",
   },
 ];
+// akar-icon:air
 </script>
