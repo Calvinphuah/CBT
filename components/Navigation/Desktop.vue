@@ -38,11 +38,11 @@
                 Gratitude
               </NuxtLink>
               <NuxtLink
-                to="/breathing"
+                to="/meditation"
                 class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
                 active-class="text-white bg-gray-900"
               >
-                Breathing
+                Meditation
               </NuxtLink>
             </div>
           </div>

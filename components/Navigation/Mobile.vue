@@ -42,8 +42,8 @@ const navItems = [
     icon: HeartIcon,
   },
   {
-    label: "Breathing",
-    to: "/breathing",
+    label: "Meditation",
+    to: "/meditation",
     icon: CloudIcon,
   },
 ];
