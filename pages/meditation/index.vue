@@ -1,11 +1,16 @@
 <template>
   <div>
+    <MeditationTopNav />
     <MeditationCard :cards="cards" />
+    <!-- Credits -->
+    <footer class="p-4 mb-20 text-xs text-center text-gray-500">
+      The guided meditation in this app are from "Mindful meditation," created
+      by Diana Winston and others for UCLA Mindful, ©2011–2024 The Regents of
+      the University of California (The UC Regents). Licensed under the Creative
+      Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+      No changes have been made to the original content.
+    </footer>
   </div>
-  <!-- Credits
-The guided meditation in this app are from "Mindful meditation," created by Diana Winston and others for UCLA Mindful, ©2011–2024 The Regents of the University of California (The UC Regents).
-Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
-No changes have been made to the original content. -->
 </template>
 
 <script setup lang="ts">

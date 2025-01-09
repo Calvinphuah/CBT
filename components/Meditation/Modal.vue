@@ -1,11 +1,10 @@
 <template>
-  <!-- Modal Backdrop -->
   <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 sm:bg-opacity-80"
+    v-if="isVisible"
+    class="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50 sm:bg-opacity-80"
   >
-    <!-- Modal Content -->
     <div
-      class="relative flex flex-col items-center justify-between w-full h-full py-6 text-white bg-black sm:h-auto sm:max-w-lg sm:rounded-lg"
+      class="relative flex flex-col items-center justify-between w-full h-screen py-8 text-white bg-black md:py-6 md:h-auto md:max-w-lg md:rounded-lg"
     >
       <!-- Header -->
       <div class="flex items-center justify-between w-full px-6 py-4">
@@ -19,24 +18,24 @@
           <h2 class="text-xl font-semibold">{{ meditation.title }}</h2>
           <p class="text-sm text-gray-400">{{ meditation.time }}</p>
         </div>
-        <button class="p-2" @click="closeModal">
+        <button class="p-2" @click="emit('close')">
           <Icon name="heroicons:x-mark" class="w-6 h-6" />
         </button>
       </div>
 
       <!-- Video Section -->
-      <div class="flex items-center justify-center flex-1">
+      <div class="flex items-center justify-center flex-1 py-8">
         <video
           ref="videoPlayer"
           src="/videos/meditation.mp4"
           loop
           muted
-          class="w-3/4 max-w-sm sm:max-w-md sm:rounded-lg"
+          class="w-1/2 md:rounded-lg"
         ></video>
       </div>
 
       <!-- Controls Section -->
-      <div class="w-full px-6 py-6 space-y-4 bg-black sm:rounded-b-lg">
+      <div class="w-full px-6 py-6 space-y-4 md:rounded-b-lg">
         <!-- Progress Bar -->
         <div class="slider">
           <input
@@ -57,16 +56,19 @@
         <!-- Playback Controls -->
         <div class="flex items-center justify-center space-x-8">
           <button class="p-2" @click="rewind">
-            <Icon name="heroicons:arrow-uturn-left" class="w-8 h-8" />
+            <Icon name="f7:gobackward-15" class="w-8 h-8" />
           </button>
-          <button class="p-4 bg-gray-700 rounded-full" @click="togglePlay">
+          <button
+            class="flex items-center justify-center w-16 h-16 bg-gray-700 rounded-full"
+            @click="togglePlay"
+          >
             <Icon
               :name="isPlaying ? 'heroicons:pause' : 'heroicons:play'"
               class="w-8 h-8"
             />
           </button>
           <button class="p-2" @click="forward">
-            <Icon name="heroicons:arrow-uturn-right" class="w-8 h-8" />
+            <Icon name="f7:goforward-15" class="w-8 h-8" />
           </button>
         </div>
       </div>
@@ -75,13 +77,19 @@
 </template>
 
 <script setup lang="ts">
-// Props for modal content
-const meditation = {
-  title: "Breathing Meditation",
-  time: "5 mins",
-  audioSrc: "/audio/breathing-meditation.mp3",
-  id: 1,
-};
+interface MeditationProps {
+  isVisible: boolean;
+  meditation: {
+    id: string;
+    title: string;
+    time: string;
+    description: string;
+    audioSrc?: string;
+  };
+}
+
+const props = defineProps<MeditationProps>();
+const emit = defineEmits(["close"]);
 
 // State for audio and video players
 const audioPlayer = ref<HTMLAudioElement | null>(null);
@@ -89,11 +97,7 @@ const videoPlayer = ref<HTMLVideoElement | null>(null);
 const isPlaying = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
-
-// Close Modal Function
-function closeModal() {
-  console.log("Modal Closed");
-}
+const isFavorite = ref(false);
 
 // Audio and Video Control Methods
 function togglePlay() {
@@ -147,7 +151,7 @@ function forward() {
     currentTime.value = audioPlayer.value.currentTime;
   }
 }
-// Format Time (MM:SS)
+
 function formatTime(seconds: number) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60)
@@ -156,13 +160,33 @@ function formatTime(seconds: number) {
   return `${mins}:${secs}`;
 }
 
-// Load Meditation Audio
+function toggleFavorite() {
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const favoriteIndex = favorites.indexOf(props.meditation.id);
+
+  if (favoriteIndex !== -1) {
+    favorites.splice(favoriteIndex, 1);
+    isFavorite.value = false;
+  } else {
+    favorites.push(props.meditation.id);
+    isFavorite.value = true;
+  }
+
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+// Lifecycle hooks
 onMounted(() => {
-  audioPlayer.value = new Audio(meditation.audioSrc);
+  audioPlayer.value = new Audio(
+    props.meditation.audioSrc || "/audio/breathing-meditation.mp3"
+  );
   videoPlayer.value = document.querySelector("video");
 
   audioPlayer.value.addEventListener("loadedmetadata", setDuration);
   audioPlayer.value.addEventListener("timeupdate", updateTime);
+
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  isFavorite.value = favorites.includes(props.meditation.id);
 });
 
 onBeforeUnmount(() => {
@@ -177,32 +201,21 @@ onBeforeUnmount(() => {
   }
 });
 
-const isFavorite = ref(false);
-
-// Favorite Management
-function toggleFavorite() {
-  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-  const favoriteIndex = favorites.indexOf(meditation.id);
-
-  if (favoriteIndex !== -1) {
-    // Found so remove from favorites
-    favorites.splice(favoriteIndex, 1);
-    isFavorite.value = false;
-  } else {
-    // Add to favorites
-    favorites.push(meditation.id);
-    isFavorite.value = true;
+// Watch for modal visibility changes
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (!newValue) {
+      if (audioPlayer.value) {
+        audioPlayer.value.pause();
+      }
+      if (videoPlayer.value) {
+        videoPlayer.value.pause();
+      }
+      isPlaying.value = false;
+    }
   }
-
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-}
-
-// Check if it is favorite on component mount
-onMounted(() => {
-  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-
-  isFavorite.value = favorites.includes(meditation.id);
-});
+);
 </script>
 
 <style scoped>

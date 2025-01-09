@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 z-10 flex items-center justify-center bg-gray-500/75"
+    class="fixed inset-0 flex items-center justify-center z-[51] bg-gray-500/75"
     aria-labelledby="modal-title"
     role="dialog"
     aria-modal="true"

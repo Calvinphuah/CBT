@@ -9,36 +9,38 @@
         active-class="text-white"
       >
         <span v-if="item.icon">
-          <Icon :name="item.icon" class="w-6 h-6 mb-1" />
+          <component :is="item.icon" class="w-6 h-6" />
+        </span>
+        <span v-if="item.name">
+          <Icon class="w-6 h-6" :name="item.name" />
         </span>
         <span class="text-xs">{{ item.label }}</span>
       </NuxtLink>
     </div>
   </nav>
 </template>
-
 <script setup lang="ts">
+import { HomeIcon, HeartIcon, CloudIcon } from "@heroicons/vue/24/solid";
 const navItems = [
   {
     label: "Home",
     to: "/",
-    icon: "heroicons:home-20-solid",
+    icon: HomeIcon,
   },
   {
     label: "CBT",
     to: "/cbt",
-    icon: "fa6-solid:brain",
+    name: "fluent:brain-sparkle-20-filled",
   },
   {
     label: "Gratitude",
     to: "/gratitude",
-    icon: "fa6-solid:brain",
+    icon: HeartIcon,
   },
   {
     label: "Meditation",
     to: "/meditation",
-    icon: "fa6-solid:brain",
+    icon: CloudIcon,
   },
 ];
-// akar-icon:air
 </script>

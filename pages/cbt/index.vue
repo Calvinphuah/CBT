@@ -2,7 +2,7 @@
   <div>
     <!-- Input Boxes -->
     <!-- <CBTInput /> -->
-    <CBTMobile />
+    <CBTView />
   </div>
 </template>
 
