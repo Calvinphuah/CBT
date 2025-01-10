@@ -1,5 +1,6 @@
 <template>
   <div>
+    All
     <BreathingCard
       v-for="item in meditationList"
       :key="item.title"

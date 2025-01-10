@@ -8,17 +8,16 @@
         class="flex flex-col items-center text-gray-400 hover:text-white"
         active-class="text-white"
       >
-        <span v-if="item.icon">
-          <component :is="item.icon" class="w-6 h-6" />
-        </span>
-        <span v-if="item.name">
-          <Icon class="w-6 h-6" :name="item.name" />
-        </span>
-        <span class="text-xs">{{ item.label }}</span>
+        <div class="flex items-center justify-center w-6 h-6">
+          <component :is="item.icon" v-if="item.icon" class="w-full h-full" />
+          <Icon v-else :name="item.name" class="w-full h-full" />
+        </div>
+        <span class="mt-1 text-xs">{{ item.label }}</span>
       </NuxtLink>
     </div>
   </nav>
 </template>
+
 <script setup lang="ts">
 import { HomeIcon, HeartIcon, CloudIcon } from "@heroicons/vue/24/solid";
 const navItems = [

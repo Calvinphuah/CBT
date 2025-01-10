@@ -10,7 +10,7 @@
       <div class="flex items-center justify-between w-full px-6 py-4">
         <button class="p-2" @click="toggleFavorite">
           <Icon
-            :name="isFavorite ? 'heroicons:heart-solid' : 'heroicons:heart'"
+            :name="isFavorite ? 'heroicons-solid:heart' : 'heroicons:heart'"
             class="w-6 h-6"
           />
         </button>

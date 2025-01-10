@@ -11,12 +11,25 @@
       :key="index"
       class="transition-transform transform bg-white border border-gray-200 rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
     >
-      <button class="block w-full p-4 text-left" @click="openModal(card)">
-        <div class="flex items-center justify-between mb-2">
+      <button
+        class="flex items-center justify-between w-full p-4 text-left"
+        @click="openModal(card)"
+      >
+        <!-- Text Section -->
+        <div class="flex flex-col">
           <h3 class="text-lg font-semibold text-gray-800">{{ card.title }}</h3>
-          <span class="text-sm font-medium text-gray-500">{{ card.time }}</span>
+          <p class="text-sm text-gray-600">{{ card.description }}</p>
         </div>
-        <p class="text-sm text-gray-600">{{ card.description }}</p>
+
+        <!-- Time Section -->
+        <div
+          class="flex flex-col items-center justify-center ml-6 text-gray-500"
+        >
+          <span class="text-2xl font-bold text-gray-800">{{
+            card.time.split(" ")[0]
+          }}</span>
+          <span class="text-sm">mins</span>
+        </div>
       </button>
     </div>
   </div>

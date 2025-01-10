@@ -1,7 +1,8 @@
 <template>
   <div class="w-full mb-4 md:mb-0">
+    <h2 class="p-4 px-5 mb-6 text-3xl font-bold">Cogni</h2>
     <!-- Header Section -->
-    <h1 class="mb-6 text-2xl font-bold text-center">
+    <h1 class="p-4 px-5 mb-6 text-lg font-bold">
       How are you today, {{ auth.user?.displayName }}?
     </h1>
 
