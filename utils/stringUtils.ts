@@ -1,7 +1,6 @@
-export function truncateText(text: string, wordLimit: number): string {
-  const words = text.split(" ");
-  if (words.length > wordLimit) {
-    return words.slice(0, wordLimit).join(" ") + "...";
+export function truncateText(text: string, charLimit: number): string {
+  if (text.length <= charLimit) {
+    return text;
   }
-  return text;
+  return text.substring(0, charLimit) + "...";
 }

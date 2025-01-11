@@ -24,6 +24,7 @@ export const useCBTStore = defineStore("cbtStore", {
     },
     isEditing: false,
     isNewEntry: false,
+    isViewing: false,
     selectedEntry: null,
     loading: false,
     error: null,
@@ -60,7 +61,7 @@ export const useCBTStore = defineStore("cbtStore", {
         consequentFeelings: entry.consequentFeelings,
         dispute: entry.disputes,
       };
-      this.isEditing = true;
+      // this.isEditing = true;
       this.isNewEntry = false;
       this.selectedEntry = entry;
     },
@@ -118,10 +119,12 @@ export const useCBTStore = defineStore("cbtStore", {
       try {
         if (this.isEditing && this.selectedEntry) {
           await this.updateEntry(this.selectedEntry.id, entry);
+          this.isEditing = false;
+          this.isViewing = true;
         } else {
           await this.addEntry(entry);
+          this.handleBackToList();
         }
-        this.handleBackToList();
         console.log("Entry submitted successfully");
       } catch (error) {
         console.error("Error submitting entry:", error);
@@ -182,7 +185,13 @@ export const useCBTStore = defineStore("cbtStore", {
       }
     },
 
-    async deleteEntry(id: string) {
+    async deleteEntry() {
+      if (!this.selectedEntry?.id) {
+        throw new Error("No entry selected for deletion");
+      }
+      const id = this.selectedEntry.id;
+      console.log("Deleting entry with ID:", id);
+
       this.loading = true;
       this.error = null;
 
@@ -190,16 +199,32 @@ export const useCBTStore = defineStore("cbtStore", {
       const docRef = doc($db, "cbtEntries", id);
 
       try {
+        // Remove the document from Firestore
         await deleteDoc(docRef);
+
+        // Remove the entry from the Pinia store
         this.cbtEntries = this.cbtEntries.filter((entry) => entry.id !== id);
+
+        // Reset form and state
+        this.handleBackToList();
+        console.log("Entry successfully deleted!");
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to delete entry";
+          error instanceof Error
+            ? error.message
+            : "Failed to delete the entry from Firestore.";
         console.error("Error deleting CBT entry:", error);
         throw error;
       } finally {
         this.loading = false;
       }
+    },
+
+    handleBackToList() {
+      this.isEditing = false;
+      this.isNewEntry = false;
+      this.isViewing = false;
+      this.resetForm();
     },
 
     handleNewEntry() {
@@ -212,10 +237,31 @@ export const useCBTStore = defineStore("cbtStore", {
       }
     },
 
-    handleUpdateEntry(entry: CBTEntry) {
+    handleUpdateEntry() {
       try {
         this.isEditing = true;
         this.isNewEntry = false;
+        this.isViewing = false;
+      } catch (error) {
+        console.error("Error handling update entry:", error);
+      }
+    },
+
+    cancelUpdateEntry() {
+      try {
+        this.isEditing = false;
+        this.isNewEntry = false;
+        this.isViewing = true;
+      } catch (error) {
+        console.error("Error handling update entry:", error);
+      }
+    },
+
+    handleViewEntry(entry: CBTEntry) {
+      try {
+        this.isEditing = false;
+        this.isNewEntry = false;
+        this.isViewing = true;
         this.populateForm(entry);
       } catch (error) {
         console.error("Error handling update entry:", error);
@@ -223,11 +269,9 @@ export const useCBTStore = defineStore("cbtStore", {
     },
 
     handleCancelEntry() {
-      if (this.isEditing) {
+      if (this.isViewing) {
         // For editing, simply reset the state and form without a prompt
-        this.isEditing = false;
-        this.isNewEntry = false;
-        this.resetForm();
+        this.handleBackToList();
       } else if (this.isNewEntry) {
         // For new entries, check for unsaved changes
         const hasUnsavedChanges = Object.values(this.formData).some(
@@ -248,12 +292,6 @@ export const useCBTStore = defineStore("cbtStore", {
         this.isNewEntry = false;
         this.resetForm();
       }
-    },
-
-    handleBackToList() {
-      this.isEditing = false;
-      this.isNewEntry = false;
-      this.resetForm();
     },
   },
 

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full max-w-2xl mx-auto">
     <div
-      class="w-full p-6 transition-shadow bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg"
+      class="w-full p-6 transition-transform transform bg-white border border-gray-200 rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
     >
       <h5 class="mb-4 text-xl font-bold text-center text-gray-900">
         {{ formatFirestoreTimestampDate(date) }}

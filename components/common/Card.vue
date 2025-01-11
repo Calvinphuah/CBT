@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md p-4 mx-auto space-y-4 mb-10">
+  <div class="max-w-md p-4 mx-auto mb-10 space-y-4">
     <!-- <h2 class="mb-4 text-lg font-semibold">for you today</h2> -->
 
     <div

@@ -12,7 +12,10 @@
     />
 
     <!-- Action Buttons -->
-    <div v-if="!cbtStore.isEditing" class="mt-4 space-y-4">
+    <div
+      v-if="!cbtStore.isEditing && !cbtStore.isViewing"
+      class="mt-4 space-y-4"
+    >
       <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
         :disabled="!isFormValid"
@@ -28,20 +31,28 @@
       </button>
     </div>
     <div v-if="cbtStore.isEditing" class="mt-4 space-y-4">
-      <button
+      <!-- <button
         class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
         :disabled="!isFormValid"
         @click="cbtStore.submitCurrentEntry"
       >
         Save
-      </button>
+      </button> -->
       <button
         class="w-full py-4 font-medium text-white bg-red-500 rounded-full"
+        @click="showDeleteModal = true"
       >
         Delete
       </button>
     </div>
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <CBTDeleteModal
+    :is-open="showDeleteModal"
+    @confirm="handleDeleteConfirm"
+    @cancel="handleDeleteCancel"
+  />
 </template>
 
 <script setup lang="ts">
@@ -66,7 +77,7 @@ const inputFields = [
       "Describe the situation and why you're worried about it. Be as specific as you can with your reasoning.",
     example:
       "E.g. There's a science test on Monday. I know for sure I'll get a zero and that people will laugh. Maybe I'll fail the class.",
-    placeholder: "Type something",
+    placeholder: "Enter the activating event",
   },
   {
     model: "beliefs",
@@ -95,6 +106,17 @@ const inputFields = [
     placeholder: "Dispute your thoughts",
   },
 ];
+
+const showDeleteModal = ref(false);
+
+const handleDeleteConfirm = async () => {
+  showDeleteModal.value = false;
+  await cbtStore.deleteEntry();
+};
+
+const handleDeleteCancel = () => {
+  showDeleteModal.value = false;
+};
 </script>
 
 <style scoped>

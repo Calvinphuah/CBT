@@ -13,6 +13,7 @@ export interface CBTState {
   cbtEntries: CBTEntry[];
   isEditing: boolean;
   isNewEntry: boolean;
+  isViewing: boolean;
   selectedEntry: CBTEntry | null;
   loading: boolean;
   error: string | null;
