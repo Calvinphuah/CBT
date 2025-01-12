@@ -1,33 +1,74 @@
 <template>
-  <div>
-    All
-    <BreathingCard
-      v-for="item in meditationList"
-      :key="item.title"
-      :item="item"
+  <div class="max-w-lg p-4 mx-auto space-y-6">
+    <MeditationModal
+      v-if="selectedMeditation"
+      :is-visible="isModalVisible"
+      :meditation="selectedMeditation"
+      :is-favorite="favorites.includes(selectedMeditation.id)"
+      @toggle-favorite="toggleFavorite"
+      @close="closeModal"
+    />
+
+    <h2 class="mt-2 text-xl font-bold">Favorite Meditations</h2>
+    <MeditationCard
+      v-for="card in favoriteCards"
+      :key="card.id"
+      :card="card"
+      :is-favorite="true"
+      @open-modal="openModal"
+    />
+
+    <h2 class="text-xl font-bold">All Meditations</h2>
+    <MeditationCard
+      v-for="card in cards"
+      :key="card.id"
+      :card="card"
+      :is-favorite="favorites.includes(card.id)"
+      @open-modal="openModal"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-const meditationList = [
-  {
-    title: "Bedtime relaxation 1",
-    content: "To relax and be in bed",
-  },
-  {
-    title: "Bedtime relaxation 2",
-    content: "To relax and be in bed",
-  },
-  {
-    title: "Bedtime relaxation 3",
-    content: "To relax and be in bed",
-  },
-  {
-    title: "Bedtime relaxation 4",
-    content: "To relax and be in bed",
-  },
-];
-</script>
+interface Card {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+}
 
-<style scoped></style>
+const { cards } = defineProps<{
+  cards: Card[];
+}>();
+
+const isModalVisible = ref(false);
+const selectedMeditation = ref<Card | null>(null);
+const favorites = ref<string[]>([]);
+
+function openModal(card: Card) {
+  selectedMeditation.value = card;
+  isModalVisible.value = true;
+}
+
+function closeModal() {
+  isModalVisible.value = false;
+  selectedMeditation.value = null;
+}
+
+function toggleFavorite(cardId: string) {
+  if (favorites.value.includes(cardId)) {
+    favorites.value = favorites.value.filter((id) => id !== cardId);
+  } else {
+    favorites.value.push(cardId);
+  }
+  localStorage.setItem("favorites", JSON.stringify(favorites.value));
+}
+
+const favoriteCards = computed(() => {
+  return cards.filter((card) => favorites.value.includes(card.id));
+});
+
+onMounted(() => {
+  favorites.value = JSON.parse(localStorage.getItem("favorites") || "[]");
+});
+</script>
