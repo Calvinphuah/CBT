@@ -1,4 +1,5 @@
 <template>
+  <!-- Bottom -->
   <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 md:hidden z-[9999]">
     <div class="flex justify-around p-2">
       <NuxtLink

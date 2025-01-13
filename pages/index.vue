@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex flex-col items-center min-h-screen px-4 py-6 bg-gradient-to-b from-purple-100 to-blue-50"
-  >
+  <div class="flex flex-col items-center min-h-screen px-4 py-6">
     <!-- Header Section -->
     <header class="w-full max-w-4xl mt-8 mb-8 text-center">
       <h1 class="text-2xl font-semibold text-gray-800 md:text-3xl">

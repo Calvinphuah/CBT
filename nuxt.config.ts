@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "@nuxtjs/seo",
     "@nuxt/icon",
     "@pinia/nuxt",
+    "@vueuse/nuxt",
   ],
   runtimeConfig: {
     public: {
