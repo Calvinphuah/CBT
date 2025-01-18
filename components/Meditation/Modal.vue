@@ -8,9 +8,9 @@
     >
       <!-- Header -->
       <div class="flex items-center justify-between w-full px-6 py-4">
-        <button class="p-2" @click="toggleFavorite">
+        <button class="p-2" @click="emit('toggleFavorite', meditation.id)">
           <Icon
-            :name="isFavorite ? 'heroicons-solid:heart' : 'heroicons:heart'"
+            :name="isFavorite ? 'heroicons:heart-solid' : 'heroicons:heart'"
             class="w-6 h-6"
           />
         </button>
@@ -86,10 +86,11 @@ interface MeditationProps {
     description: string;
     audioSrc?: string;
   };
+  isFavorite: boolean;
 }
 
 const props = defineProps<MeditationProps>();
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "toggleFavorite"]);
 
 // State for audio and video players
 const audioPlayer = ref<HTMLAudioElement | null>(null);
@@ -97,7 +98,6 @@ const videoPlayer = ref<HTMLVideoElement | null>(null);
 const isPlaying = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
-const isFavorite = ref(false);
 
 // Audio and Video Control Methods
 function togglePlay() {
@@ -160,21 +160,6 @@ function formatTime(seconds: number) {
   return `${mins}:${secs}`;
 }
 
-function toggleFavorite() {
-  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-  const favoriteIndex = favorites.indexOf(props.meditation.id);
-
-  if (favoriteIndex !== -1) {
-    favorites.splice(favoriteIndex, 1);
-    isFavorite.value = false;
-  } else {
-    favorites.push(props.meditation.id);
-    isFavorite.value = true;
-  }
-
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-}
-
 // Lifecycle hooks
 onMounted(() => {
   audioPlayer.value = new Audio(
@@ -184,9 +169,6 @@ onMounted(() => {
 
   audioPlayer.value.addEventListener("loadedmetadata", setDuration);
   audioPlayer.value.addEventListener("timeupdate", updateTime);
-
-  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-  isFavorite.value = favorites.includes(props.meditation.id);
 });
 
 onBeforeUnmount(() => {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <MeditationTopNav />
-    <MeditationCard :cards="cards" />
+    <MeditationList :cards="cards" />
     <!-- Credits -->
     <footer class="p-4 mb-20 text-xs text-center text-gray-500">
       The guided meditation in this app are from "Mindful meditation," created
@@ -48,7 +48,7 @@ const cards = [
       "Learn techniques to navigate challenging emotions and situations.",
     time: "7 mins",
     link: "/meditation/working-with-difficulties",
-    audioSrc: "/audio/meditation-working-with-difficulties.mp3",
+    audioSrc: "/audio/meditation-for-working-with-difficulties.mp3",
   },
   {
     id: "loving-kindness-meditation",
@@ -64,7 +64,7 @@ const cards = [
     description: "A short meditation for body and sound awareness.",
     time: "3 mins",
     link: "/meditation/body-and-sound-meditation",
-    audioSrc: "/audio/body-and-sound-meditation.mp3",
+    audioSrc: "/audio/body-sound-meditation.mp3",
   },
   {
     id: "short-body-scan",
@@ -72,7 +72,7 @@ const cards = [
     description: "A brief body scan to relax and refocus.",
     time: "3 mins",
     link: "/meditation/short-body-scan",
-    audioSrc: "/audio/short-body-scan.mp3",
+    audioSrc: "/audio/short-body-scan-meditation.mp3",
   },
   {
     id: "body-scan-for-sleep",
