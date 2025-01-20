@@ -56,8 +56,6 @@
             <button
               type="button"
               class="relative flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-              aria-haspopup="true"
-              :aria-expanded="isProfileMenuOpen"
               @click="toggleProfileMenu"
             >
               <span class="sr-only">Open user menu</span>
@@ -70,7 +68,7 @@
             <div
               v-show="isProfileMenuOpen"
               ref="target"
-              class="absolute right-0 z-[10000] w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
+              class="absolute right-0 z-[10000] w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none hover:cursor-pointer"
               role="menu"
             >
               <NuxtLink to="/" class="block px-4 py-2 text-sm text-gray-700">
@@ -79,9 +77,12 @@
               <NuxtLink to="/" class="block px-4 py-2 text-sm text-gray-700">
                 Settings
               </NuxtLink>
-              <NuxtLink to="/" class="block px-4 py-2 text-sm text-gray-700">
+              <span
+                class="block px-4 py-2 text-sm text-gray-700"
+                @click="authStore.logout"
+              >
                 Sign Out
-              </NuxtLink>
+              </span>
             </div>
           </div>
         </div>
@@ -91,6 +92,8 @@
 </template>
 
 <script setup lang="ts">
+const authStore = useAuthStore();
+
 const target = ref(null);
 onClickOutside(target, () => (isProfileMenuOpen.value = false));
 
@@ -98,7 +101,9 @@ onClickOutside(target, () => (isProfileMenuOpen.value = false));
 const isProfileMenuOpen = ref(false);
 
 const toggleProfileMenu = () => {
+  console.log("Before toggle:", isProfileMenuOpen.value);
   isProfileMenuOpen.value = !isProfileMenuOpen.value;
+  console.log("After toggle:", isProfileMenuOpen.value);
 };
 </script>
 
