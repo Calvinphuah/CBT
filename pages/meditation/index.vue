@@ -83,6 +83,10 @@ const cards = [
     audioSrc: "/audio/body-scan-for-sleep.mp3",
   },
 ];
+
+useHead({
+  title: "Meditation",
+});
 </script>
 
 <style scoped></style>
