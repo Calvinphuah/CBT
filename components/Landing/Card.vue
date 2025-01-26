@@ -1,23 +1,27 @@
 <template>
   <NuxtLink
     :to="card.link"
-    class="relative flex items-center gap-4 p-6 transition-transform duration-200 bg-white rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
+    class="flex flex-col w-full gap-2 p-4 transition-transform duration-200 rounded-lg shadow-md hover:scale-103 hover:shadow-lg"
+    :class="card.color"
   >
-    <!-- Card Image -->
-    <img
-      :src="card.image"
-      :alt="card.title"
-      class="object-cover w-16 h-16 rounded-lg"
-    />
-
-    <!-- Card Content -->
-    <div class="flex-1">
-      <h2 class="text-lg font-semibold text-gray-800">{{ card.title }}</h2>
-      <p class="text-sm text-gray-600">{{ card.description }}</p>
+    <div class="flex items-center justify-between w-full">
+      <h2 class="text-xl font-semibold text-gray-800 shrink-0">
+        {{ card.title }}
+      </h2>
+      <CommonPill :time="card.time" />
     </div>
-
-    <!-- Card Time -->
-    <span class="text-sm text-gray-500">{{ card.time }}</span>
+    <div>
+      <img
+        :src="card.image"
+        :alt="card.title"
+        :style="{
+          width: `${card.imageWidth || 64}px`,
+          height: `${card.imageHeight || 64}px`,
+          marginLeft: `${card.marginLeft || 0}px`,
+        }"
+        class="object-cover rounded-lg"
+      />
+    </div>
   </NuxtLink>
 </template>
 
@@ -26,13 +30,6 @@ defineProps({
   card: {
     type: Object,
     required: true,
-    default: () => ({
-      title: "",
-      description: "",
-      time: "",
-      link: "",
-      image: "",
-    }),
   },
 });
 </script>

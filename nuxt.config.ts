@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@pinia/nuxt",
     "@vueuse/nuxt",
+    "@nuxtjs/google-fonts",
   ],
   runtimeConfig: {
     public: {
@@ -39,6 +40,20 @@ export default defineNuxtConfig({
       title: "Cogni",
       titleTemplate: "%s | Cogni",
       meta: [{ name: "Cogni", content: "Cognitive behavioural therapy app" }],
+      link: [
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap",
+        },
+      ],
     },
+  },
+  googleFonts: {
+    families: {
+      "Nunito+Sans": [400, 700],
+    },
+    display: "swap",
+    subsets: ["latin"],
+    preconnect: true,
   },
 });
