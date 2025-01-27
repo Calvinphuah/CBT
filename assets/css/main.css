@@ -3,13 +3,12 @@
 @tailwind utilities;
 
 body {
-  background-color: #f0eee6;
-  font-family: "Inter", sans-serif;
+  background-color: #ffffff;
+  @apply font-sans;
 }
 
 @layer components {
   .btn {
-    @apply bg-orange-500 text-white rounded px-4 py-2 font-bold cursor-pointer shadow-md
-      hover:bg-orange-600 focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 transition duration-300;
+    @apply px-4 py-2 font-bold text-white transition duration-300 bg-orange-500 rounded shadow-md cursor-pointer hover:bg-orange-600 focus:ring-2 focus:ring-orange-300 focus:ring-offset-2;
   }
 }

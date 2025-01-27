@@ -1,6 +1,6 @@
 <template>
-  <nav class="bg-gray-800">
-    <div class="px-2 mx-auto sm:px-6 lg:px-8">
+  <nav class="">
+    <div class="px-4 mx-auto sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
         <!-- Logo, Title, and Navigation -->
         <div class="flex items-center flex-1 sm:justify-start">
@@ -11,8 +11,9 @@
               src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
               alt="Cogni Logo"
             />
-            <span class="ml-2 text-lg font-semibold text-white sm:text-xl"
-              >Cogni</span
+            <span class="ml-2 text-lg font-semibold sm:text-xl"
+              >Hi{{ authStore.user ? "," : "" }}
+              {{ authStore.user?.displayName }}</span
             >
           </NuxtLink>
           <!-- Navigation Links -->
@@ -48,8 +49,15 @@
           </div>
         </div>
 
+        <div class="flex items-center">
+          <Icon
+            name="solar:hamburger-menu-linear"
+            style="color: black"
+            size="24"
+          />
+        </div>
         <!-- Profile and Notifications -->
-        <div
+        <!-- <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
           <div class="relative ml-3">
@@ -59,11 +67,11 @@
               @click="toggleProfileMenu"
             >
               <span class="sr-only">Open user menu</span>
-              <img
-                class="rounded-full size-8"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt="Profile"
+              <Icon
+                name="fluent:brain-sparkle-20-filled"
+                class="w-full h-full"
               />
+              hey
             </button>
             <div
               v-show="isProfileMenuOpen"
@@ -85,7 +93,7 @@
               </span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>
@@ -100,20 +108,7 @@ onClickOutside(target, () => (isProfileMenuOpen.value = false));
 // Profile dropdown state
 const isProfileMenuOpen = ref(false);
 
-const toggleProfileMenu = () => {
-  console.log("Before toggle:", isProfileMenuOpen.value);
-  isProfileMenuOpen.value = !isProfileMenuOpen.value;
-  console.log("After toggle:", isProfileMenuOpen.value);
-};
+// const toggleProfileMenu = () => {
+//   isProfileMenuOpen.value = !isProfileMenuOpen.value;
+// };
 </script>
-
-<style scoped>
-.size-6 {
-  height: 24px;
-  width: 24px;
-}
-.size-8 {
-  height: 32px;
-  width: 32px;
-}
-</style>

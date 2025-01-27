@@ -1,13 +1,15 @@
 <template>
   <!-- Bottom -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 md:hidden z-[9999]">
-    <div class="flex justify-around p-2">
+  <nav
+    class="fixed bottom-0 left-0 right-0 bg-white md:hidden z-[9999] w-full rounded-t-lg"
+  >
+    <div class="flex justify-around p-4">
       <NuxtLink
         v-for="(item, index) in navItems"
         :key="index"
         :to="item.to"
-        class="flex flex-col items-center text-gray-400 hover:text-white"
-        active-class="text-white"
+        class="flex flex-col items-center text-gray-400 hover:text-gray-600"
+        active-class="text-gray-800"
       >
         <div class="flex items-center justify-center w-6 h-6">
           <component :is="item.icon" v-if="item.icon" class="w-full h-full" />
