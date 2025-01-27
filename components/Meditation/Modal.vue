@@ -4,7 +4,7 @@
     class="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50 sm:bg-opacity-80"
   >
     <div
-      class="relative flex flex-col items-center justify-between w-full h-screen py-8 text-white bg-black md:py-6 md:h-auto md:max-w-lg md:rounded-lg"
+      class="relative flex flex-col items-center justify-between w-full h-screen py-8 bg-white md:py-6 md:h-auto md:max-w-lg md:rounded-lg"
     >
       <!-- Header -->
       <div class="flex items-center justify-between w-full px-6 py-4">
@@ -27,7 +27,7 @@
       <div class="flex items-center justify-center flex-1 py-8">
         <video
           ref="videoPlayer"
-          src="/videos/meditation.mp4"
+          src="/videos/meditation-white.mp4"
           loop
           muted
           class="w-1/2 md:rounded-lg"
@@ -55,19 +55,19 @@
 
         <!-- Playback Controls -->
         <div class="flex items-center justify-center space-x-8">
-          <button class="p-2" @click="rewind">
+          <button class="p-2 text-[#ACB8C2]" @click="rewind">
             <Icon name="f7:gobackward-15" class="w-8 h-8" />
           </button>
           <button
-            class="flex items-center justify-center w-16 h-16 bg-gray-700 rounded-full"
+            class="flex items-center justify-center w-16 h-16 rounded-full bg-[#C1BDFC]"
             @click="togglePlay"
           >
             <Icon
               :name="isPlaying ? 'heroicons:pause' : 'heroicons:play'"
-              class="w-8 h-8"
+              class="w-8 h-8 text-white"
             />
           </button>
-          <button class="p-2" @click="forward">
+          <button class="p-2 text-[#ACB8C2]" @click="forward">
             <Icon name="f7:goforward-15" class="w-8 h-8" />
           </button>
         </div>
@@ -209,7 +209,7 @@ input[type="range"] {
   width: 100%;
   margin: 10px 0;
   position: relative;
-  height: 16px; /* Increased height for better touch targets */
+  height: 16px;
   cursor: pointer;
 }
 
@@ -217,7 +217,7 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.2); /* Slightly visible background */
+  background: #e5e7eb;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -225,7 +225,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 input[type="range"]::-moz-range-track {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.2);
+  background: #e5e7eb;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -234,7 +234,7 @@ input[type="range"]::-moz-range-track {
 input[type="range"]::before {
   content: "";
   position: absolute;
-  background: white;
+  background: #c1bdfc;
   width: var(--progress-value, 0%);
   height: 4px;
   border-radius: 2px;
@@ -250,7 +250,7 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   height: 12px;
   width: 12px;
-  background: white;
+  background: #c1bdfc;
   border-radius: 50%;
   cursor: pointer;
   margin-top: -4px;
@@ -263,7 +263,7 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-thumb {
   height: 12px;
   width: 12px;
-  background: white;
+  background: #c1bdfc;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -302,10 +302,10 @@ input[type="range"]:focus {
 
 /* Change the color when hovering */
 input[type="range"]:hover::-webkit-slider-runnable-track {
-  background: rgba(255, 255, 255, 0.3);
+  background: #d1d5db;
 }
 
 input[type="range"]:hover::-moz-range-track {
-  background: rgba(255, 255, 255, 0.3);
+  background: #d1d5db;
 }
 </style>

@@ -9,6 +9,8 @@
       :description="field.description"
       :example="showExamples ? field.example : null"
       :placeholder="field.placeholder"
+      :image-src="field.imageSrc"
+      class="my-10"
     />
 
     <!-- Action Buttons -->
@@ -72,38 +74,42 @@ const inputFields = [
   {
     model: "activating",
     // title: "What's worrying you right now and why?",
-    title: "A: Activating Event",
+    title: "Activating Event",
     description:
       "Describe the situation and why you're worried about it. Be as specific as you can with your reasoning.",
     example:
       "E.g. There's a science test on Monday. I know for sure I'll get a zero and that people will laugh. Maybe I'll fail the class.",
     placeholder: "Enter the activating event",
+    imageSrc: "img/leaf.png",
   },
   {
     model: "beliefs",
-    title: "B: Beliefs",
+    title: "Beliefs",
     description:
       "Write down the automatic thoughts and beliefs that arose during this situation. What went through your mind?",
     example:
       'E.g. "I\'m not smart enough", "Everyone will think I\'m stupid", "I always fail at everything"',
     placeholder: "Type your thoughts here",
+    imageSrc: "img/wavy-leaf.png",
   },
   {
     model: "consequentFeelings",
-    title: "C: Consequent Feelings",
+    title: "Consequent Feelings",
     description:
       "Describe your emotions and feelings that arose because of the thoughts and beliefs you had.",
     example: 'E.g. "I felt anxious", "I felt hopeless", "I felt angry"',
     placeholder: "Describe your feelings",
+    imageSrc: "img/popcorn.png",
   },
   {
     model: "dispute",
-    title: "D: Dispute",
+    title: "Dispute",
     description:
       "Write down evidence or reasons why these thoughts might not be true or helpful.",
     example:
       'E.g. "I\'ve passed tests before", "People rarely notice small mistakes", "Failing one test doesn\'t mean I\'ll fail the class"',
     placeholder: "Dispute your thoughts",
+    imageSrc: "img/cat.png",
   },
 ];
 
