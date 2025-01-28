@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-32">
+  <div class="max-w-lg pb-32 mx-auto">
     <!-- Title -->
     <div class="flex items-center justify-between px-10 py-4">
       <img src="../../public/img/landing-cbt.png" alt="CBT" class="w-32" />

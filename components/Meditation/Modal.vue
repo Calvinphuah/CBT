@@ -114,6 +114,13 @@ function togglePlay() {
   }
 }
 
+function handleAudioEnd() {
+  isPlaying.value = false;
+  if (videoPlayer.value) {
+    videoPlayer.value.pause();
+  }
+}
+
 function updateTime() {
   if (audioPlayer.value) {
     currentTime.value = audioPlayer.value.currentTime;
@@ -167,8 +174,11 @@ onMounted(() => {
   );
   videoPlayer.value = document.querySelector("video");
 
-  audioPlayer.value.addEventListener("loadedmetadata", setDuration);
-  audioPlayer.value.addEventListener("timeupdate", updateTime);
+  if (audioPlayer.value) {
+    audioPlayer.value.addEventListener("loadedmetadata", setDuration);
+    audioPlayer.value.addEventListener("timeupdate", updateTime);
+    audioPlayer.value.addEventListener("ended", handleAudioEnd);
+  }
 });
 
 onBeforeUnmount(() => {
@@ -176,6 +186,7 @@ onBeforeUnmount(() => {
     audioPlayer.value.pause();
     audioPlayer.value.removeEventListener("loadedmetadata", setDuration);
     audioPlayer.value.removeEventListener("timeupdate", updateTime);
+    audioPlayer.value.removeEventListener("ended", handleAudioEnd);
   }
 
   if (videoPlayer.value) {
