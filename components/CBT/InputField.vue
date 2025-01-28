@@ -1,50 +1,84 @@
 <template>
-  <div class="mb-6">
-    <h2 class="mb-4 text-2xl font-medium text-blue-500">{{ title }}</h2>
-    <p class="flex items-center mb-4 text-gray-600">
-      {{ description }}
-      <button
-        class="flex items-center ml-2 text-blue-500 hover:text-blue-700"
-        @click="toggleExample"
-      >
-        <InformationCircleIcon class="w-5 h-5" />
-      </button>
-    </p>
-    <p v-if="showExample" class="mb-4 mr-4 italic text-gray-500">
-      {{ example }}
-    </p>
-
-    <div v-if="cbtStore.isEditing || cbtStore.isNewEntry" class="relative">
-      <textarea
-        v-model="localValue"
-        :placeholder="placeholder"
-        :maxlength="maxlength"
-        class="w-full resize-none rounded-xl border p-4 h-[calc(10rem-24px)]"
-      />
-      <div class="h-6 mt-1 text-sm text-right text-gray-400">
-        {{ remainingChars }} characters remaining
+  <div class="max-w-md mx-auto">
+    <div
+      class="relative p-6 pt-12 bg-white border-2 border-black rounded-lg shadow-sm"
+    >
+      <!-- Centered Top Icon -->
+      <div class="absolute -translate-x-1/2 left-1/2 -top-8">
+        <div
+          class="w-16 h-16 rounded-full bg-[#FDF1EC] flex items-center justify-center border-2 border-black"
+        >
+          <img
+            :src="imageSrc"
+            alt="Leaf icon"
+            class="object-contain w-10 h-10"
+          />
+        </div>
       </div>
-    </div>
-    <div v-if="cbtStore.isViewing" class="relative">
-      <p>{{ localValue }}</p>
+
+      <!-- Rest of the template remains exactly the same -->
+      <h2 class="mb-4 text-xl font-medium text-center text-gray-800">
+        {{ title }}
+      </h2>
+
+      <div
+        v-if="cbtStore.isEditing || cbtStore.isNewEntry"
+        class="flex items-start gap-1 mb-4"
+      >
+        <p class="text-gray-600">{{ description }}</p>
+        <button
+          v-if="example"
+          class="flex-shrink-0 mt-0.5 text-gray-500 hover:text-gray-700"
+          @click="toggleExample"
+        >
+          <InformationCircleIcon class="w-4 h-4" />
+        </button>
+      </div>
+
+      <p
+        v-if="showExample && example"
+        class="mb-4 text-sm italic text-gray-500"
+      >
+        {{ example }}
+      </p>
+
+      <div v-if="cbtStore.isEditing || cbtStore.isNewEntry" class="relative">
+        <textarea
+          v-model="localValue"
+          :placeholder="placeholder"
+          :maxlength="maxlength"
+          class="w-full h-32 p-4 transition-all border border-gray-200 outline-none resize-none rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
+        />
+        <div class="h-6 mt-1 text-sm text-right text-gray-400">
+          {{ remainingChars }} characters remaining
+        </div>
+      </div>
+
+      <div v-if="cbtStore.isViewing" class="relative">
+        <p class="p-4 bg-gray-50 rounded-xl">{{ localValue }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+// Script section remains exactly the same
+import { ref, computed, watch } from "vue";
 import { InformationCircleIcon } from "@heroicons/vue/24/solid";
+
 const props = defineProps({
   title: {
     type: String,
-    default: "Default Title",
+    default: "Activating Event",
   },
   description: {
     type: String,
-    default: "Default Description",
+    default:
+      "Describe the situation and why you're worried about it. Be as specific as you can with your reasoning.",
   },
   example: {
     type: [String, null],
-    default: "Default Example",
+    default: null,
   },
   modelValue: {
     type: String,
@@ -52,26 +86,26 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: "Type something...",
+    default: "Work has been really stressful lately",
   },
   maxlength: {
     type: Number,
     default: 400,
   },
+  imageSrc: {
+    type: String,
+    default: "/img/leaf.png",
+  },
 });
 
-// Event emitter for v-model
 const emit = defineEmits(["update:modelValue"]);
-
-// Create a local value to bind with v-model
 const localValue = ref(props.modelValue);
+const showExample = ref(false);
 
-// Watch for changes in `localValue` and emit updates to the parent
 watch(localValue, (newValue) => {
   emit("update:modelValue", newValue);
 });
 
-// Update `localValue` when `modelValue` prop changes from the parent
 watch(
   () => props.modelValue,
   (newValue) => {
@@ -79,13 +113,10 @@ watch(
   }
 );
 
-// Remaining characters computed property
 const remainingChars = computed(
   () => props.maxlength - (localValue.value?.length || 0)
 );
 
-// State for toggling the example
-const showExample = ref(false);
 const toggleExample = () => {
   showExample.value = !showExample.value;
 };
