@@ -1,5 +1,14 @@
 <template>
   <div class="max-w-lg p-4 mx-auto space-y-6">
+    <div class="flex items-center justify-between px-10 py-4">
+      <img
+        src="../../public/img/landing-meditation.png"
+        alt="Meditation"
+        class="w-32"
+      />
+      <h2 class="text-lg font-semibold">Take time <br />to unwind</h2>
+    </div>
+
     <MeditationModal
       v-if="selectedMeditation"
       :is-visible="isModalVisible"

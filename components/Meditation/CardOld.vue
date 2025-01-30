@@ -1,19 +1,11 @@
 <template>
-  <MeditationModal
-    v-if="selectedMeditation"
-    :is-visible="isModalVisible"
-    :meditation="selectedMeditation"
-    @close="closeModal"
-  />
-  <div class="max-w-lg p-4 mx-auto space-y-6">
+  <div class="max-w-lg mx-auto space-y-6">
     <div
-      v-for="(card, index) in cards"
-      :key="index"
       class="transition-transform transform bg-white border border-gray-200 rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
     >
       <button
         class="flex items-center justify-between w-full p-4 text-left"
-        @click="openModal(card)"
+        @click="emit('openModal', card)"
       >
         <!-- Text Section -->
         <div class="flex flex-col">
@@ -43,29 +35,9 @@ interface Card {
   time: string;
 }
 
-const { cards } = defineProps<{
-  cards: Card[];
+const { card } = defineProps<{
+  card: Card;
 }>();
 
-const isModalVisible = ref(false);
-const selectedMeditation = ref<Card | null>(null);
-
-function openModal(card: Card) {
-  selectedMeditation.value = card;
-  isModalVisible.value = true;
-}
-
-function closeModal() {
-  isModalVisible.value = false;
-  selectedMeditation.value = null;
-}
-
-const favorites = ref<string[]>([]);
-
-console.log(cards);
-
-onMounted(() => {
-  // Initialize favorites from local storage
-  favorites.value = JSON.parse(localStorage.getItem("favorites") || "[]");
-});
+const emit = defineEmits(["openModal"]);
 </script>
