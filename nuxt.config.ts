@@ -24,8 +24,9 @@ export default defineNuxtConfig({
       firebaseMessagingSenderId:
         process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID,
-      encryptionSecretKey: process.env.NUXT_PUBLIC_ENCRYPTION_SECRET_KEY || "",
+      encryptionSecretKey: process.env.NUXT_ENCRYPTION_SECRET_KEY || "",
     },
+    private: {},
   },
   css: ["~/assets/css/main.css"],
   postcss: {

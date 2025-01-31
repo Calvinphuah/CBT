@@ -89,10 +89,24 @@ export const useCBTStore = defineStore("cbtStore", {
         );
 
         const snapshot = await getDocs(entriesQuery);
-        this.cbtEntries = snapshot.docs.map((doc) => ({
+        const rawEntries = snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         })) as CBTEntry[];
+
+        // 🔓 Decrypt sensitive fields before storing in Pinia state
+        const decryptedEntries = await Promise.all(
+          rawEntries.map((entry) =>
+            serverDecrypt(entry, [
+              "activatingEvent",
+              "beliefs",
+              "consequentFeelings",
+              "disputes",
+            ])
+          )
+        );
+
+        this.cbtEntries = decryptedEntries;
       } catch (error) {
         this.error =
           error instanceof Error ? error.message : "Failed to fetch entries";
@@ -117,12 +131,21 @@ export const useCBTStore = defineStore("cbtStore", {
       };
 
       try {
+        // 🔐 Encrypt sensitive fields before storing
+        const encryptedEntry = (await secureEncrypt(entry, [
+          "activatingEvent",
+          "beliefs",
+          "consequentFeelings",
+          "disputes",
+        ])) as Omit<CBTEntry, "id" | "createdAt" | "userId">;
+
         if (this.isEditing && this.selectedEntry) {
-          await this.updateEntry(this.selectedEntry.id, entry);
+          await this.updateEntry(this.selectedEntry.id, encryptedEntry, entry);
           this.isEditing = false;
           this.isViewing = true;
         } else {
-          await this.addEntry(entry);
+          console.log("Adding new entry:", entry);
+          await this.addEntry(encryptedEntry);
           this.handleBackToList();
         }
         console.log("Entry submitted successfully");
@@ -150,19 +173,30 @@ export const useCBTStore = defineStore("cbtStore", {
 
       try {
         const docRef = await addDoc(collection($db, "cbtEntries"), newEntry);
-        this.cbtEntries.unshift({ ...newEntry, id: docRef.id });
+
+        // 🔓 Immediately decrypt the entry for UI display
+        const decryptedEntry = await serverDecrypt(
+          { ...newEntry, id: docRef.id },
+          ["activatingEvent", "beliefs", "consequentFeelings", "disputes"]
+        );
+
+        this.cbtEntries.unshift(decryptedEntry); // ✅ Store the decrypted version
         return docRef.id;
       } catch (error) {
         this.error =
           error instanceof Error ? error.message : "Failed to add entry";
-        console.error("Error adding CBT entry:", error);
+        console.error("❌ Error adding CBT entry:", error);
         throw error;
       } finally {
         this.loading = false;
       }
     },
 
-    async updateEntry(id: string, updates: Partial<CBTEntry>) {
+    async updateEntry(
+      id: string,
+      updates: Partial<CBTEntry>,
+      entry: Partial<CBTEntry>
+    ) {
       this.loading = true;
       this.error = null;
 
@@ -173,7 +207,7 @@ export const useCBTStore = defineStore("cbtStore", {
         await updateDoc(docRef, updates);
         const index = this.cbtEntries.findIndex((entry) => entry.id === id);
         if (index !== -1) {
-          this.cbtEntries[index] = { ...this.cbtEntries[index], ...updates };
+          this.cbtEntries[index] = { ...this.cbtEntries[index], ...entry };
         }
       } catch (error) {
         this.error =
