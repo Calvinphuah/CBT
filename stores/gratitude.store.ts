@@ -18,6 +18,18 @@ import {
 import type { GratitudeEntry, GratitudeState } from "@/types/gratitude";
 import { secureEncrypt, serverDecrypt } from "@/utils/encryption";
 
+const images = [
+  "img/cat.png",
+  "img/dog.png",
+  "img/leaf.png",
+  "img/popcorn.png",
+  "img/wavy-leaf.png",
+] as const;
+
+const getRandomImage = () => {
+  return images[Math.floor(Math.random() * images.length)];
+};
+
 export const useGratitudeStore = defineStore("gratitudeStore", {
   state: (): GratitudeState => ({
     newEntry: "",
@@ -146,6 +158,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
         entry,
         createdAt: Timestamp.now(),
         userId: $auth.currentUser.uid,
+        image: getRandomImage(),
       };
 
       try {

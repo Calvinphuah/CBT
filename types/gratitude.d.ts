@@ -4,6 +4,7 @@ export interface GratitudeEntry {
   entry: string;
   createdAt: Timestamp;
   userId: string;
+  image?: string;
 }
 
 export interface GratitudeState {

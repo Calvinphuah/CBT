@@ -1,10 +1,11 @@
 <template>
-  <div class="font-sans text-lg text-gray-800">
+  <div class="max-w-lg mx-auto font-sans text-lg text-gray-800">
     <!-- Header -->
     <h2 class="px-4">Take a moment for yourself</h2>
     <!-- Cards -->
     <div class="flex flex-col max-w-xl gap-6 p-4 pb-28">
       <LandingCard v-for="card in cards" :key="card.id" :card="card" />
+      <!-- <LandingCardWhite v-for="card in cards" :key="card.id" :card="card" /> -->
     </div>
   </div>
 </template>

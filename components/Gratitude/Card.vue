@@ -1,29 +1,48 @@
 <template>
-  <div class="w-full max-w-2xl mx-auto">
+  <div class="w-full mx-auto">
     <div
-      class="w-full p-6 transition-transform transform bg-white border border-gray-200 rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
+      class="w-full p-4 transition-shadow bg-white border border-black rounded-lg hover:shadow-md"
+      @click="$emit('click')"
     >
-      <h5 class="mb-4 text-xl font-bold text-center text-gray-900">
-        {{ formatFirestoreTimestampDate(date) }}
-      </h5>
-      <p class="text-center text-gray-700">
-        {{ content }}
-      </p>
+      <div class="flex items-center gap-4">
+        <!-- image or Image (if provided) -->
+        <div v-if="image" class="flex-shrink-0 w-16 h-16">
+          <img
+            :src="image"
+            :alt="imageAlt || 'Gratitude icon'"
+            class="object-contain w-full h-full"
+          />
+        </div>
+
+        <!-- Content -->
+        <p class="flex-grow text-base text-gray-800">
+          {{ content }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Timestamp } from "firebase/firestore";
+// Props
+interface Props {
+  content: string;
+  image?: string;
+  imageAlt?: string;
+}
 
-defineProps({
-  date: {
-    type: Timestamp,
-    required: true,
-  },
-  content: {
-    type: String,
-    required: true,
-  },
-});
+defineProps<Props>();
+
+// Emits
+defineEmits<{
+  click: [];
+}>();
 </script>
+
+<style scoped>
+/* Adjust border radius and padding to match the image */
+.div {
+  border-radius: 12px;
+  padding: 16px;
+}
+</style>
