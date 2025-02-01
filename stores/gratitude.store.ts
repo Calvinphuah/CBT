@@ -16,6 +16,7 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 import type { GratitudeEntry, GratitudeState } from "@/types/gratitude";
+import { secureEncrypt, serverDecrypt } from "@/utils/encryption";
 
 export const useGratitudeStore = defineStore("gratitudeStore", {
   state: (): GratitudeState => ({
@@ -85,30 +86,42 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
           return;
         }
 
-        const newEntries = snapshot.docs.map(
-          (doc: QueryDocumentSnapshot<DocumentData>) => {
-            const data = doc.data();
-            // Type assertion to ensure all required fields are present
-            const entry: GratitudeEntry = {
-              id: doc.id,
-              entry: data.entry as string,
-              createdAt: data.createdAt as Timestamp,
-              userId: data.userId as string,
-            };
-            return entry;
-          }
+        const rawEntries = snapshot.docs.map(
+          (doc: QueryDocumentSnapshot<DocumentData>) => ({
+            ...doc.data(),
+            id: doc.id,
+          })
+        ) as GratitudeEntry[];
+
+        console.log("📥 Firestore Entries (Encrypted):", rawEntries);
+
+        // 🔓 Decrypt `entry` field before displaying in UI
+        const decryptedEntries = await Promise.all(
+          rawEntries.map(async (entry) => {
+            try {
+              const decryptedEntry = await serverDecrypt(entry, ["entry"]);
+              return {
+                ...entry,
+                ...decryptedEntry,
+              };
+            } catch (error) {
+              console.error(`❌ Error decrypting entry ID: ${entry.id}`, error);
+              return entry; // Use encrypted version as fallback
+            }
+          })
         );
 
-        this.gratitudeEntries = loadMore
-          ? [...this.gratitudeEntries, ...newEntries]
-          : newEntries;
+        console.log("📤 Decrypted Entries (For UI):", decryptedEntries);
 
-        // Update the last visible document
+        this.gratitudeEntries = loadMore
+          ? [...this.gratitudeEntries, ...decryptedEntries]
+          : decryptedEntries;
+
         this.lastVisible = snapshot.docs[snapshot.docs.length - 1];
       } catch (error) {
         this.error =
           error instanceof Error ? error.message : "Failed to fetch entries";
-        console.error("Error fetching Gratitude entries:", error);
+        console.error("❌ Error fetching Gratitude entries:", error);
       } finally {
         this.loading = false;
       }
@@ -117,6 +130,11 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
     async addEntry(entry: string) {
       this.loading = true;
       this.error = null;
+
+      if (this.newEntry.trim() === "") {
+        alert("Entry cannot be empty");
+        return;
+      }
 
       const { $db, $auth } = useNuxtApp();
 
@@ -131,23 +149,26 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
       };
 
       try {
+        // 🔐 Encrypt the `entry` field before storing in Firestore
+        const encryptedEntry = await secureEncrypt(newEntry, ["entry"]);
+
         const docRef = await addDoc(
           collection($db, "gratitudeEntries"),
-          newEntry
+          encryptedEntry
         );
 
-        const entryWithId: GratitudeEntry = {
-          ...newEntry,
+        // 🔓 Store the decrypted version in UI immediately
+        this.gratitudeEntries.unshift({
+          ...newEntry, // Store the original decrypted version
           id: docRef.id,
-        };
+        });
 
-        this.gratitudeEntries.unshift(entryWithId);
         this.handleResetEntry();
         return docRef.id;
       } catch (error) {
         this.error =
           error instanceof Error ? error.message : "Failed to add entry";
-        console.error("Error adding Gratitude entry:", error);
+        console.error("❌ Error adding Gratitude entry:", error);
         throw error;
       } finally {
         this.loading = false;
@@ -194,12 +215,15 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
       const { $db } = useNuxtApp();
 
       try {
-        const docRef = collection($db, "gratitudeEntries");
-        await updateDoc(doc(docRef, this.currentEntry.id), {
-          entry: this.newEntry,
-        });
+        // 🔐 Encrypt `entry` before updating Firestore
+        const encryptedUpdate = await secureEncrypt({ entry: this.newEntry }, [
+          "entry",
+        ]);
 
-        // Update the Pinia store
+        const docRef = collection($db, "gratitudeEntries");
+        await updateDoc(doc(docRef, this.currentEntry.id), encryptedUpdate);
+
+        // Update UI with decrypted version
         const index = this.gratitudeEntries.findIndex(
           (entry) => entry.id === this.currentEntry?.id
         );
@@ -207,16 +231,15 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
           this.gratitudeEntries[index].entry = this.newEntry;
         }
 
-        // Reset the form and flags
         this.handleResetEntry();
-        console.log("Entry successfully updated!");
+        console.log("✅ Entry successfully updated!");
       } catch (error) {
         this.error =
           error instanceof Error
             ? error.message
             : "Failed to update the entry in Firestore.";
-        console.error("Error updating Gratitude entry:", error);
-        throw error; // Optional, if you want to propagate the error
+        console.error("❌ Error updating Gratitude entry:", error);
+        throw error;
       } finally {
         this.loading = false;
       }
