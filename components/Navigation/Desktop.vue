@@ -1,5 +1,5 @@
 <template>
-  <nav class="">
+  <nav>
     <div class="px-4 mx-auto sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
         <!-- Logo, Title, and Navigation -->
@@ -8,40 +8,47 @@
           <NuxtLink to="/" class="flex items-center">
             <img
               class="w-auto h-8"
-              src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+              src="@/public/img/wavy-leaf.png"
               alt="Cogni Logo"
             />
-            <span class="ml-2 text-lg font-semibold sm:text-xl"
-              >Hi{{ authStore.user ? "," : "" }}
-              {{ authStore.user?.displayName }}</span
-            >
+            <!-- <Icon
+              name="fluent:brain-sparkle-20-filled"
+              size="32"
+              class="text-indigo-500"
+            /> -->
+
+            <span class="ml-2 text-lg font-semibold sm:text-xl">
+              Hi{{ authStore.user ? "," : "" }}
+              {{ authStore.user?.displayName }}
+            </span>
           </NuxtLink>
+
           <!-- Navigation Links -->
           <div class="hidden ml-6 space-x-4 md:block">
             <NuxtLink
               to="/"
-              class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
               active-class="text-white bg-gray-900"
             >
               Home
             </NuxtLink>
             <NuxtLink
               to="/cbt"
-              class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
               active-class="text-white bg-gray-900"
             >
               CBT
             </NuxtLink>
             <NuxtLink
               to="/gratitude"
-              class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
               active-class="text-white bg-gray-900"
             >
               Gratitude
             </NuxtLink>
             <NuxtLink
               to="/meditation"
-              class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
               active-class="text-white bg-gray-900"
             >
               Meditation
@@ -49,66 +56,75 @@
           </div>
         </div>
 
-        <div class="flex items-center">
-          <Icon
-            name="solar:hamburger-menu-linear"
-            style="color: black"
-            size="24"
-          />
-        </div>
-        <!-- Profile and Notifications -->
-        <!-- <div
-          class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
-        >
-          <div class="relative ml-3">
-            <button
-              type="button"
-              class="relative flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-              @click="toggleProfileMenu"
+        <!-- User Icon and Profile Menu (wrapped in the same container) -->
+        <div ref="menuContainer" class="relative">
+          <button
+            type="button"
+            class="flex items-center focus:outline-none"
+            @click="toggleProfileMenu"
+          >
+            <Icon
+              name="heroicons:user-16-solid"
+              style="color: black"
+              size="24"
+            />
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div
+            v-show="isProfileMenuOpen"
+            class="absolute right-0 z-[10000] w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
+            role="menu"
+          >
+            <!-- <NuxtLink
+              to="/profile"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
             >
-              <span class="sr-only">Open user menu</span>
-              <Icon
-                name="fluent:brain-sparkle-20-filled"
-                class="w-full h-full"
-              />
-              hey
-            </button>
-            <div
-              v-show="isProfileMenuOpen"
-              ref="target"
-              class="absolute right-0 z-[10000] w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none hover:cursor-pointer"
-              role="menu"
+              Your Profile
+            </NuxtLink>
+            <NuxtLink
+              to="/settings"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
             >
-              <NuxtLink to="/" class="block px-4 py-2 text-sm text-gray-700">
-                Your Profile
-              </NuxtLink>
-              <NuxtLink to="/" class="block px-4 py-2 text-sm text-gray-700">
-                Settings
-              </NuxtLink>
-              <span
-                class="block px-4 py-2 text-sm text-gray-700"
-                @click="authStore.logout"
-              >
-                Sign Out
-              </span>
-            </div>
+              Settings
+            </NuxtLink> -->
+            <span
+              role="menuitem"
+              class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+              @click="authStore.logout"
+            >
+              Sign Out
+            </span>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
+import { onClickOutside } from "@vueuse/core";
+
+// Access auth store
 const authStore = useAuthStore();
 
-const target = ref(null);
-onClickOutside(target, () => (isProfileMenuOpen.value = false));
-
-// Profile dropdown state
+// State for the profile dropdown
 const isProfileMenuOpen = ref(false);
 
-// const toggleProfileMenu = () => {
-//   isProfileMenuOpen.value = !isProfileMenuOpen.value;
-// };
+// Reference to the icon and dropdown container
+const menuContainer = ref(null);
+
+// Toggle the profile menu
+const toggleProfileMenu = () => {
+  isProfileMenuOpen.value = !isProfileMenuOpen.value;
+};
+
+// Close the dropdown when clicking outside
+onClickOutside(menuContainer, () => {
+  if (isProfileMenuOpen.value) {
+    isProfileMenuOpen.value = false;
+  }
+});
 </script>

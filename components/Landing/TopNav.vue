@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky top-0 z-50 flex items-center justify-between p-4 px-5 text-white bg-gray-800"
+    class="sticky top-0 z-50 flex items-center justify-between p-4 px-4 text-white bg-gray-800 sm:px-6 lg:px-8"
   >
     <!-- Back Icon -->
     <NuxtLink to="/">

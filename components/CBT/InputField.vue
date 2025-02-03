@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-md mx-auto">
     <div
-      class="relative p-6 pt-12 bg-white border-2 border-black rounded-lg shadow-sm"
+      class="relative p-6 pt-12 bg-white border border-black rounded-lg shadow-sm lg:min-h-[370px] z-7"
     >
       <!-- Centered Top Icon -->
       <div class="absolute -translate-x-1/2 left-1/2 -top-8">
         <div
-          class="w-16 h-16 rounded-full bg-[#FDF1EC] flex items-center justify-center border-2 border-black"
+          class="w-16 h-16 rounded-full bg-[#FDF1EC] flex items-center justify-center border border-black"
         >
           <img
             :src="imageSrc"

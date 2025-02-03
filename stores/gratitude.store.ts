@@ -105,7 +105,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
           })
         ) as GratitudeEntry[];
 
-        console.log("📥 Firestore Entries (Encrypted):", rawEntries);
+        // console.log("📥 Firestore Entries (Encrypted):", rawEntries);
 
         // 🔓 Decrypt `entry` field before displaying in UI
         const decryptedEntries = await Promise.all(
@@ -123,7 +123,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
           })
         );
 
-        console.log("📤 Decrypted Entries (For UI):", decryptedEntries);
+        // console.log("📤 Decrypted Entries (For UI):", decryptedEntries);
 
         this.gratitudeEntries = loadMore
           ? [...this.gratitudeEntries, ...decryptedEntries]

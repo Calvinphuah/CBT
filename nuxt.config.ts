@@ -47,6 +47,10 @@ export default defineNuxtConfig({
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap",
         },
+        {
+          rel: "icon",
+          href: "/img/wavy-leaf.png",
+        },
       ],
     },
   },

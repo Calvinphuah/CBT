@@ -3,11 +3,14 @@
     <!-- Title -->
     <div class="flex items-center justify-between px-10 py-4">
       <img
-        src="../../public/img/landing-gratitude.png"
+        src="../../public/img/landing-gratitude-1.png"
         alt="Gratitude"
-        class="w-32"
+        class="w-36"
       />
-      <h2 class="text-lg font-semibold">Capture moments of <br />gratitude</h2>
+      <h2 class="text-lg font-semibold">
+        <span class="block md:inline">Capture moments</span>
+        <span class="block md:inline"> of gratitude</span>
+      </h2>
     </div>
 
     <!-- Modals -->

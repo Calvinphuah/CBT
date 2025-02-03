@@ -7,7 +7,7 @@
     aria-modal="true"
   >
     <div
-      class="fixed inset-0 transition-opacity bg-gray-500/75"
+      class="fixed inset-0 transition-opacity bg-gray-500/75 z-[9]"
       aria-hidden="true"
     ></div>
 

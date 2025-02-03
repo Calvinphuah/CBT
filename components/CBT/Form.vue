@@ -1,19 +1,31 @@
 <template>
-  <div class="min-h-screen p-4 bg-gray-50">
-    <!-- Input Fields -->
-    <CBTInputField
-      v-for="(field, index) in inputFields"
-      :key="index"
-      v-model="cbtStore.formData[field.model]"
-      :title="field.title"
-      :description="field.description"
-      :example="showExamples ? field.example : null"
-      :placeholder="field.placeholder"
-      :image-src="field.imageSrc"
-      class="my-10"
-    />
+  <div class="p-4 pb-24 bg-gray-50">
+    <!-- Input Fields Container -->
+    <div class="flex flex-col gap-4 md:flex-row md:flex-wrap">
+      <CBTInputField
+        v-for="(field, index) in inputFields"
+        :key="index"
+        v-model="cbtStore.formData[field.model]"
+        :title="field.title"
+        :description="field.description"
+        :example="showExamples ? field.example : null"
+        :placeholder="field.placeholder"
+        :image-src="field.imageSrc"
+        class="flex flex-col justify-between w-full p-4 bg-white rounded-lg shadow-sm md:w-1/2"
+      />
+    </div>
 
-    <!-- Action Buttons -->
+    <!-- Delete Button (Displayed at Bottom of Input Fields) -->
+    <div v-if="cbtStore.isEditing" class="px-4 mt-4 md:px-6 lg:px-8">
+      <button
+        class="w-full px-4 py-4 font-medium text-white bg-red-500 rounded-full"
+        @click="showDeleteModal = true"
+      >
+        Delete
+      </button>
+    </div>
+
+    <!-- Action Buttons (Save/Cancel) -->
     <div
       v-if="!cbtStore.isEditing && !cbtStore.isViewing"
       class="mt-4 space-y-4"
@@ -30,21 +42,6 @@
         @click="cbtStore.handleCancelEntry"
       >
         Cancel
-      </button>
-    </div>
-    <div v-if="cbtStore.isEditing" class="mt-4 space-y-4">
-      <!-- <button
-        class="w-full py-4 font-medium text-white bg-blue-400 rounded-full"
-        :disabled="!isFormValid"
-        @click="cbtStore.submitCurrentEntry"
-      >
-        Save
-      </button> -->
-      <button
-        class="w-full py-4 font-medium text-white bg-red-500 rounded-full"
-        @click="showDeleteModal = true"
-      >
-        Delete
       </button>
     </div>
   </div>
@@ -126,10 +123,6 @@ const handleDeleteCancel = () => {
 </script>
 
 <style scoped>
-.min-h-screen {
-  min-height: calc(100vh - 64px);
-}
-
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

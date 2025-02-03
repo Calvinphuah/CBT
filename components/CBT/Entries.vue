@@ -4,7 +4,8 @@
     <div class="flex items-center justify-between px-10 py-4">
       <img src="../../public/img/landing-cbt.png" alt="CBT" class="w-32" />
       <h2 class="text-lg font-semibold">
-        Challenge your <br />negative thoughts
+        <span class="block md:inline">Challenge your</span>
+        <span class="block md:inline"> negative thoughts</span>
       </h2>
     </div>
 
@@ -15,9 +16,9 @@
       class="px-4 pt-4"
     >
       <!-- Date Header -->
-      <div class="pb-2 text-gray-800">
+      <h2 class="px-2 pb-2 text-lg font-medium text-gray-800">
         {{ formatDate(new Date(date)) }}
-      </div>
+      </h2>
 
       <!-- Entries for the Date -->
       <div

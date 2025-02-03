@@ -32,7 +32,7 @@ export const useAuthStore = defineStore("auth", {
         onAuthStateChanged($auth, (user) => {
           this.user = user;
           this.initialAuthValueReady = true;
-          console.log("User state changed", this.user);
+          // console.log("User state changed", this.user);
         });
       } else {
         console.error("Firebase Auth is not initialized");
