@@ -3,7 +3,7 @@
     <!-- Title -->
     <div class="flex items-center justify-between px-10 py-4">
       <img
-        src="../../public/img/landing-gratitude-1.png"
+        src="../../public/img/landing-gratitude.png"
         alt="Gratitude"
         class="w-36"
       />

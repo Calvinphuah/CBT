@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav class="bg-white">
     <div class="px-4 mx-auto sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
         <!-- Logo, Title, and Navigation -->

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-24 bg-gray-50">
+  <div class="p-4 pb-24">
     <!-- Input Fields Container -->
     <div class="flex flex-col gap-4 md:flex-row md:flex-wrap">
       <CBTInputField

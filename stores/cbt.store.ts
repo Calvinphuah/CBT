@@ -22,6 +22,7 @@ export const useCBTStore = defineStore("cbtStore", {
       consequentFeelings: "",
       dispute: "",
     },
+    originalFormData: null,
     isEditing: false,
     isNewEntry: false,
     isViewing: false,
@@ -143,6 +144,7 @@ export const useCBTStore = defineStore("cbtStore", {
           await this.updateEntry(this.selectedEntry.id, encryptedEntry, entry);
           this.isEditing = false;
           this.isViewing = true;
+          this.originalFormData = null;
         } else {
           console.log("Adding new entry:", entry);
           await this.addEntry(encryptedEntry);
@@ -276,6 +278,9 @@ export const useCBTStore = defineStore("cbtStore", {
         this.isEditing = true;
         this.isNewEntry = false;
         this.isViewing = false;
+
+        // Store original data for cancel functionality
+        this.originalFormData = { ...this.formData };
       } catch (error) {
         console.error("Error handling update entry:", error);
       }
@@ -283,6 +288,10 @@ export const useCBTStore = defineStore("cbtStore", {
 
     cancelUpdateEntry() {
       try {
+        if (this.originalFormData) {
+          this.formData = { ...this.originalFormData };
+        }
+
         this.isEditing = false;
         this.isNewEntry = false;
         this.isViewing = true;

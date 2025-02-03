@@ -23,20 +23,22 @@
 
       <div
         v-if="cbtStore.isEditing || cbtStore.isNewEntry"
-        class="flex items-start gap-1 mb-4"
+        class="flex items-center gap-2 mb-4"
       >
-        <p class="text-gray-600">{{ description }}</p>
-        <button
-          v-if="example"
-          class="flex-shrink-0 mt-0.5 text-gray-500 hover:text-gray-700"
-          @click="toggleExample"
-        >
-          <InformationCircleIcon class="w-4 h-4" />
-        </button>
+        <p class="flex items-center text-gray-600">
+          {{ description }}
+          <button
+            v-if="example"
+            class="inline-flex items-center ml-1 text-gray-500 hover:text-gray-700"
+            @click="toggleExample"
+          >
+            <InformationCircleIcon class="w-4 h-4" />
+          </button>
+        </p>
       </div>
 
       <p
-        v-if="showExample && example"
+        v-if="showExample && example && cbtStore.isEditing"
         class="mb-4 text-sm italic text-gray-500"
       >
         {{ example }}
@@ -55,7 +57,7 @@
       </div>
 
       <div v-if="cbtStore.isViewing" class="relative">
-        <p class="p-4 bg-gray-50 rounded-xl">{{ localValue }}</p>
+        <p class="p-4 rounded-xl">{{ localValue }}</p>
       </div>
     </div>
   </div>
