@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-lg p-4 mx-auto">
+  <div class="max-w-lg px-4 mx-auto">
     <!-- Title -->
     <div class="flex items-center justify-between px-10 py-4">
       <img

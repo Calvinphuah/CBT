@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-24 text-gray-800 md:pb-0 bg-gray-50">
+  <div class="pb-24 text-gray-800 md:pb-0">
     <!-- Hero Section -->
     <section class="flex items-center justify-center min-h-screen px-4 py-16">
       <div

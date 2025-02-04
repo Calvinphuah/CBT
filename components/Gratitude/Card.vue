@@ -1,7 +1,7 @@
 <template>
   <div class="w-full mx-auto">
     <div
-      class="w-full p-4 transition-shadow bg-white border border-black rounded-lg shadow-md hover:cursor-pointer hover:scale-105 hover:shadow-lg"
+      class="w-full p-4 transition-transform transform bg-white border border-black rounded-lg shadow-md hover:cursor-pointer hover:scale-105 hover:shadow-lg"
       @click="$emit('click')"
     >
       <div class="flex items-center gap-4">

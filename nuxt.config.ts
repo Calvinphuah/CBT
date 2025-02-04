@@ -14,7 +14,61 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "@nuxtjs/google-fonts",
+    "@vite-pwa/nuxt",
   ],
+  pwa: {
+    manifest: {
+      name: "Cogni",
+      short_name: "Cogni",
+      description: "Cognitive behavioural therapy app",
+      theme_color: "#ffffff",
+      icons: [
+        {
+          src: "/icons/icon-144x144.png",
+          sizes: "144x144",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/icons/icon-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "/icons/icon-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any",
+        },
+      ],
+      screenshots: [
+        {
+          src: "/screenshots/desktop.png",
+          sizes: "1920x1080",
+          type: "image/png",
+          form_factor: "wide",
+          label: "Desktop view",
+        },
+        {
+          src: "/screenshots/mobile.png",
+          sizes: "750x1334",
+          type: "image/png",
+          form_factor: "narrow",
+          label: "Mobile view",
+        },
+      ],
+    },
+    workbox: {
+      navigateFallback: "/",
+      navigateFallbackDenylist: [/^\/__nuxt_devtools__/],
+    },
+    devOptions: {
+      enabled: true,
+      type: "module",
+    },
+  },
+
   runtimeConfig: {
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
