@@ -1,6 +1,6 @@
 <template>
   <nav class="sticky top-0 z-[999] w-full bg-white">
-    <div class="flex items-center justify-between p-4 px-5">
+    <div class="flex items-center justify-between p-4 px-4 sm:px-6 lg:px-8">
       <!-- Back Icon -->
       <NuxtLink to="/">
         <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />

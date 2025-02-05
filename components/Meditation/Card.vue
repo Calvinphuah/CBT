@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-lg mx-auto space-y-6">
+  <div class="max-w-lg mx-auto mb-4">
     <div
       class="transition-transform transform bg-white border border-black rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
     >

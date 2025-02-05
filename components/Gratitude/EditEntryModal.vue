@@ -1,11 +1,11 @@
 <template>
   <div
-    class="fixed inset-0 flex items-center justify-center z-[51] bg-gray-500/75"
+    class="fixed inset-0 flex items-center justify-center z-[110] bg-gray-500/75"
     aria-labelledby="modal-title"
     role="dialog"
     aria-modal="true"
   >
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-xl">
+    <div class="w-full max-w-md p-6 mx-4 bg-white rounded-lg shadow-xl">
       <h3
         id="modal-title"
         class="text-lg font-semibold text-center text-gray-900"

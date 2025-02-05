@@ -18,6 +18,18 @@ import {
 import type { GratitudeEntry, GratitudeState } from "@/types/gratitude";
 import { secureEncrypt, serverDecrypt } from "@/utils/encryption";
 
+const images = [
+  "img/cat.png",
+  "img/dog.png",
+  "img/leaf.png",
+  "img/popcorn.png",
+  "img/wavy-leaf.png",
+] as const;
+
+const getRandomImage = () => {
+  return images[Math.floor(Math.random() * images.length)];
+};
+
 export const useGratitudeStore = defineStore("gratitudeStore", {
   state: (): GratitudeState => ({
     newEntry: "",
@@ -93,7 +105,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
           })
         ) as GratitudeEntry[];
 
-        console.log("📥 Firestore Entries (Encrypted):", rawEntries);
+        // console.log("📥 Firestore Entries (Encrypted):", rawEntries);
 
         // 🔓 Decrypt `entry` field before displaying in UI
         const decryptedEntries = await Promise.all(
@@ -111,7 +123,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
           })
         );
 
-        console.log("📤 Decrypted Entries (For UI):", decryptedEntries);
+        // console.log("📤 Decrypted Entries (For UI):", decryptedEntries);
 
         this.gratitudeEntries = loadMore
           ? [...this.gratitudeEntries, ...decryptedEntries]
@@ -146,6 +158,7 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
         entry,
         createdAt: Timestamp.now(),
         userId: $auth.currentUser.uid,
+        image: getRandomImage(),
       };
 
       try {

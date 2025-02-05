@@ -1,12 +1,16 @@
 <template>
-  <div class="max-w-lg p-4 mx-auto space-y-6">
+  <div class="max-w-lg px-4 mx-auto">
+    <!-- Title -->
     <div class="flex items-center justify-between px-10 py-4">
       <img
         src="../../public/img/landing-meditation.png"
-        alt="Meditation"
+        alt="CBT"
         class="w-32"
       />
-      <h2 class="text-lg font-semibold">Take time <br />to unwind</h2>
+      <h2 class="text-lg font-semibold">
+        <span class="block md:inline">Take time</span>
+        <span class="block md:inline"> to unwind</span>
+      </h2>
     </div>
 
     <MeditationModal
@@ -18,7 +22,7 @@
       @close="closeModal"
     />
 
-    <h2 class="mt-2 text-xl font-bold">Favorite Meditations</h2>
+    <h2 class="px-2 my-2 text-xl font-semibold">Favorite Meditations</h2>
     <MeditationCard
       v-for="card in favoriteCards"
       :key="card.id"
@@ -27,7 +31,7 @@
       @open-modal="openModal"
     />
 
-    <h2 class="text-xl font-bold">All Meditations</h2>
+    <h2 class="px-2 mb-2 text-xl font-semibold">All Meditations</h2>
     <MeditationCard
       v-for="card in cards"
       :key="card.id"

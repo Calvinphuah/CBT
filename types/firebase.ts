@@ -3,3 +3,4 @@ export interface FirebaseUser {
   email: string | null;
   displayName: string | null;
 }
+ 

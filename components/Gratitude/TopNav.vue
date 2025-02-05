@@ -1,5 +1,7 @@
 <template>
-  <div class="sticky top-0 z-50 flex items-center justify-between p-4 px-5">
+  <div
+    class="sticky top-0 z-50 flex items-center justify-between p-4 px-4 bg-white sm:px-6 lg:px-8"
+  >
     <!-- Back Icon -->
     <NuxtLink to="/">
       <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer"

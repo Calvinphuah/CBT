@@ -18,4 +18,5 @@ export interface CBTState {
   loading: boolean;
   error: string | null;
   formData: { [key: string]: string };
+  originalFormData: { [key: string]: string } | null;
 }
