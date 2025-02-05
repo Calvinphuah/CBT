@@ -89,12 +89,12 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  ssr: true,
+  ssr: false,
   nitro: {
     preset: "static",
-    output: {
-      dir: "dist",
-    },
+    // output: {
+    //   dir: "dist",
+    // },
   },
   plugins: ["@/plugins/firebase.client.ts", "@/plugins/authSetup.client.ts"],
   app: {
