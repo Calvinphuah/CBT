@@ -89,7 +89,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  ssr: false,
+  ssr: true,
   plugins: ["@/plugins/firebase.client.ts", "@/plugins/authSetup.client.ts"],
   app: {
     head: {
