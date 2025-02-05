@@ -1,29 +1,14 @@
-// No need to import "crypto" module anymore!
-import { getFunctions, httpsCallable } from "firebase/functions";
-
 /**
- * Retrieves the encryption key from local config or Firebase Functions.
+ * Retrieves the encryption key from runtime config.
  */
 async function getEncryptionKey(): Promise<CryptoKey> {
   const config = useRuntimeConfig();
-  let rawKey: string | undefined = "";
-
-  if (config.public.encryptionSecretKey) {
-    // console.warn("⚠️ Using public encryption key in development mode.");
-    rawKey = config.public.encryptionSecretKey;
-  } else {
-    // Fetch from Firebase in production
-    const functions = getFunctions();
-    const getKey = httpsCallable<unknown, { key: string }>(
-      functions,
-      "getEncryptionKey"
-    );
-    const result = await getKey();
-    rawKey = result.data.key;
-  }
+  const rawKey = config.public.encryptionSecretKey;
 
   if (!rawKey) {
-    throw new Error("Encryption key is missing.");
+    throw new Error(
+      "Encryption key is missing from environment configuration."
+    );
   }
 
   // Convert hex string to Uint8Array
