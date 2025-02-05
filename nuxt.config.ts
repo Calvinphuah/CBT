@@ -90,6 +90,7 @@ export default defineNuxtConfig({
     },
   },
   ssr: true,
+  target: "static",
   plugins: ["@/plugins/firebase.client.ts", "@/plugins/authSetup.client.ts"],
   app: {
     head: {
