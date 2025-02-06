@@ -31,8 +31,8 @@
           loop
           muted
           playsinline
-          controls="false"
-          class="w-1/2 md:rounded-lg"
+          :controls="false"
+          class="w-1/2 md:rounded-lg video-player"
         ></video>
       </div>
 
@@ -338,5 +338,46 @@ input[type="range"]:hover::-webkit-slider-runnable-track {
 
 input[type="range"]:hover::-moz-range-track {
   background: #d1d5db;
+}
+
+.video-player {
+  /* Remove all default controls */
+  -webkit-media-controls-panel: none !important;
+  -webkit-media-controls: none !important;
+  -webkit-media-controls-overlay-play-button: none !important;
+  -webkit-media-controls-start-playback-button: none !important;
+  -webkit-media-controls-play-button: none !important;
+  -webkit-media-controls-timeline: none !important;
+  -webkit-media-controls-current-time-display: none !important;
+  -webkit-media-controls-time-remaining-display: none !important;
+  -webkit-media-controls-time-control-container: none !important;
+  -webkit-media-controls-toggle-closed-captions-button: none !important;
+  -webkit-media-controls-volume-control-container: none !important;
+  -webkit-media-controls-fullscreen-button: none !important;
+  -webkit-media-controls-rewind-button: none !important;
+  -webkit-media-controls-return-to-realtime-button: none !important;
+  -webkit-media-controls-seek-back-button: none !important;
+  -webkit-media-controls-seek-forward-button: none !important;
+  -webkit-media-controls-mute-button: none !important;
+  -webkit-media-controls-volume-slider: none !important;
+
+  /* Prevent all interactions */
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+
+  /* Remove tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent !important;
+
+  /* Ensure video doesn't show default play button */
+  object-fit: contain;
+  background: transparent;
+}
+
+/* Ensure video wrapper also prevents interactions */
+.video-player-wrapper {
+  pointer-events: none !important;
 }
 </style>
