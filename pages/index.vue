@@ -25,7 +25,7 @@
             Start now
           </NuxtLink>
           <button
-            class="inline-block px-6 py-2 ml-4 transition rounded-full bg-accent-orange"
+            class="hidden px-6 py-2 ml-4 transition rounded-full md:inline-block bg-accent-orange"
           >
             <a href="/pdf/cbt_exercise.pdf" download>PDF Template</a>
           </button>

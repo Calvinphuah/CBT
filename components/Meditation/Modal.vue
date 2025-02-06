@@ -30,6 +30,8 @@
           src="/videos/meditation-white.mp4"
           loop
           muted
+          playsinline
+          controls="false"
           class="w-1/2 md:rounded-lg"
         ></video>
       </div>
@@ -90,7 +92,10 @@ interface MeditationProps {
 }
 
 const props = defineProps<MeditationProps>();
-const emit = defineEmits(["close", "toggleFavorite"]);
+const emit = defineEmits<{
+  (e: "close"): void;
+  (e: "toggleFavorite", id: string): void;
+}>();
 
 // State for audio and video players
 const audioPlayer = ref<HTMLAudioElement | null>(null);
@@ -159,7 +164,7 @@ function forward() {
   }
 }
 
-function formatTime(seconds: number) {
+function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60)
     .toString()
@@ -212,6 +217,21 @@ watch(
 </script>
 
 <style scoped>
+/* Hide default video controls */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+video {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  pointer-events: none;
+}
+
 /* Custom range input styles */
 input[type="range"] {
   -webkit-appearance: none;

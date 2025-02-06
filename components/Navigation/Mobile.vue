@@ -1,7 +1,7 @@
 <template>
   <!-- Bottom -->
   <nav
-    class="fixed bottom-0 left-0 right-0 bg-white md:hidden z-[100] w-full rounded-t-lg"
+    class="fixed bottom-0 left-0 right-0 bg-white md:hidden z-[100] w-full rounded-t-lg safe-area-fix"
   >
     <div class="flex justify-around p-4">
       <NuxtLink
@@ -46,3 +46,28 @@ const navItems = [
   },
 ];
 </script>
+
+<style scoped>
+/* Add these styles to handle mobile keyboard */
+.safe-area-fix {
+  padding-bottom: env(safe-area-inset-bottom);
+  height: auto;
+  /* This ensures the nav stays at the bottom even with keyboard */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* Prevent nav from being pushed up by keyboard */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* Additional Safari/iOS support */
+  -webkit-touch-callout: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* iOS specific fix */
+  .safe-area-fix {
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+}
+</style>
