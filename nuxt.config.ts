@@ -101,7 +101,14 @@ export default defineNuxtConfig({
     head: {
       title: "Cogni",
       titleTemplate: "%s | Cogni",
-      meta: [{ name: "Cogni", content: "Cognitive behavioural therapy app" }],
+      meta: [
+        { name: "Cogni", content: "Cognitive behavioural therapy app" },
+        {
+          name: "viewport",
+          content:
+            "width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no",
+        },
+      ],
       link: [
         {
           rel: "stylesheet",
