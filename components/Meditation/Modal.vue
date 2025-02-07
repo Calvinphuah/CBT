@@ -30,7 +30,9 @@
           src="/videos/meditation-white.mp4"
           loop
           muted
-          class="w-1/2 md:rounded-lg"
+          playsinline
+          :controls="false"
+          class="w-1/2 md:rounded-lg video-player"
         ></video>
       </div>
 
@@ -90,7 +92,10 @@ interface MeditationProps {
 }
 
 const props = defineProps<MeditationProps>();
-const emit = defineEmits(["close", "toggleFavorite"]);
+const emit = defineEmits<{
+  (e: "close"): void;
+  (e: "toggleFavorite", id: string): void;
+}>();
 
 // State for audio and video players
 const audioPlayer = ref<HTMLAudioElement | null>(null);
@@ -159,7 +164,7 @@ function forward() {
   }
 }
 
-function formatTime(seconds: number) {
+function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60)
     .toString()
@@ -212,6 +217,21 @@ watch(
 </script>
 
 <style scoped>
+/* Hide default video controls */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+video {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  pointer-events: none;
+}
+
 /* Custom range input styles */
 input[type="range"] {
   -webkit-appearance: none;
@@ -318,5 +338,46 @@ input[type="range"]:hover::-webkit-slider-runnable-track {
 
 input[type="range"]:hover::-moz-range-track {
   background: #d1d5db;
+}
+
+.video-player {
+  /* Remove all default controls */
+  -webkit-media-controls-panel: none !important;
+  -webkit-media-controls: none !important;
+  -webkit-media-controls-overlay-play-button: none !important;
+  -webkit-media-controls-start-playback-button: none !important;
+  -webkit-media-controls-play-button: none !important;
+  -webkit-media-controls-timeline: none !important;
+  -webkit-media-controls-current-time-display: none !important;
+  -webkit-media-controls-time-remaining-display: none !important;
+  -webkit-media-controls-time-control-container: none !important;
+  -webkit-media-controls-toggle-closed-captions-button: none !important;
+  -webkit-media-controls-volume-control-container: none !important;
+  -webkit-media-controls-fullscreen-button: none !important;
+  -webkit-media-controls-rewind-button: none !important;
+  -webkit-media-controls-return-to-realtime-button: none !important;
+  -webkit-media-controls-seek-back-button: none !important;
+  -webkit-media-controls-seek-forward-button: none !important;
+  -webkit-media-controls-mute-button: none !important;
+  -webkit-media-controls-volume-slider: none !important;
+
+  /* Prevent all interactions */
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+
+  /* Remove tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent !important;
+
+  /* Ensure video doesn't show default play button */
+  object-fit: contain;
+  background: transparent;
+}
+
+/* Ensure video wrapper also prevents interactions */
+.video-player-wrapper {
+  pointer-events: none !important;
 }
 </style>

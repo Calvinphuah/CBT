@@ -1,7 +1,8 @@
 <template>
   <!-- Bottom -->
   <nav
-    class="fixed bottom-0 left-0 right-0 bg-white md:hidden z-[100] w-full rounded-t-lg"
+    class="fixed bottom-0 left-0 right-0 bg-white md:hidden z-[100] w-full rounded-t-lg transition-transform duration-200 safe-area-fix"
+    :class="{ hidden: isKeyboardOpen }"
   >
     <div class="flex justify-around p-4">
       <NuxtLink
@@ -45,4 +46,37 @@ const navItems = [
     icon: CloudIcon,
   },
 ];
+
+const isKeyboardOpen = ref(false);
+
+const handleResize = () => {
+  isKeyboardOpen.value = window.innerHeight < screen.height * 0.7;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
+});
 </script>
+
+<style scoped>
+.safe-area-fix {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  padding-bottom: env(safe-area-inset-bottom);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+@supports (-webkit-touch-callout: none) {
+  .safe-area-fix {
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+}
+</style>

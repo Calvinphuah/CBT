@@ -89,13 +89,26 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  ssr: true,
+  ssr: false,
+  nitro: {
+    preset: "static",
+    // output: {
+    //   dir: "dist",
+    // },
+  },
   plugins: ["@/plugins/firebase.client.ts", "@/plugins/authSetup.client.ts"],
   app: {
     head: {
       title: "Cogni",
       titleTemplate: "%s | Cogni",
-      meta: [{ name: "Cogni", content: "Cognitive behavioural therapy app" }],
+      meta: [
+        { name: "Cogni", content: "Cognitive behavioural therapy app" },
+        {
+          name: "viewport",
+          content:
+            "width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no",
+        },
+      ],
       link: [
         {
           rel: "stylesheet",
