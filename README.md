@@ -1,75 +1,30 @@
-# Nuxt Minimal Starter
+# Cogni - CBT Web Application
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A Progressive Web Application (PWA) built with Nuxt 3, implementing Cognitive Behavioral Therapy (CBT) techniques to assist users in managing thoughts and emotions. The application provides structured tools for mental wellness practice while maintaining user privacy through client-side encryption.
 
-## Setup
+## Features
 
-Make sure to install dependencies:
+- **CBT Tools** - Evidence-based thought analysis and restructuring
+- **Guided Exercises** - Structured CBT worksheets and activities
+- **Client-side Encryption** - Secure data handling with Web Crypto API
 
-```bash
-# npm
-npm install
+## Technology Stack
 
-# pnpm
-pnpm install
+- **Framework:** [Nuxt 3](https://nuxt.com/)
+- **Language:** TypeScript
+- **State Management:** [Pinia](https://pinia.vuejs.org/)
+- **Hosting & Deployment:** Netlify
+- **Authentication & Database:** Firebase (Auth & Firestore)
+- **Encryption:** Web Crypto API
+- **UI Framework:** TailwindCSS
 
-# yarn
-yarn install
+## PWA Installation
 
-# bun
-bun install
-```
+The application can be installed as a Progressive Web App on supported devices:
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+1.  Access the application through a compatible web browser
+2.  Use the browser's install functionality:
+    - Desktop: Look for the install icon in the address bar
+    - Mobile: Use the browser's "Add to Home Screen" option
+3.  Follow the installation prompts
+4.  Access the application from your device's home screen
