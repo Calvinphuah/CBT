@@ -26,9 +26,12 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
-          publish-dir: "./.output/public" # Ensure this is your Nuxt build output folder
+          publish-dir: "./.output/public"
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-          alias: preview
+          deploy-message: "Deploying PR to Netlify"
+          enable-pull-request-comment: true
+          enable-commit-status: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
