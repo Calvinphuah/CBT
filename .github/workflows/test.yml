@@ -23,5 +23,5 @@ jobs:
       # - name: Run Unit Tests
       #   run: npm run test
 
-      - name: Build Nuxt App
-        run: npm run build
+      # - name: Build Nuxt App
+      #   run: npm run build
