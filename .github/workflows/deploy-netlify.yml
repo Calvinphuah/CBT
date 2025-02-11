@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+# Add permissions block to grant necessary access
+permissions:
+  pull-requests: write
+  deployments: write
+  statuses: write
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
