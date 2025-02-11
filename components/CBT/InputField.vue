@@ -38,7 +38,9 @@
       </div>
 
       <p
-        v-if="showExample && example && cbtStore.isEditing"
+        v-if="
+          showExample && example && (cbtStore.isEditing || cbtStore.isNewEntry)
+        "
         class="mb-4 text-sm italic text-gray-500"
       >
         {{ example }}
