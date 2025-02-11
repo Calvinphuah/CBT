@@ -45,9 +45,9 @@ jobs:
           publish-dir: "./.output/public"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "🚀 Deploying PR Preview to Netlify"
-          alias: pr-${{ github.event.number }} # Unique preview per PR
-          enable-pull-request-comment: true # Adds the Netlify preview URL as a PR comment
-          enable-commit-status: true # Shows status in GitHub Actions
+          alias: pr-${{ github.event.number }}
+          enable-pull-request-comment: true
+          enable-commit-status: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
