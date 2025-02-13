@@ -1,9 +1,6 @@
 name: CBT
 
 on:
-  # pull_request:
-  #   branches:
-  #     - main
   push:
     branches:
       - dev
@@ -20,8 +17,5 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # - name: Run Unit Tests
-      #   run: npm run test
-
-      # - name: Build Nuxt App
-      #   run: npm run build
+      - name: Run Unit Tests
+        run: npm run test
