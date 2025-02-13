@@ -3,34 +3,38 @@ name: CBT Tests
 on:
   push:
     branches:
-      - dev
+      - dev # Runs only when code is pushed to dev
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      # actions/checkout@v4 clones your repo into the workflow’s temporary environment.
+      # ✅ Clones your repository into the GitHub Actions runner
       - name: 🚀 Checkout Repository
         uses: actions/checkout@v4
 
+      # ✅ Creates .env.test dynamically using GitHub Secrets
       - name: 🔑 Create .env.test File
         run: |
-          echo "NUXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}" >> .env.test
-          echo "NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> .env.test
-          echo "NUXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}" >> .env.test
-          echo "NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> .env.test
-          echo "NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}" >> .env.test
-          echo "NUXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env.test
+          echo "NUXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NUXT_PUBLIC_FIREBASE_API_KEY }}" >> .env.test
+          echo "NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}" >> .env.test
+          echo "NUXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NUXT_PUBLIC_FIREBASE_PROJECT_ID }}" >> .env.test
+          echo "NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" >> .env.test
+          echo "NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}" >> .env.test
+          echo "NUXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NUXT_PUBLIC_FIREBASE_APP_ID }}" >> .env.test
 
+      # ✅ Sets up Node.js with caching for faster builds
       - name: ⚡ Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "npm"
 
+      # ✅ Installs dependencies
       - name: 📦 Install Dependencies
         run: npm ci
 
+      # ✅ Runs Vitest unit tests
       - name: ✅ Run Unit Tests
         run: npm run test
