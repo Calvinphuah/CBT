@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxtjs/google-fonts",
     "@vite-pwa/nuxt",
+    "@nuxt/test-utils/module",
   ],
   pwa: {
     manifest: {
