@@ -11,6 +11,7 @@
             :src="image"
             :alt="imageAlt || 'Gratitude icon'"
             class="object-contain w-full h-full"
+            @error="onImageError"
           />
         </div>
 
@@ -32,6 +33,14 @@ interface Props {
 }
 
 defineProps<Props>();
+
+// Some older entries stored an image path that no longer ships.
+const FALLBACK_IMAGE = "/img/leaf.png";
+const onImageError = (e: Event) => {
+  const img = e.target as HTMLImageElement;
+  if (img.getAttribute("src") === FALLBACK_IMAGE) return;
+  img.src = FALLBACK_IMAGE;
+};
 
 // Emits
 defineEmits<{
