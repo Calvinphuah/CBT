@@ -19,11 +19,10 @@ import type { GratitudeEntry, GratitudeState } from "@/types/gratitude";
 import { secureEncrypt, serverDecrypt } from "@/utils/encryption";
 
 const images = [
-  "img/cat.png",
-  "img/dog.png",
-  "img/leaf.png",
-  "img/popcorn.png",
-  "img/wavy-leaf.png",
+  "/img/cat.png",
+  "/img/leaf.png",
+  "/img/popcorn.png",
+  "/img/wavy-leaf.png",
 ] as const;
 
 const getRandomImage = () => {
