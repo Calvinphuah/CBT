@@ -50,7 +50,9 @@
       <h1 class="text-title">
         {{ currentStep.model === "dispute" ? copy.answerQuestion : currentStep.title }}
       </h1>
-      <p class="mt-2 text-[17px] leading-[25px] text-ink-2">{{ currentStep.help }}</p>
+      <p class="mt-2 text-[17px] leading-[25px] text-ink-2">
+        {{ currentStep.model === "dispute" ? copy.answerHelp : currentStep.help }}
+      </p>
       <CommonHandNote v-if="currentStep.note" class="mt-2" :tilt="-3">
         {{ currentStep.note }}
       </CommonHandNote>
@@ -96,10 +98,10 @@
       </p>
     </div>
 
-    <div class="flex-1" />
+    <div class="flex-1 md:hidden" />
 
     <div
-      class="sticky bottom-0 -mx-5 flex gap-2.5 bg-page px-5 pt-3 md:-mx-10 md:px-10"
+      class="sticky bottom-0 -mx-5 flex gap-2.5 bg-page px-5 pt-3 md:static md:mx-0 md:bg-transparent md:px-0 md:pt-1"
       :style="{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }"
     >
       <button
@@ -152,7 +154,8 @@
 <script setup lang="ts">
 import { CloudIcon } from "@heroicons/vue/24/outline";
 
-const emit = defineEmits<{ (e: "saved", clearerView: string): void }>();
+// Read by CBTView to show the saved screen. Set before saving, because saving closes this form.
+const savedClearerView = useState("cbt-saved-clearer-view", () => "");
 
 const cbtStore = useCBTStore();
 const { style, copy } = useAppStyle();
@@ -268,13 +271,12 @@ const goForward = async () => {
 };
 
 const save = async () => {
-  const wasNew = cbtStore.isNewEntry;
-  const clearerView = cbtStore.formData.dispute.trim();
+  if (cbtStore.isNewEntry) savedClearerView.value = cbtStore.formData.dispute.trim();
   isSaving.value = true;
   try {
     await cbtStore.submitCurrentEntry();
-    if (wasNew) emit("saved", clearerView);
   } catch {
+    savedClearerView.value = "";
     nudge.value = "Couldn’t save. Your words are still here, so try again.";
   } finally {
     isSaving.value = false;

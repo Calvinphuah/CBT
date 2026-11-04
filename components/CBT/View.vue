@@ -1,9 +1,6 @@
 <template>
   <div>
-    <CBTForm
-      v-if="cbtStore.isEditing || cbtStore.isNewEntry"
-      @saved="handleSaved"
-    />
+    <CBTForm v-if="cbtStore.isEditing || cbtStore.isNewEntry" />
 
     <CBTSaved
       v-else-if="savedClearerView"
@@ -22,18 +19,19 @@
 const cbtStore = useCBTStore();
 const route = useRoute();
 
-// Shown once, right after a new record is saved.
-const savedClearerView = ref("");
-
-const handleSaved = (clearerView: string) => {
-  savedClearerView.value = clearerView;
-};
+// Set by CBTForm when a new record is saved; shown once, then cleared.
+const savedClearerView = useState("cbt-saved-clearer-view", () => "");
 
 const viewSavedEntry = () => {
   savedClearerView.value = "";
   const newest = cbtStore.cbtEntries[0];
   if (newest) cbtStore.handleViewEntry(newest);
 };
+
+// Leaving the page dismisses the saved screen, so it isn't shown again on return.
+onUnmounted(() => {
+  savedClearerView.value = "";
+});
 
 onMounted(() => {
   cbtStore.fetchEntries();
