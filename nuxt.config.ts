@@ -3,6 +3,8 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
+  // Port 3000 is used by another local app.
+  devServer: { port: 3001 },
   modules: [
     "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
@@ -117,10 +119,17 @@ export default defineNuxtConfig({
     client: {
       installPrompt: false,
     },
+    // Off in dev: a dev service worker caches old pages and causes blank screens after restarts.
     devOptions: {
-      enabled: true,
+      enabled: false,
       type: "module",
     },
+  },
+
+  // Used by @nuxtjs/seo for the sitemap and share links.
+  site: {
+    url: "https://cogni-app.com",
+    name: "Cogni",
   },
 
   runtimeConfig: {
