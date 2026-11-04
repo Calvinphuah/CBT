@@ -1,57 +1,22 @@
 <template>
-  <div class="w-full mx-auto">
-    <div
-      class="w-full p-4 transition-transform transform bg-white border border-black rounded-lg shadow-md hover:cursor-pointer hover:scale-105 hover:shadow-lg"
-      @click="$emit('click')"
-    >
-      <div class="flex items-center gap-4">
-        <!-- image or Image (if provided) -->
-        <div v-if="image" class="flex-shrink-0 w-16 h-16">
-          <img
-            :src="image"
-            :alt="imageAlt || 'Gratitude icon'"
-            class="object-contain w-full h-full"
-            @error="onImageError"
-          />
-        </div>
-
-        <!-- Content -->
-        <p class="flex-grow text-base text-gray-800">
-          {{ content }}
-        </p>
-      </div>
-    </div>
-  </div>
+  <button
+    type="button"
+    class="card flex w-full gap-3 px-4 py-3.5 text-left transition-colors hover:bg-sunken"
+    @click="$emit('click')"
+  >
+    <SunIcon class="size-[22px] shrink-0 text-sun-icon" aria-hidden="true" />
+    <span class="text-[17px] leading-[25px]">{{ content }}</span>
+  </button>
 </template>
 
 <script setup lang="ts">
-// Props
-interface Props {
+import { SunIcon } from "@heroicons/vue/24/outline";
+
+defineProps<{
   content: string;
-  image?: string;
-  imageAlt?: string;
-}
+}>();
 
-defineProps<Props>();
-
-// Some older entries stored an image path that no longer ships.
-const FALLBACK_IMAGE = "/img/leaf.png";
-const onImageError = (e: Event) => {
-  const img = e.target as HTMLImageElement;
-  if (img.getAttribute("src") === FALLBACK_IMAGE) return;
-  img.src = FALLBACK_IMAGE;
-};
-
-// Emits
 defineEmits<{
   click: [];
 }>();
 </script>
-
-<style scoped>
-/* Adjust border radius and padding to match the image */
-.div {
-  border-radius: 12px;
-  padding: 16px;
-}
-</style>

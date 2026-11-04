@@ -1,58 +1,59 @@
 <template>
-  <div
-    class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-80"
-    aria-labelledby="modal-title"
-    role="dialog"
-    aria-modal="true"
-  >
-    <div class="w-full max-w-md p-6 mx-4 bg-white rounded-lg shadow-xl">
-      <h3
-        id="modal-title"
-        class="text-lg font-semibold text-center text-gray-900"
-      >
-        Add to Gratitude Journal
-      </h3>
-      <div class="mt-4">
+  <CommonSheet :open="gratitudeStore.isNewEntry" @close="gratitudeStore.handleResetEntry">
+    <div class="flex flex-col gap-4">
+      <h2 class="text-title text-[24px]">What went well today?</h2>
+      <div>
+        <label for="gratitude-new" class="sr-only">What went well today?</label>
         <textarea
+          id="gratitude-new"
           v-model="gratitudeStore.newEntry"
-          class="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
-          placeholder="What are you grateful for today?"
-          rows="5"
+          class="field"
+          rows="4"
+          maxlength="400"
+          placeholder="The barista remembered my order."
+          @input="nudge = ''"
         ></textarea>
+        <p v-if="nudge" class="mt-1.5 text-[15px] text-danger" role="alert">{{ nudge }}</p>
       </div>
-
-      <div class="flex items-center justify-between mt-4 space-x-2">
-        <div>
-          <button
-            type="button"
-            class="flex items-center justify-center text-white bg-yellow-500 rounded-md w-9 h-9 hover:bg-yellow-600 focus:ring focus:ring-yellow-300"
-            @click="gratitudeStore.generateGratitudeEntry"
-          >
-            <SparklesIcon class="w-6 h-6" />
-          </button>
-        </div>
-        <div class="flex gap-2">
-          <button
-            type="button"
-            class="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
-            @click="gratitudeStore.handleResetEntry"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
-            @click="gratitudeStore.addEntry(gratitudeStore.newEntry)"
-          >
-            Save
-          </button>
-        </div>
+      <div class="flex items-center justify-between">
+        <p class="text-[13px] text-ink-3">Small things count.</p>
+        <button
+          type="button"
+          class="flex h-11 items-center gap-1.5 text-[15px] font-semibold"
+          @click="gratitudeStore.generateGratitudeEntry"
+        >
+          <SparklesIcon class="size-5 text-sun-icon" aria-hidden="true" />
+          Need an idea?
+        </button>
+      </div>
+      <div class="flex gap-2.5">
+        <button type="button" class="btn-ghost" @click="gratitudeStore.handleResetEntry">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-primary flex-1"
+          :disabled="gratitudeStore.loading"
+          @click="save"
+        >
+          {{ gratitudeStore.loading ? "Saving…" : "Save" }}
+        </button>
       </div>
     </div>
-  </div>
+  </CommonSheet>
 </template>
 
 <script setup lang="ts">
-import { SparklesIcon } from "@heroicons/vue/24/solid";
+import { SparklesIcon } from "@heroicons/vue/24/outline";
+
 const gratitudeStore = useGratitudeStore();
+const nudge = ref("");
+
+const save = async () => {
+  if (!gratitudeStore.newEntry.trim()) {
+    nudge.value = "Write a few words first.";
+    return;
+  }
+  await gratitudeStore.addEntry(gratitudeStore.newEntry);
+};
 </script>
