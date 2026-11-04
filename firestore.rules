@@ -1,0 +1,60 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Encrypted text grows ~1.4x, so this leaves room for long entries.
+    function isText(value) {
+      return value is string && value.size() <= 50000;
+    }
+
+    function ownsExisting() {
+      return request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
+
+    function ownsIncoming() {
+      return request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.createdAt is timestamp;
+    }
+
+    // Updates may only change the listed fields; userId and createdAt stay fixed.
+    function onlyChanges(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    match /cbtEntries/{entryId} {
+      function validEntry(data) {
+        return isText(data.activatingEvent)
+          && isText(data.beliefs)
+          && isText(data.consequentFeelings)
+          && isText(data.disputes);
+      }
+
+      allow read, delete: if ownsExisting();
+      allow create: if ownsIncoming()
+        && request.resource.data.keys().hasOnly([
+          'activatingEvent', 'beliefs', 'consequentFeelings', 'disputes',
+          'createdAt', 'userId'
+        ])
+        && validEntry(request.resource.data);
+      allow update: if ownsExisting()
+        && onlyChanges(['activatingEvent', 'beliefs', 'consequentFeelings', 'disputes'])
+        && validEntry(request.resource.data);
+    }
+
+    match /gratitudeEntries/{entryId} {
+      allow read, delete: if ownsExisting();
+      allow create: if ownsIncoming()
+        && request.resource.data.keys().hasOnly(['entry', 'createdAt', 'userId', 'image'])
+        && isText(request.resource.data.entry)
+        && (!('image' in request.resource.data) || request.resource.data.image is string);
+      allow update: if ownsExisting()
+        && onlyChanges(['entry'])
+        && isText(request.resource.data.entry);
+    }
+
+    // Everything else, including the unused `data` collection, is denied.
+  }
+}
