@@ -2,11 +2,11 @@ import { describe, it, expect } from "vitest";
 import { APP_STYLES, STYLE_COPY, isAppStyle } from "@/composables/useAppStyle";
 
 describe("App styles", () => {
-  it("accepts only the four known styles", () => {
+  it("accepts only the styles in the picker", () => {
     expect(isAppStyle("clearing")).toBe(true);
     expect(isAppStyle("workbook")).toBe(true);
     expect(isAppStyle("companion")).toBe(true);
-    expect(isAppStyle("margin")).toBe(true);
+    expect(isAppStyle("margin")).toBe(false);
     expect(isAppStyle("paper")).toBe(false);
     expect(isAppStyle(null)).toBe(false);
   });

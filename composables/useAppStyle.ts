@@ -10,11 +10,11 @@ export interface StyleCopy {
   loginTitle: string;
 }
 
+// Margin is hidden for now; its styles stay in the code so it can come back.
 export const APP_STYLES: { value: AppStyle; label: string }[] = [
   { value: "clearing", label: "Clearing" },
   { value: "workbook", label: "Workbook" },
   { value: "companion", label: "Companion" },
-  { value: "margin", label: "Margin" },
 ];
 
 // The words that change with each style; the steps and data stay the same.
