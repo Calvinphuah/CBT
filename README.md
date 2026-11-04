@@ -1,12 +1,12 @@
 # Cogni - CBT Web Application
 
-A Progressive Web Application (PWA) built with Nuxt 3, implementing Cognitive Behavioral Therapy (CBT) techniques to assist users in managing thoughts and emotions. The application provides structured tools for mental wellness practice while maintaining user privacy through client-side encryption.
+A Progressive Web Application (PWA) built with Nuxt 3, implementing Cognitive Behavioral Therapy (CBT) techniques to assist users in managing thoughts and emotions. The application provides structured tools for mental wellness practice, with each user's entries kept private by Firestore security rules.
 
 ## Features
 
 - **CBT Tools** - Evidence-based thought analysis and restructuring
 - **Guided Exercises** - Structured CBT worksheets and activities
-- **Client-side Encryption** - Secure data handling with Web Crypto API
+- **Private Entries** - Firestore security rules let users read and write only their own entries
 
 ## Technology Stack
 
@@ -15,8 +15,18 @@ A Progressive Web Application (PWA) built with Nuxt 3, implementing Cognitive Be
 - **State Management:** [Pinia](https://pinia.vuejs.org/)
 - **Hosting & Deployment:** Netlify
 - **Authentication & Database:** Firebase (Auth & Firestore)
-- **Encryption:** Web Crypto API
+- **Encryption:** Web Crypto API (AES-GCM with a shared app key; this obscures entries at rest but is not end-to-end encryption, since the key ships in the client bundle)
 - **UI Framework:** TailwindCSS
+
+## Firestore Security Rules
+
+Rules live in `firestore.rules` and are deployed with:
+
+```bash
+npx firebase-tools deploy --only firestore:rules
+```
+
+Deploying replaces the rules currently set in the Firebase console.
 
 ## PWA Installation
 
