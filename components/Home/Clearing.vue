@@ -23,7 +23,7 @@
           </h1>
         </div>
 
-        <div class="h-[206px] overflow-hidden rounded-[22px] md:h-[330px] md:rounded-[26px]">
+        <div class="art-frame h-[206px] overflow-hidden rounded-[22px] md:h-[330px] md:rounded-[26px]">
           <CommonIllustration position="50% 62%" />
         </div>
 

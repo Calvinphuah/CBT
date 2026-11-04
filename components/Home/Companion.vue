@@ -23,7 +23,7 @@
           >
             Hey {{ firstName }}. Want to untangle something together?
           </p>
-          <div class="my-4 h-[200px] w-[200px] overflow-hidden rounded-[28px] md:h-[260px] md:w-[260px]">
+          <div class="my-3 h-[210px] w-[210px] dark:overflow-hidden dark:rounded-[28px] md:h-[270px] md:w-[270px]">
             <CommonIllustration />
           </div>
         </div>

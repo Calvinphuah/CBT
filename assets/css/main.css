@@ -131,7 +131,7 @@
     --c-danger: 200 56 72;
     --c-pen: 112 90 220;
     --c-margin: 255 138 61;
-    --c-soft: 227 217 255;
+    --c-soft: 226 215 253;
     --font-display: "Gabarito", "Onest", system-ui, sans-serif;
     --font-body: "Onest", system-ui, sans-serif;
     --font-hand: "Onest", system-ui, sans-serif;
@@ -281,6 +281,10 @@
   box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
 }
 
+[data-style="workbook"] .card-pop {
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink)), 4px 4px 0 rgb(var(--c-ink));
+}
+
 [data-style="workbook"] .clear-card {
   background: rgb(var(--c-surface));
   border-left: 4px solid rgb(var(--c-margin));
@@ -400,4 +404,26 @@
 [data-style="workbook"] :focus-visible,
 [data-style="companion"] :focus-visible {
   outline-color: rgb(var(--c-pen));
+}
+
+/* Picture frames: soft rounded in Clearing, a pasted-in photo in Workbook, a rounded tile in Companion. */
+[data-style="workbook"] .art-frame {
+  border-radius: 4px;
+  border: 1.5px solid rgb(var(--c-ink));
+  box-shadow: 4px 4px 0 rgb(var(--c-ink));
+  transform: rotate(-1deg);
+}
+
+[data-style="workbook"] .art-frame.art-flat {
+  border-width: 0 0 1.5px;
+  box-shadow: none;
+  transform: none;
+}
+
+[data-style="companion"] .art-frame {
+  border-radius: 28px;
+}
+
+[data-style="companion"] .art-frame.art-flat {
+  border-radius: 0 0 36px 36px;
 }

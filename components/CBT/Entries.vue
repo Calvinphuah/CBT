@@ -42,15 +42,23 @@
         @click="cbtStore.handleViewEntry(entry)"
       >
         <span
+          v-if="style !== 'workbook'"
           class="grid size-10 shrink-0 place-items-center rounded-full bg-sky-tint text-pen"
         >
-          <SunIcon class="size-[22px]" aria-hidden="true" />
+          <LightBulbIcon v-if="style === 'companion'" class="size-[22px]" aria-hidden="true" />
+          <SunIcon v-else class="size-[22px]" aria-hidden="true" />
         </span>
         <span class="min-w-0 flex-1">
           <span class="line-clamp-2 block text-[17px] font-semibold leading-[25px]">
-            {{ entry.beliefs }}
+            <span
+              :class="{ 'bg-sun px-1 text-sun-on [box-decoration-break:clone]': style === 'workbook' }"
+              >{{ entry.beliefs }}</span
+            >
           </span>
-          <span class="mt-0.5 block truncate text-[15px] text-ink-2">
+          <span
+            class="mt-0.5 block truncate text-[15px]"
+            :class="style === 'workbook' ? 'text-pen' : 'text-ink-2'"
+          >
             {{ entry.disputes }}
           </span>
         </span>
@@ -63,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { PlusIcon, SunIcon } from "@heroicons/vue/24/outline";
+import { LightBulbIcon, PlusIcon, SunIcon } from "@heroicons/vue/24/outline";
 import type { CBTEntry } from "@/types/cbt";
 
 const { entries } = defineProps<{
@@ -71,6 +79,7 @@ const { entries } = defineProps<{
 }>();
 
 const cbtStore = useCBTStore();
+const { style } = useAppStyle();
 
 const formatTime = (date: Date) =>
   date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).toLowerCase();

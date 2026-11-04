@@ -24,11 +24,11 @@
           Write it down. Then talk back.
         </h1>
 
-        <div class="h-[196px] overflow-hidden rounded ring-1 ring-ink/15 md:h-[300px]">
+        <div class="art-frame mx-1 h-[196px] overflow-hidden md:h-[300px]">
           <CommonIllustration />
         </div>
 
-        <div class="card -rotate-1 p-5 md:max-w-md">
+        <div class="card card-pop rotate-1 p-5 md:max-w-md">
           <h2 class="text-[21px] font-bold">New thought record</h2>
           <p class="mt-1 text-[15px] text-ink-2">4 questions, about 8 minutes</p>
           <button type="button" class="btn-primary mt-4 h-11 px-5 text-[15px]" @click="emit('start')">

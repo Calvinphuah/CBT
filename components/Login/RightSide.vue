@@ -12,6 +12,21 @@
       Your entries are encrypted, and only you can read them.
     </p>
 
+    <ul class="mt-2 flex flex-col gap-3 text-[15px] text-ink-2">
+      <li class="flex items-center gap-3">
+        <CloudIcon class="size-6 shrink-0 text-pen" aria-hidden="true" />
+        Untangle a hard thought in 4 short steps
+      </li>
+      <li class="flex items-center gap-3">
+        <HeartIcon class="size-6 shrink-0 text-pen" aria-hidden="true" />
+        Keep a list of small good things
+      </li>
+      <li class="flex items-center gap-3">
+        <MoonIcon class="size-6 shrink-0 text-pen" aria-hidden="true" />
+        Guided meditations, 3 to 19 minutes
+      </li>
+    </ul>
+
     <div class="flex-1 md:hidden" />
 
     <button
@@ -28,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import { CloudIcon, HeartIcon, MoonIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth.store";
 
 const authStore = useAuthStore();
