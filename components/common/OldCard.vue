@@ -26,7 +26,7 @@ const props = defineProps({
   link: { type: String, required: false, default: "/" },
 });
 
-const { title, image, link } = props;
+const { title, link } = props;
 
 // Responsive classes for card dimensions
 const responsiveCardClasses = computed(
