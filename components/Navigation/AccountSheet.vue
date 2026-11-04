@@ -26,17 +26,17 @@
             @click="style = option.value"
           >
             <span
-              class="relative flex h-[68px] flex-col justify-end gap-1 overflow-hidden rounded-xl p-2 dark:brightness-[.8]"
-              :style="STYLE_PREVIEWS[option.value].page"
+              class="relative flex h-[68px] flex-col justify-end gap-1 overflow-hidden rounded-xl p-2"
+              :style="previews[option.value].page"
               aria-hidden="true"
             >
               <span
                 class="absolute left-2 top-1.5 text-[19px] font-bold leading-none"
-                :style="STYLE_PREVIEWS[option.value].type"
+                :style="previews[option.value].type"
                 >Aa</span
               >
-              <i class="block h-2.5 w-4/5" :style="STYLE_PREVIEWS[option.value].thought" />
-              <i class="block h-2.5 w-3/5" :style="STYLE_PREVIEWS[option.value].answer" />
+              <i class="block h-2.5 w-4/5" :style="previews[option.value].thought" />
+              <i class="block h-2.5 w-3/5" :style="previews[option.value].answer" />
             </span>
             {{ option.label }}
           </button>
@@ -105,7 +105,9 @@ const isOpen = useState("account-sheet-open", () => false);
 const { style } = useAppStyle();
 
 // Fixed mini previews so each option shows its own paper, font and colours, whatever style is active.
-const STYLE_PREVIEWS: Record<AppStyle, Record<"page" | "type" | "thought" | "answer", Record<string, string>>> = {
+type Preview = Record<"page" | "type" | "thought" | "answer", Record<string, string>>;
+
+const LIGHT_PREVIEWS: Record<AppStyle, Preview> = {
   clearing: {
     page: { background: "#F5F7FA", boxShadow: "inset 0 0 0 1px #E1E6ED" },
     type: { fontFamily: "'Bricolage Grotesque'", color: "#1D2433" },
@@ -138,8 +140,45 @@ const STYLE_PREVIEWS: Record<AppStyle, Record<"page" | "type" | "thought" | "ans
   },
 };
 
+// Dark mode shows each style's own dark palette, so the sheet has no bright tiles.
+const DARK_PREVIEWS: Record<AppStyle, Preview> = {
+  clearing: {
+    page: { background: "#11151D", boxShadow: "inset 0 0 0 1px #2E384E" },
+    type: { fontFamily: "'Bricolage Grotesque'", color: "#ECEFF4" },
+    thought: { background: "#2C3650", borderRadius: "4px" },
+    answer: { background: "#BFD9F2", borderRadius: "4px", boxShadow: "inset 3px 0 #FFC94D" },
+  },
+  workbook: {
+    page: {
+      backgroundColor: "#141417",
+      backgroundImage: "linear-gradient(#303038 1px, transparent 1px), linear-gradient(90deg, #303038 1px, transparent 1px)",
+      backgroundSize: "8px 8px",
+      boxShadow: "inset 0 0 0 1.5px #5C5C68",
+      borderRadius: "4px",
+    },
+    type: { fontFamily: "'Schibsted Grotesk'", color: "#F2F2EE" },
+    thought: { background: "#BACE44", borderRadius: "1px" },
+    answer: { background: "#93A4FF", height: "3px", borderRadius: "2px", marginTop: "4px" },
+  },
+  companion: {
+    page: { background: "#17132A", boxShadow: "inset 0 0 0 1px #483E74", borderRadius: "16px" },
+    type: { fontFamily: "Gabarito", color: "#F1EEFC" },
+    thought: { background: "#BFB3F0", borderRadius: "999px" },
+    answer: { background: "#7FD9B8", borderRadius: "999px" },
+  },
+  margin: {
+    page: { background: "#14181E", boxShadow: "inset 0 0 0 1px #303845", borderRadius: "10px" },
+    type: { fontFamily: "Newsreader", fontStyle: "italic", fontWeight: "400", color: "#EEF0F3" },
+    thought: { background: "#EEF0F3", height: "3px", borderRadius: "2px", boxShadow: "-6px 0 0 -1px #303845" },
+    answer: { background: "#5FD1B2", height: "3px", borderRadius: "2px", boxShadow: "-6px 0 0 -1px #5FD1B2" },
+  },
+};
+
+const colorMode = useColorMode();
+const previews = computed(() => (colorMode.value === "dark" ? DARK_PREVIEWS : LIGHT_PREVIEWS));
+
 // The saved choice ("auto" follows the device setting), kept separate from the resolved light or dark.
-const savedTheme = useColorMode().store;
+const savedTheme = colorMode.store;
 
 type ThemeChoice = "light" | "dark" | "auto";
 

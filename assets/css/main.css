@@ -433,9 +433,10 @@
   border-radius: 20px;
 }
 
+/* The darker orange edge gives the light tangerine button a 3:1 outline against the page. */
 [data-style="companion"] .btn-primary,
 [data-style="companion"] .btn-sun {
-  box-shadow: 0 5px 0 rgb(var(--c-btn-shadow));
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-btn-shadow)), 0 5px 0 rgb(var(--c-btn-shadow));
 }
 
 [data-style="companion"] .icon-btn-filled {
@@ -445,7 +446,7 @@
 [data-style="companion"] .btn-primary:active,
 [data-style="companion"] .btn-sun:active {
   transform: translateY(3px);
-  box-shadow: 0 2px 0 rgb(var(--c-btn-shadow));
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-btn-shadow)), 0 2px 0 rgb(var(--c-btn-shadow));
 }
 
 [data-style="companion"] .field {
