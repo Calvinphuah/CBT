@@ -2,7 +2,7 @@
   <div class="flex min-h-[calc(100dvh-6rem)] flex-col md:min-h-screen md:items-center md:justify-center md:p-10">
     <div class="flex w-full flex-1 flex-col md:max-w-[640px] md:flex-none">
       <div class="art-frame art-flat h-[46vh] max-h-[400px] overflow-hidden rounded-b-[36px] md:h-[300px] md:rounded-[28px]">
-        <CommonIllustration :position="style === 'clearing' ? '50% 38%' : undefined" />
+        <CommonIllustration variant="saved" />
       </div>
 
       <div class="flex flex-1 flex-col gap-4 px-5 pt-7 md:px-0">

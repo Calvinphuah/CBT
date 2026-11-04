@@ -16,7 +16,7 @@
     </div>
 
     <div class="art-frame h-[min(36vh,340px)] w-full shrink-0 overflow-hidden rounded-[28px]">
-      <CommonIllustration alt="" :position="style === 'clearing' ? '50% 45%' : undefined" />
+      <CommonIllustration alt="" variant="player" />
     </div>
 
     <div>
@@ -73,7 +73,6 @@ definePageMeta({
 
 // Router
 const route = useRoute();
-const { style } = useAppStyle();
 const router = useRouter();
 
 

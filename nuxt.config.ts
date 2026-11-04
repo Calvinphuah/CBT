@@ -113,7 +113,7 @@ export default defineNuxtConfig({
       navigateFallback: "/",
       navigateFallbackDenylist: [/^\/__nuxt_devtools__/],
       // Precache the app shell, fonts and artwork so it opens offline; audio is streamed.
-      globPatterns: ["**/*.{js,css,html,png,svg,jpg,ico,woff2,webmanifest}"],
+      globPatterns: ["**/*.{js,css,html,png,svg,jpg,webp,ico,woff2,webmanifest}"],
       globIgnores: ["screenshots/**"],
     },
     client: {
