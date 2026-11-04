@@ -50,10 +50,14 @@ export default {
           on: token("on-btn"),
         },
         danger: token("danger"),
+        pen: token("pen"),
+        margin: token("margin"),
+        soft: token("soft"),
       },
       fontFamily: {
-        sans: ["Figtree", "system-ui", "sans-serif"],
-        display: ["Bricolage Grotesque", "Figtree", "system-ui", "sans-serif"],
+        sans: ["var(--font-body)"],
+        display: ["var(--font-display)"],
+        hand: ["var(--font-hand)"],
       },
       borderRadius: {
         card: "18px",

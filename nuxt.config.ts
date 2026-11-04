@@ -120,12 +120,38 @@ export default defineNuxtConfig({
     },
   },
   fonts: {
+    // Each style names its fonts only through CSS variables, so load them all globally.
     families: [
-      { name: "Figtree", provider: "google", weights: [400, 500, 600, 700] },
+      {
+        name: "Figtree",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        global: true,
+      },
       {
         name: "Bricolage Grotesque",
         provider: "google",
         weights: [600, 700, 800],
+        global: true,
+      },
+      {
+        name: "Schibsted Grotesk",
+        provider: "google",
+        weights: [400, 500, 600, 700, 800],
+        global: true,
+      },
+      { name: "Caveat", provider: "google", weights: [600, 700], global: true },
+      {
+        name: "Gabarito",
+        provider: "google",
+        weights: [600, 700, 800],
+        global: true,
+      },
+      {
+        name: "Onest",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        global: true,
       },
     ],
   },

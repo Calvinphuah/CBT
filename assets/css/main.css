@@ -23,6 +23,13 @@
     --c-btn: 62 74 97;
     --c-on-btn: 255 255 255;
     --c-danger: 196 67 47;
+    --c-pen: 62 74 97;
+    --c-margin: 255 201 77;
+    --c-soft: 230 239 249;
+    --c-btn-shadow: 62 74 97;
+    --font-display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+    --font-body: "Figtree", system-ui, sans-serif;
+    --font-hand: "Figtree", system-ui, sans-serif;
     color-scheme: light;
   }
 
@@ -42,7 +49,117 @@
     --c-btn: 191 217 242;
     --c-on-btn: 17 21 29;
     --c-danger: 240 138 120;
+    --c-pen: 191 217 242;
+    --c-soft: 28 42 64;
     color-scheme: dark;
+  }
+
+  /* Workbook: your own CBT notebook. Graphite thought, biro answer, highlighter on the thought being tested. */
+  :root[data-style="workbook"] {
+    --c-page: 251 251 248;
+    --c-surface: 255 255 255;
+    --c-sunken: 241 241 236;
+    --c-ink: 28 28 31;
+    --c-ink-2: 78 79 86;
+    --c-ink-3: 100 102 110;
+    --c-rule: 226 228 234;
+    --c-storm: 228 244 106;
+    --c-on-storm: 28 28 31;
+    --c-storm-label: 78 79 86;
+    --c-sky: 43 69 212;
+    --c-sky-tint: 255 255 255;
+    --c-sun: 228 244 106;
+    --c-on-sun: 28 28 31;
+    --c-sun-icon: 217 74 56;
+    --c-btn: 28 28 31;
+    --c-on-btn: 255 255 255;
+    --c-btn-shadow: 43 69 212;
+    --c-danger: 196 50 40;
+    --c-pen: 43 69 212;
+    --c-margin: 217 74 56;
+    --c-soft: 241 243 252;
+    --font-display: "Schibsted Grotesk", system-ui, sans-serif;
+    --font-body: "Schibsted Grotesk", system-ui, sans-serif;
+    --font-hand: "Caveat", "Schibsted Grotesk", cursive;
+  }
+
+  .dark[data-style="workbook"] {
+    --c-page: 20 20 23;
+    --c-surface: 30 30 35;
+    --c-sunken: 38 38 44;
+    --c-ink: 242 242 238;
+    --c-ink-2: 180 180 186;
+    --c-ink-3: 150 150 158;
+    --c-rule: 48 48 56;
+    --c-storm: 214 234 76;
+    --c-on-storm: 20 20 23;
+    --c-storm-label: 60 62 30;
+    --c-sky: 147 164 255;
+    --c-sky-tint: 30 30 35;
+    --c-sun: 214 234 76;
+    --c-on-sun: 20 20 23;
+    --c-sun-icon: 240 122 104;
+    --c-btn: 242 242 238;
+    --c-on-btn: 20 20 23;
+    --c-btn-shadow: 147 164 255;
+    --c-danger: 240 122 104;
+    --c-pen: 147 164 255;
+    --c-margin: 240 122 104;
+    --c-soft: 34 36 52;
+  }
+
+  /* Companion: warm and friendly. Plum thought, mint reframe, tangerine to act. */
+  :root[data-style="companion"] {
+    --c-page: 251 248 255;
+    --c-surface: 255 255 255;
+    --c-sunken: 241 236 253;
+    --c-ink: 43 33 80;
+    --c-ink-2: 94 84 128;
+    --c-ink-3: 108 100 138;
+    --c-rule: 230 224 245;
+    --c-storm: 43 33 80;
+    --c-on-storm: 255 255 255;
+    --c-storm-label: 191 179 240;
+    --c-sky: 143 227 195;
+    --c-sky-tint: 221 247 236;
+    --c-sun: 255 138 61;
+    --c-on-sun: 43 33 80;
+    --c-sun-icon: 224 112 36;
+    --c-btn: 255 138 61;
+    --c-on-btn: 43 33 80;
+    --c-btn-shadow: 196 94 30;
+    --c-danger: 200 56 72;
+    --c-pen: 112 90 220;
+    --c-margin: 255 138 61;
+    --c-soft: 227 217 255;
+    --font-display: "Gabarito", "Onest", system-ui, sans-serif;
+    --font-body: "Onest", system-ui, sans-serif;
+    --font-hand: "Onest", system-ui, sans-serif;
+  }
+
+  .dark[data-style="companion"] {
+    --c-page: 23 19 42;
+    --c-surface: 34 28 61;
+    --c-sunken: 46 39 82;
+    --c-ink: 241 238 252;
+    --c-ink-2: 191 184 220;
+    --c-ink-3: 160 152 190;
+    --c-rule: 58 50 96;
+    --c-storm: 52 43 96;
+    --c-on-storm: 241 238 252;
+    --c-storm-label: 191 179 240;
+    --c-sky: 127 217 184;
+    --c-sky-tint: 31 58 51;
+    --c-sun: 255 154 87;
+    --c-on-sun: 23 19 42;
+    --c-sun-icon: 255 154 87;
+    --c-btn: 255 154 87;
+    --c-on-btn: 23 19 42;
+    --c-btn-shadow: 168 82 30;
+    --c-danger: 255 130 140;
+    --c-pen: 191 179 240;
+    --c-margin: 255 154 87;
+    --c-soft: 46 39 82;
   }
 
   body {
@@ -149,4 +266,138 @@
   .day-label {
     @apply text-[13px] font-semibold text-ink-3;
   }
+}
+
+/* Per-style shapes. Clearing is the default above; these only change form, never meaning. */
+[data-style="workbook"] body {
+  background-image: linear-gradient(rgb(var(--c-rule) / 0.7) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--c-rule) / 0.7) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+[data-style="workbook"] .card,
+[data-style="workbook"] .clear-card {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+}
+
+[data-style="workbook"] .clear-card {
+  background: rgb(var(--c-surface));
+  border-left: 4px solid rgb(var(--c-margin));
+  color: rgb(var(--c-pen));
+}
+
+[data-style="workbook"] .storm-card {
+  border-radius: 3px;
+}
+
+[data-style="workbook"] .btn {
+  border-radius: 8px;
+}
+
+[data-style="workbook"] .btn-primary,
+[data-style="workbook"] .icon-btn-filled {
+  box-shadow: 4px 4px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="workbook"] .icon-btn-filled {
+  border-radius: 8px;
+}
+
+[data-style="workbook"] .btn-sun {
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink)), 4px 4px 0 rgb(var(--c-ink));
+}
+
+[data-style="workbook"] .btn-ghost {
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+}
+
+[data-style="workbook"] .field {
+  border-radius: 6px;
+  padding-left: 46px;
+  line-height: 28px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+  background-color: rgb(var(--c-surface));
+  background-image: linear-gradient(90deg, transparent 33px, rgb(var(--c-margin) / 0.6) 33px, rgb(var(--c-margin) / 0.6) 34px, transparent 34px),
+    repeating-linear-gradient(transparent 0 27px, rgb(var(--c-pen) / 0.18) 27px 28px);
+  background-position: 0 0, 0 16px;
+}
+
+[data-style="workbook"] .field-sky {
+  color: rgb(var(--c-pen));
+}
+
+[data-style="workbook"] .field:focus {
+  box-shadow: inset 0 0 0 2px rgb(var(--c-pen));
+}
+
+[data-style="workbook"] .chip {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+}
+
+[data-style="workbook"] .chip-on {
+  background: rgb(var(--c-sun));
+  color: rgb(var(--c-on-sun));
+}
+
+[data-style="companion"] .card,
+[data-style="companion"] .storm-card,
+[data-style="companion"] .clear-card {
+  border-radius: 24px;
+}
+
+[data-style="companion"] .btn {
+  border-radius: 20px;
+}
+
+[data-style="companion"] .btn-primary,
+[data-style="companion"] .btn-sun,
+[data-style="companion"] .icon-btn-filled {
+  box-shadow: 0 5px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="companion"] .btn-primary:active,
+[data-style="companion"] .btn-sun:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="companion"] .field {
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 2px rgb(var(--c-ink) / 0.85);
+}
+
+[data-style="companion"] .field-sky {
+  box-shadow: none;
+}
+
+[data-style="companion"] .chip {
+  border-radius: 14px;
+  background: rgb(var(--c-soft));
+  box-shadow: none;
+  font-weight: 600;
+}
+
+[data-style="companion"] .chip-on {
+  background: rgb(var(--c-storm));
+  color: rgb(var(--c-on-storm));
+}
+
+/* Active tab marker: none for Clearing, a highlighter for Workbook, a lilac pill for Companion. */
+[data-style="workbook"] .tab-on {
+  background: rgb(var(--c-sun));
+  color: rgb(var(--c-on-sun));
+  border-radius: 8px;
+}
+
+[data-style="companion"] .tab-on {
+  background: rgb(var(--c-soft));
+  border-radius: 14px;
+}
+
+/* The highlighter and tangerine are too light for a focus outline, so use the pen colour. */
+[data-style="workbook"] :focus-visible,
+[data-style="companion"] :focus-visible {
+  outline-color: rgb(var(--c-pen));
 }
