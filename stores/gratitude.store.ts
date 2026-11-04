@@ -209,7 +209,6 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
       this.isNewEntry = false;
       this.currentEntry = entry;
       this.newEntry = entry.entry;
-      console.log("Editing entry:", entry);
     },
 
     async submitEditedEntry() {

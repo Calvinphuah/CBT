@@ -1,39 +1,34 @@
 <template>
-  <div class="max-w-lg mx-auto mb-4">
-    <div
-      class="transition-transform transform bg-white border border-black rounded-lg shadow-md hover:scale-105 hover:shadow-lg"
+  <button
+    type="button"
+    class="flex w-full items-center gap-3.5 border-b border-rule py-3.5 text-left last:border-b-0"
+    @click="emit('openModal', card)"
+  >
+    <span
+      class="row-icon grid size-10 shrink-0 place-items-center rounded-full bg-surface text-pen ring-[1.5px] ring-inset ring-pen/40"
     >
-      <button
-        class="flex items-center justify-between w-full text-left"
-        @click="emit('openModal', card)"
-      >
-        <!-- Icon Section -->
-        <div class="flex">
-          <!-- <div class="w-24 rounded-l-lg bg-accent-blue">hey</div> -->
-          <!-- Text Section -->
-          <div class="flex flex-col py-4 ml-4">
-            <h3 class="text-lg font-semibold text-gray-800">
-              {{ card.title }}
-            </h3>
-            <p class="text-sm text-gray-600">{{ card.description }}</p>
-          </div>
-        </div>
-
-        <!-- Time Section -->
-        <div
-          class="flex flex-col items-center justify-center p-4 text-gray-500"
-        >
-          <span class="text-2xl font-bold text-gray-800">{{
-            card.time.split(" ")[0]
-          }}</span>
-          <span class="text-sm">mins</span>
-        </div>
-      </button>
-    </div>
-  </div>
+      <PlayIcon class="size-[18px]" aria-hidden="true" />
+    </span>
+    <span class="min-w-0 flex-1">
+      <span class="block text-[17px] font-semibold">
+        {{ card.title }}
+        <HeartIcon
+          v-if="isFavorite"
+          class="ml-1 inline size-4 align-[-2px] text-danger"
+          aria-label="Favourite"
+        />
+      </span>
+      <span class="block truncate text-[15px] text-ink-3">{{ card.description }}</span>
+    </span>
+    <span class="shrink-0 text-[15px] font-semibold tabular-nums text-ink-2">
+      {{ card.time.replace("mins", "min") }}
+    </span>
+  </button>
 </template>
 
 <script setup lang="ts">
+import { HeartIcon, PlayIcon } from "@heroicons/vue/24/solid";
+
 interface Card {
   id: string;
   title: string;
@@ -41,8 +36,9 @@ interface Card {
   time: string;
 }
 
-const { card } = defineProps<{
+const { card, isFavorite = false } = defineProps<{
   card: Card;
+  isFavorite?: boolean;
 }>();
 
 const emit = defineEmits(["openModal"]);

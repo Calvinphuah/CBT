@@ -2,16 +2,598 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* background-color: #ffffff; */
-  /* background-color: #f5f4ef; */
-  background-color: #f9fafb;
+/* Clearing: slate is the storm (the worrying thought), sky blue is the clearer view, sun yellow only marks the moment of reframing. Values are RGB triplets so Tailwind opacity modifiers work. */
+@layer base {
+  :root {
+    --c-page: 245 247 250;
+    --c-surface: 255 255 255;
+    --c-sunken: 237 241 245;
+    --c-ink: 29 36 51;
+    --c-ink-2: 86 96 116;
+    --c-ink-3: 90 100 120;
+    --c-rule: 214 220 229;
+    --c-storm: 62 74 97;
+    --c-on-storm: 255 255 255;
+    --c-storm-label: 201 210 220;
+    --c-sky: 191 217 242;
+    --c-sky-tint: 230 239 249;
+    --c-sun: 255 201 77;
+    --c-on-sun: 29 36 51;
+    --c-sun-icon: 176 130 10;
+    --c-btn: 62 74 97;
+    --c-on-btn: 255 255 255;
+    --c-danger: 196 67 47;
+    --c-pen: 62 74 97;
+    --c-margin: 255 201 77;
+    --c-soft: 230 239 249;
+    --c-btn-shadow: 62 74 97;
+    --font-display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+    --font-body: "Figtree", system-ui, sans-serif;
+    --font-hand: "Figtree", system-ui, sans-serif;
+    color-scheme: light;
+    --c-line: 214 220 229;
+  }
 
-  @apply font-sans;
+  .dark {
+    --c-page: 17 21 29;
+    --c-surface: 26 32 48;
+    --c-sunken: 32 40 58;
+    --c-ink: 236 239 244;
+    --c-ink-2: 169 178 194;
+    --c-ink-3: 143 152 169;
+    --c-rule: 46 56 78;
+    --c-storm: 44 54 80;
+    --c-on-storm: 236 239 244;
+    --c-storm-label: 154 166 186;
+    --c-sky-tint: 34 54 84;
+    --c-sun-icon: 255 201 77;
+    --c-btn: 191 217 242;
+    --c-on-btn: 17 21 29;
+    --c-danger: 240 138 120;
+    --c-pen: 191 217 242;
+    --c-soft: 34 54 84;
+    color-scheme: dark;
+    --c-line: 46 56 78;
+  }
+
+  /* Workbook: your own CBT notebook. Graphite thought, biro answer, highlighter on the thought being tested. */
+  :root[data-style="workbook"] {
+    --c-page: 251 251 248;
+    --c-surface: 255 255 255;
+    --c-sunken: 241 241 236;
+    --c-ink: 28 28 31;
+    --c-ink-2: 78 79 86;
+    --c-ink-3: 100 102 110;
+    --c-rule: 226 228 234;
+    --c-storm: 228 244 106;
+    --c-on-storm: 28 28 31;
+    --c-storm-label: 78 79 86;
+    --c-sky: 43 69 212;
+    --c-sky-tint: 241 243 252;
+    --c-sun: 228 244 106;
+    --c-on-sun: 28 28 31;
+    --c-sun-icon: 43 69 212;
+    --c-btn: 28 28 31;
+    --c-on-btn: 255 255 255;
+    --c-btn-shadow: 43 69 212;
+    --c-danger: 196 50 40;
+    --c-pen: 43 69 212;
+    --c-margin: 217 74 56;
+    --c-soft: 241 243 252;
+    --c-line: 28 28 31;
+    --font-display: "Schibsted Grotesk", system-ui, sans-serif;
+    --font-body: "Schibsted Grotesk", system-ui, sans-serif;
+    --font-hand: "Caveat", "Schibsted Grotesk", cursive;
+  }
+
+  .dark[data-style="workbook"] {
+    --c-page: 20 20 23;
+    --c-surface: 30 30 35;
+    --c-sunken: 38 38 44;
+    --c-ink: 242 242 238;
+    --c-ink-2: 180 180 186;
+    --c-ink-3: 150 150 158;
+    --c-rule: 48 48 56;
+    --c-storm: 186 206 68;
+    --c-on-storm: 20 20 23;
+    --c-storm-label: 60 62 30;
+    --c-sky: 147 164 255;
+    --c-sky-tint: 30 30 35;
+    --c-sun: 186 206 68;
+    --c-on-sun: 20 20 23;
+    --c-sun-icon: 147 164 255;
+    --c-btn: 147 164 255;
+    --c-on-btn: 20 20 23;
+    --c-btn-shadow: 92 92 104;
+    --c-danger: 240 122 104;
+    --c-pen: 147 164 255;
+    --c-margin: 240 122 104;
+    --c-soft: 34 36 52;
+    --c-line: 92 92 104;
+  }
+
+  /* Companion: warm and friendly. Plum thought, mint reframe, tangerine to act. */
+  :root[data-style="companion"] {
+    --c-page: 251 248 255;
+    --c-surface: 255 255 255;
+    --c-sunken: 236 229 250;
+    --c-ink: 43 33 80;
+    --c-ink-2: 94 84 128;
+    --c-ink-3: 108 100 138;
+    --c-rule: 230 224 245;
+    --c-storm: 43 33 80;
+    --c-on-storm: 255 255 255;
+    --c-storm-label: 191 179 240;
+    --c-sky: 250 200 220;
+    --c-sky-tint: 253 236 243;
+    --c-sun: 124 99 232;
+    --c-on-sun: 255 255 255;
+    --c-sun-icon: 108 80 220;
+    --c-btn: 92 70 214;
+    --c-on-btn: 255 255 255;
+    --c-btn-shadow: 58 40 150;
+    --c-danger: 200 56 72;
+    --c-pen: 72 56 160;
+    --c-margin: 124 99 232;
+    --c-soft: 226 215 253;
+    --font-display: "Gabarito", "Onest", system-ui, sans-serif;
+    --font-body: "Onest", system-ui, sans-serif;
+    --font-hand: "Onest", system-ui, sans-serif;
+    --c-line: 230 224 245;
+  }
+
+  .dark[data-style="companion"] {
+    --c-page: 23 19 42;
+    --c-surface: 34 28 61;
+    --c-sunken: 46 39 82;
+    --c-ink: 241 238 252;
+    --c-ink-2: 191 184 220;
+    --c-ink-3: 160 152 190;
+    --c-rule: 72 62 116;
+    --c-storm: 62 52 112;
+    --c-on-storm: 241 238 252;
+    --c-storm-label: 191 179 240;
+    --c-sky: 240 166 198;
+    --c-sky-tint: 70 44 78;
+    --c-sun: 178 160 250;
+    --c-on-sun: 23 19 42;
+    --c-sun-icon: 178 160 250;
+    --c-btn: 178 160 250;
+    --c-on-btn: 23 19 42;
+    --c-btn-shadow: 98 74 196;
+    --c-danger: 255 130 140;
+    --c-pen: 191 179 240;
+    --c-margin: 178 160 250;
+    --c-soft: 66 56 112;
+    --c-line: 72 62 116;
+  }
+
+  /* Margin: a thought record page. Blue-black ink for what you wrote, green second ink for your answer, one vertical rule. */
+  :root[data-style="margin"] {
+    --c-page: 244 245 242;
+    --c-surface: 255 255 255;
+    --c-sunken: 236 238 234;
+    --c-ink: 26 34 51;
+    --c-ink-2: 74 85 102;
+    --c-ink-3: 100 110 125;
+    --c-rule: 217 220 214;
+    --c-storm: 230 236 248;
+    --c-on-storm: 26 34 51;
+    --c-storm-label: 74 85 102;
+    --c-sky: 15 110 92;
+    --c-sky-tint: 225 242 236;
+    --c-sun: 15 110 92;
+    --c-on-sun: 255 255 255;
+    --c-sun-icon: 168 50 79;
+    --c-btn: 36 64 122;
+    --c-on-btn: 255 255 255;
+    --c-btn-shadow: 36 64 122;
+    --c-danger: 178 58 46;
+    --c-pen: 15 110 92;
+    --c-margin: 15 110 92;
+    --c-soft: 230 236 248;
+    --c-line: 138 146 156;
+    --font-display: "Schibsted Grotesk", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, sans-serif;
+    --font-hand: "Newsreader", Georgia, serif;
+  }
+
+  /* A dark desk, not inverted paper: surfaces get lighter as they come forward. */
+  .dark[data-style="margin"] {
+    --c-page: 20 24 30;
+    --c-surface: 28 33 41;
+    --c-sunken: 36 43 53;
+    --c-ink: 238 240 243;
+    --c-ink-2: 180 187 199;
+    --c-ink-3: 134 144 160;
+    --c-rule: 48 56 69;
+    --c-storm: 31 42 68;
+    --c-on-storm: 238 240 243;
+    --c-storm-label: 180 187 199;
+    --c-sky: 95 209 178;
+    --c-sky-tint: 23 53 48;
+    --c-sun: 95 209 178;
+    --c-on-sun: 20 24 30;
+    --c-sun-icon: 240 138 163;
+    --c-btn: 157 180 238;
+    --c-on-btn: 20 24 30;
+    --c-btn-shadow: 157 180 238;
+    --c-danger: 240 124 110;
+    --c-pen: 95 209 178;
+    --c-margin: 95 209 178;
+    --c-soft: 31 42 68;
+    --c-line: 91 101 120;
+  }
+
+  /* Desktop browsers draw a thick grey scrollbar; keep it thin and in the style's colours. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-line)) transparent;
+  }
+
+  body {
+    @apply bg-page font-sans text-ink antialiased;
+    /* Long words or pasted links in entries wrap instead of pushing the layout wider. */
+    overflow-wrap: anywhere;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-storm));
+    outline-offset: 2px;
+  }
+
+  .dark :focus-visible {
+    outline-color: rgb(var(--c-sky));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 @layer components {
-  .btn {
-    @apply px-4 py-2 font-bold text-white transition duration-300 bg-orange-500 rounded shadow-md cursor-pointer hover:bg-orange-600 focus:ring-2 focus:ring-orange-300 focus:ring-offset-2;
+  .app-page {
+    @apply mx-auto w-full max-w-[680px] px-5 pb-8 md:px-10 md:pt-10;
+    padding-top: max(1rem, env(safe-area-inset-top));
   }
+
+  .text-display {
+    @apply font-display text-[31px] font-bold leading-[35px] tracking-[-0.03em];
+  }
+
+  .text-title {
+    @apply font-display text-[27px] font-bold leading-[31px] tracking-[-0.025em];
+  }
+
+  .text-heading {
+    @apply font-display text-[19px] font-bold leading-6 tracking-[-0.015em];
+  }
+
+  .btn {
+    @apply inline-flex h-[54px] items-center justify-center gap-2 whitespace-nowrap rounded-2xl px-6 text-[17px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-btn text-btn-on hover:brightness-110 active:translate-y-px;
+  }
+
+  .btn-sun {
+    @apply btn bg-sun font-bold text-sun-on hover:brightness-105 active:translate-y-px;
+  }
+
+  .btn-ghost {
+    @apply btn bg-surface text-ink ring-[1.5px] ring-inset ring-ink-3/50 hover:bg-sunken;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger text-white hover:bg-danger/90 dark:text-page;
+  }
+
+  .icon-btn {
+    @apply grid size-11 shrink-0 place-items-center rounded-full text-ink transition-colors hover:bg-sunken;
+  }
+
+  .icon-btn-filled {
+    @apply icon-btn bg-btn text-btn-on hover:bg-btn/90;
+  }
+
+  .card {
+    @apply rounded-card bg-surface;
+  }
+
+  .storm-card {
+    @apply rounded-card bg-storm px-4 pb-4 pt-3.5 text-storm-on;
+  }
+
+  .clear-card {
+    @apply rounded-card bg-sky-tint px-4 pb-4 pt-3.5 text-ink;
+  }
+
+  .card-label {
+    @apply mb-1 flex items-center gap-1.5 text-[13px] font-semibold;
+  }
+
+  .field {
+    @apply w-full resize-none rounded-card bg-surface p-4 text-[17px] leading-[25px] text-ink ring-[1.5px] ring-inset ring-rule placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-storm dark:focus:ring-sky;
+  }
+
+  .field-sky {
+    @apply bg-sky-tint ring-0;
+  }
+
+  .chip {
+    @apply inline-flex h-9 items-center rounded-xl bg-surface px-3.5 text-[15px] font-medium text-ink ring-[1.5px] ring-inset ring-rule transition-colors hover:bg-sunken;
+  }
+
+  .chip-on {
+    @apply bg-storm text-storm-on ring-0 hover:bg-storm;
+  }
+
+  .day-label {
+    @apply text-[13px] font-semibold text-ink-3;
+  }
+}
+
+/* Per-style shapes. Clearing is the default above; these only change form, never meaning. */
+[data-style="workbook"] body {
+  background-image: linear-gradient(rgb(var(--c-rule) / 0.7) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--c-rule) / 0.7) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* A real border, not an inset shadow, so a picture inside a card can't paint over it. */
+[data-style="workbook"] .card,
+[data-style="workbook"] .clear-card {
+  border-radius: 6px;
+  border: 1.5px solid rgb(var(--c-line));
+}
+
+[data-style="workbook"] .card-pop {
+  box-shadow: 4px 4px 0 rgb(var(--c-line));
+}
+
+/* List icons become small ruled boxes in Workbook. */
+[data-style="workbook"] .row-icon {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
+}
+
+[data-style="workbook"] .card-art {
+  border-bottom: 1.5px solid rgb(var(--c-line));
+}
+
+[data-style="workbook"] .clear-card {
+  background: rgb(var(--c-surface));
+  border-left: 4px solid rgb(var(--c-margin));
+  color: rgb(var(--c-pen));
+}
+
+[data-style="workbook"] .storm-card {
+  border-radius: 3px;
+}
+
+[data-style="workbook"] .btn {
+  border-radius: 8px;
+}
+
+[data-style="workbook"] .btn-primary,
+[data-style="workbook"] .icon-btn-filled {
+  box-shadow: 4px 4px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="workbook"] .icon-btn-filled {
+  border-radius: 8px;
+}
+
+[data-style="workbook"] .btn-sun {
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line)), 4px 4px 0 rgb(var(--c-line));
+}
+
+[data-style="workbook"] .btn-ghost {
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
+}
+
+[data-style="workbook"] .field {
+  border-radius: 6px;
+  padding-left: 46px;
+  line-height: 28px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
+  background-color: rgb(var(--c-surface));
+  background-image: linear-gradient(90deg, transparent 33px, rgb(var(--c-margin) / 0.6) 33px, rgb(var(--c-margin) / 0.6) 34px, transparent 34px),
+    repeating-linear-gradient(transparent 0 27px, rgb(var(--c-pen) / 0.18) 27px 28px);
+  padding-top: 8px;
+  /* Rules sit just under each 28px line of text; the first one hides under the top border. */
+  background-position: 0 0, 0 4px;
+}
+
+[data-style="workbook"] .field-sky {
+  color: rgb(var(--c-pen));
+}
+
+[data-style="workbook"] .field:focus {
+  box-shadow: inset 0 0 0 2px rgb(var(--c-pen));
+}
+
+[data-style="workbook"] .chip {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
+}
+
+[data-style="workbook"] .chip-on {
+  background: rgb(var(--c-sun));
+  color: rgb(var(--c-on-sun));
+}
+
+[data-style="companion"] .card,
+[data-style="companion"] .storm-card,
+[data-style="companion"] .clear-card {
+  border-radius: 24px;
+}
+
+[data-style="companion"] .btn {
+  border-radius: 20px;
+}
+
+/* The darker orange edge gives the light tangerine button a 3:1 outline against the page. */
+[data-style="companion"] .btn-primary,
+[data-style="companion"] .btn-sun {
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-btn-shadow)), 0 5px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="companion"] .icon-btn-filled {
+  box-shadow: 0 2px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="companion"] .btn-primary:active,
+[data-style="companion"] .btn-sun:active {
+  transform: translateY(3px);
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-btn-shadow)), 0 2px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="companion"] .field {
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 2px rgb(var(--c-ink) / 0.85);
+}
+
+.dark[data-style="companion"] .field {
+  box-shadow: inset 0 0 0 2px rgb(var(--c-ink) / 0.35);
+}
+
+[data-style="companion"] .field-sky {
+  box-shadow: none;
+}
+
+[data-style="companion"] .chip {
+  border-radius: 14px;
+  background: rgb(var(--c-soft));
+  box-shadow: none;
+  font-weight: 600;
+}
+
+[data-style="companion"] .chip-on {
+  background: rgb(var(--c-storm));
+  color: rgb(var(--c-on-storm));
+}
+
+/* Phone cards need an edge: white on the pale page is too faint on its own. */
+[data-style="clearing"] .card,
+[data-style="companion"] .card {
+  box-shadow: 0 0 0 1px rgb(var(--c-rule)), 0 1px 2px rgb(var(--c-ink) / 0.04);
+}
+
+[data-style="clearing"] .tab-on,
+[data-style="clearing"] .tab-on:hover {
+  background: rgb(var(--c-sky-tint));
+}
+
+/* Active tab marker: a sky tint for Clearing, a highlighter for Workbook, a lilac pill for Companion. */
+/* The active tab keeps its marker on hover, so it never dims to a muddy colour. */
+[data-style="workbook"] .tab-on,
+[data-style="workbook"] .tab-on:hover {
+  background: rgb(var(--c-sun));
+  color: rgb(var(--c-on-sun));
+  border-radius: 8px;
+}
+
+[data-style="companion"] .tab-on,
+[data-style="companion"] .tab-on:hover {
+  background: rgb(var(--c-soft));
+  border-radius: 14px;
+}
+
+/* The highlighter and tangerine are too light for a focus outline, so use the pen colour. */
+[data-style="workbook"] :focus-visible,
+[data-style="companion"] :focus-visible {
+  outline-color: rgb(var(--c-pen));
+}
+
+/* Picture frames: soft rounded in Clearing, a pasted-in photo in Workbook, a rounded tile in Companion. */
+[data-style="workbook"] .art-frame {
+  border-radius: 4px;
+  border: 1.5px solid rgb(var(--c-line));
+  box-shadow: 4px 4px 0 rgb(var(--c-line));
+  transform: rotate(-1deg);
+}
+
+[data-style="workbook"] .art-frame.art-flat {
+  border-width: 0 0 1.5px;
+  box-shadow: none;
+  transform: none;
+}
+
+[data-style="companion"] .art-frame {
+  border-radius: 28px;
+}
+
+[data-style="companion"] .art-frame.art-flat {
+  border-radius: 0 0 36px 36px;
+}
+
+/* Margin: page, not card. The thought and the answer sit beside one vertical rule; your own words are in serif italic. */
+[data-style="margin"] .card {
+  border-radius: 16px;
+}
+
+[data-style="margin"] .btn {
+  border-radius: 10px;
+}
+
+[data-style="margin"] .btn:active {
+  transform: scale(0.98);
+}
+
+[data-style="margin"] .storm-card,
+[data-style="margin"] .clear-card {
+  border-radius: 0 10px 10px 0;
+  border-left: 2px solid rgb(var(--c-line));
+  padding-left: 16px;
+}
+
+[data-style="margin"] .storm-card {
+  background: transparent;
+  color: rgb(var(--c-ink));
+}
+
+[data-style="margin"] .clear-card {
+  border-left-color: rgb(var(--c-pen));
+}
+
+/* Only the user's own words get the serif: text in a quote card, never buttons or empty-state help. */
+[data-style="margin"] .storm-card:not(:has(> button, > .btn)) > :is(p, span):not(.card-label),
+[data-style="margin"] .clear-card:not(:has(> button, > .btn)) > :is(p, span):not(.card-label),
+[data-style="margin"] .note-text {
+  font-family: var(--font-hand);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+[data-style="margin"] .clear-card:not(:has(> button, > .btn)) > :is(p, span):not(.card-label) {
+  color: rgb(var(--c-pen));
+}
+
+[data-style="margin"] .field {
+  border-radius: 10px;
+}
+
+[data-style="margin"] .chip {
+  border-radius: 6px;
+}
+
+[data-style="margin"] .tab-on {
+  color: rgb(var(--c-btn));
+}
+
+[data-style="margin"] .art-frame {
+  border-radius: 16px;
+}
+
+[data-style="margin"] :focus-visible {
+  outline-color: rgb(var(--c-btn));
 }

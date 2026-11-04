@@ -1,112 +1,76 @@
 <template>
   <div
-    class="flex flex-col justify-center items-center w-full h-full p-4 md:p-8 bg-[#f5f4ef] min-h-screen"
+    class="flex flex-1 flex-col gap-3.5 px-5 pt-7 md:mx-auto md:w-full md:max-w-[440px] md:justify-center md:px-0"
+    :style="{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }"
   >
-    <!-- Header -->
-    <div class="flex gap-2">
-      <img
-        class="w-auto h-8"
-        src="@/public/img/wavy-leaf.png"
-        alt="Cogni Logo"
-      />
-      <h3 class="mb-8 text-2xl font-bold md:mb-20 md:text-3xl">Cogni</h3>
-    </div>
-    <h2 class="mb-4 text-3xl font-medium text-center md:text-5xl">
-      Your thoughts,
-      <br />
-      Calmed
-    </h2>
-    <h3 class="mb-6 text-sm text-center md:mb-10 md:text-base">
-      Cognitive Behavioural Therapy to combat negative thoughts.
-    </h3>
+    <CommonLogo size="lg" />
+    <h1 class="text-display md:text-[40px] md:leading-[44px]">
+      {{ copy.loginTitle }}
+    </h1>
+    <p class="text-[15px] leading-[21px] text-ink-2">
+      Work through anxious thoughts with CBT, gratitude and guided meditation.
+      Your entries are encrypted, and only you can read them.
+    </p>
 
-    <!-- Login Form -->
-    <div
-      class="w-full max-w-[500px] p-4 md:p-8 bg-[#f5f4ef] rounded-xl shadow-sm border border-gray-300"
+    <ul class="mt-2 flex flex-col gap-3 text-[15px] text-ink-2">
+      <li class="flex items-center gap-3">
+        <CloudIcon class="size-6 shrink-0 text-pen" aria-hidden="true" />
+        Untangle a hard thought in 4 short steps
+      </li>
+      <li class="flex items-center gap-3">
+        <HeartIcon class="size-6 shrink-0 text-pen" aria-hidden="true" />
+        Keep a list of small good things
+      </li>
+      <li class="flex items-center gap-3">
+        <MoonIcon class="size-6 shrink-0 text-pen" aria-hidden="true" />
+        Guided meditations, 3 to 19 minutes
+      </li>
+    </ul>
+
+    <div class="flex-1 md:hidden" />
+
+    <button
+      type="button"
+      class="btn mt-2 w-full bg-surface text-ink ring-[1.5px] ring-inset ring-rule hover:bg-sunken"
+      :disabled="isSigningIn"
+      @click="handleGoogleLogin"
     >
-      <!-- Google Login Button -->
-      <button
-        type="button"
-        class="flex items-center justify-center w-full gap-2 px-4 py-2 font-semibold text-black transition-all bg-white border border-gray-200 rounded-lg hover:border-gray-400 focus:outline-none focus:ring-2"
-        @click="handleGoogleLogin"
-      >
-        <img
-          src="../../assets/svgs/google-icon.svg"
-          alt="Google"
-          class="w-4 h-4 mr-2"
-        />
-        Sign In with Google
-      </button>
-
-      <!-- Divider -->
-      <!-- <div class="flex items-center justify-center my-4 md:my-6">
-        <div class="w-1/3 border-t border-gray-300"></div>
-        <p class="px-4 text-sm text-gray-600">OR</p>
-        <div class="w-1/3 border-t border-gray-300"></div>
-      </div> -->
-
-      <!-- Email Login Form (Disabled) -->
-      <!-- <form class="space-y-4">
-        <div class="space-y-2">
-          <InputBox
-            id="email"
-            v-model="email"
-            type="email"
-            placeholder="Email login currently unavailable"
-            disabled
-          />
-        </div>
-
-        <button
-          type="button"
-          class="w-full px-4 py-2 font-semibold text-white bg-gray-400 rounded-lg cursor-not-allowed"
-          disabled
-        >
-          Continue with Email (Unavailable)
-        </button>
-      </form> -->
-    </div>
+      <img src="../../assets/svgs/google-icon.svg" alt="" class="size-[18px]" />
+      {{ isSigningIn ? "Signing in…" : "Continue with Google" }}
+    </button>
+    <p v-if="loginError" class="text-[15px] text-danger" role="alert">{{ loginError }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { CloudIcon, HeartIcon, MoonIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "@/stores/auth.store";
 
-// Use the auth store
 const authStore = useAuthStore();
+const { copy } = useAppStyle();
 
-// State for form inputs
-// const email = ref("");
-
-// // Computed properties for loading and error state
-// const loading = computed(() => authStore.initialAuthValueReady === false);
-// const loginError = computed(() => authStore.loginError);
-
-// // Handle Email Login
-// const handleEmailLogin = async () => {
-//   try {
-//     await authStore.login(email.value, ""); // Provide an appropriate password or implement passwordless login
-//     console.log("Logged in user:", authStore.user);
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.error("Email login failed:", error.message);
-//     } else {
-//       console.error("Unknown error occurred:", error);
-//     }
-//   }
-// };
+const isSigningIn = ref(false);
+const loginError = ref("");
 
 // Handle Google Login
 const handleGoogleLogin = async () => {
+  isSigningIn.value = true;
+  loginError.value = "";
   try {
     await authStore.loginWithGoogle?.();
-    console.log("Google Sign-In successful:", authStore.user);
   } catch (error) {
+    // Closing the Google popup on purpose is not an error worth showing.
+    const code = (error as { code?: string }).code;
+    if (code !== "auth/popup-closed-by-user" && code !== "auth/cancelled-popup-request") {
+      loginError.value = "Couldn’t sign in with Google. Check your connection and try again.";
+    }
     if (error instanceof Error) {
-      console.error("Email login failed:", error.message);
+      console.error("Google login failed:", error.message);
     } else {
       console.error("Unknown error occurred:", error);
     }
+  } finally {
+    isSigningIn.value = false;
   }
 };
 </script>

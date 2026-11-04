@@ -1,130 +1,66 @@
 <template>
-  <nav class="bg-white">
-    <div class="px-4 mx-auto sm:px-6 lg:px-8">
-      <div class="relative flex items-center justify-between h-16">
-        <!-- Logo, Title, and Navigation -->
-        <div class="flex items-center flex-1 sm:justify-start">
-          <!-- Logo and Title -->
-          <NuxtLink to="/" class="flex items-center">
-            <img
-              class="w-auto h-8"
-              src="@/public/img/wavy-leaf.png"
-              alt="Cogni Logo"
-            />
-            <!-- <Icon
-              name="fluent:brain-sparkle-20-filled"
-              size="32"
-              class="text-indigo-500"
-            /> -->
+  <aside
+    class="sticky top-0 hidden h-screen flex-col gap-1 border-r border-rule px-4 py-7 md:flex"
+  >
+    <div class="px-3.5 pb-6"><CommonLogo /></div>
 
-            <span class="ml-2 text-lg font-semibold sm:text-xl">
-              Hi{{ authStore.user ? "," : "" }}
-              {{ authStore.user?.displayName }}
-            </span>
-          </NuxtLink>
+    <NuxtLink
+      v-for="item in navItems"
+      :key="item.to"
+      :to="item.to"
+      class="flex h-11 items-center gap-2.5 rounded-xl px-3.5 text-[15px] font-semibold text-ink-2 transition-colors hover:bg-sunken"
+      :class="{ 'tab-on bg-surface text-ink ring-1 ring-rule': isActive(item.to) }"
+      :aria-current="isActive(item.to) ? 'page' : undefined"
+    >
+      <component
+        :is="item.icon"
+        class="size-5"
+        :stroke-width="isActive(item.to) ? 2 : 1.6"
+        aria-hidden="true"
+      />
+      {{ item.label }}
+    </NuxtLink>
 
-          <!-- Navigation Links -->
-          <div class="hidden ml-6 space-x-4 md:block">
-            <NuxtLink
-              to="/"
-              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
-              active-class="text-white bg-gray-900"
-            >
-              Home
-            </NuxtLink>
-            <NuxtLink
-              to="/cbt"
-              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
-              active-class="text-white bg-gray-900"
-            >
-              CBT
-            </NuxtLink>
-            <NuxtLink
-              to="/gratitude"
-              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
-              active-class="text-white bg-gray-900"
-            >
-              Gratitude
-            </NuxtLink>
-            <NuxtLink
-              to="/meditation"
-              class="px-3 py-2 text-sm font-medium text-black rounded-md hover:bg-gray-700 hover:text-white"
-              active-class="text-white bg-gray-900"
-            >
-              Meditation
-            </NuxtLink>
-          </div>
-        </div>
+    <div class="flex-1" />
 
-        <!-- User Icon and Profile Menu (wrapped in the same container) -->
-        <div ref="menuContainer" class="relative">
-          <button
-            type="button"
-            class="flex items-center focus:outline-none"
-            @click="toggleProfileMenu"
-          >
-            <Icon
-              name="heroicons:user-16-solid"
-              style="color: black"
-              size="24"
-            />
-          </button>
-
-          <!-- Profile Dropdown -->
-          <div
-            v-show="isProfileMenuOpen"
-            class="absolute right-0 z-[10000] w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black/5 focus:outline-none"
-            role="menu"
-          >
-            <!-- <NuxtLink
-              to="/profile"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              role="menuitem"
-            >
-              Your Profile
-            </NuxtLink>
-            <NuxtLink
-              to="/settings"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              role="menuitem"
-            >
-              Settings
-            </NuxtLink> -->
-            <span
-              role="menuitem"
-              class="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
-              @click="authStore.logout"
-            >
-              Sign Out
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+    <button
+      type="button"
+      class="flex h-11 items-center gap-3 rounded-xl px-3.5 text-left text-[15px] font-semibold text-ink-2 transition-colors hover:bg-sunken"
+      @click="isAccountOpen = true"
+    >
+      <span
+        class="grid size-7 place-items-center rounded-full bg-sky-tint text-[13px] font-bold text-ink"
+        >{{ initial }}</span
+      >
+      <span class="truncate">{{ displayName }}</span>
+    </button>
+  </aside>
 </template>
 
 <script setup lang="ts">
-import { onClickOutside } from "@vueuse/core";
+import {
+  CloudIcon,
+  HeartIcon,
+  HomeIcon,
+  MoonIcon,
+} from "@heroicons/vue/24/outline";
 
-// Access auth store
 const authStore = useAuthStore();
+const route = useRoute();
+const isAccountOpen = useState("account-sheet-open", () => false);
 
-// State for the profile dropdown
-const isProfileMenuOpen = ref(false);
+const navItems = [
+  { label: "Home", to: "/", icon: HomeIcon },
+  { label: "Thoughts", to: "/cbt", icon: CloudIcon },
+  { label: "Gratitude", to: "/gratitude", icon: HeartIcon },
+  { label: "Meditate", to: "/meditation", icon: MoonIcon },
+];
 
-// Reference to the icon and dropdown container
-const menuContainer = ref(null);
+const displayName = computed(
+  () => authStore.user?.displayName || authStore.user?.email || "Account"
+);
+const initial = computed(() => displayName.value.charAt(0).toUpperCase());
 
-// Toggle the profile menu
-const toggleProfileMenu = () => {
-  isProfileMenuOpen.value = !isProfileMenuOpen.value;
-};
-
-// Close the dropdown when clicking outside
-onClickOutside(menuContainer, () => {
-  if (isProfileMenuOpen.value) {
-    isProfileMenuOpen.value = false;
-  }
-});
+const isActive = (to: string) =>
+  to === "/" ? route.path === "/" : route.path.startsWith(to);
 </script>

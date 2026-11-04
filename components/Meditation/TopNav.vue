@@ -1,19 +1,7 @@
 <template>
-  <nav class="sticky top-0 z-[999] w-full bg-white">
-    <div class="flex items-center justify-between p-4 px-4 sm:px-6 lg:px-8">
-      <!-- Back Icon -->
-      <NuxtLink to="/">
-        <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />
-      </NuxtLink>
-
-      <h1 class="flex-1 text-xl font-medium text-center">Meditation</h1>
-
-      <!-- Action Icons -->
-      <div class="size-7 text-light-100" />
-    </div>
-  </nav>
+  <div class="flex min-h-14 items-center">
+    <h1 class="text-display">Meditate</h1>
+  </div>
 </template>
 
-<script setup lang="ts">
-import { ArrowLeftIcon } from "@heroicons/vue/24/solid";
-</script>
+<script setup lang="ts"></script>

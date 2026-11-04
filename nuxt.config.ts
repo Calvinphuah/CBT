@@ -1,8 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { MEDITATIONS } from "./utils/meditations";
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
+  // Port 3000 is used by another local app.
+  devServer: { port: 3001 },
   modules: [
     "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
@@ -13,16 +16,26 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@pinia/nuxt",
     "@vueuse/nuxt",
-    "@nuxtjs/google-fonts",
     "@vite-pwa/nuxt",
     "@nuxt/test-utils/module",
   ],
   pwa: {
+    // Apply new versions on the next launch; the app has no "update available" prompt.
+    registerType: "autoUpdate",
     manifest: {
-      name: "Cogni",
+      id: "/",
+      name: "Cogni: CBT, gratitude and meditation",
       short_name: "Cogni",
-      description: "Cognitive behavioural therapy app",
-      theme_color: "#ffffff",
+      description:
+        "Work through anxious thoughts with CBT, keep track of small good things, and listen to guided meditations.",
+      lang: "en",
+      start_url: "/",
+      scope: "/",
+      display: "standalone",
+      orientation: "portrait",
+      theme_color: "#F5F7FA",
+      background_color: "#F5F7FA",
+      categories: ["health", "lifestyle", "medical"],
       icons: [
         {
           src: "/icons/icon-144x144.png",
@@ -42,32 +55,82 @@ export default defineNuxtConfig({
           type: "image/png",
           purpose: "any",
         },
+        {
+          src: "/icons/icon-maskable-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "maskable",
+        },
+        {
+          src: "/icons/icon-maskable-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+      ],
+      shortcuts: [
+        {
+          name: "New thought record",
+          short_name: "New record",
+          url: "/cbt?new=1",
+          icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
+        },
+        {
+          name: "Gratitude",
+          url: "/gratitude",
+          icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
+        },
+        {
+          name: "Meditate",
+          url: "/meditation",
+          icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
+        },
       ],
       screenshots: [
         {
-          src: "/screenshots/desktop.png",
-          sizes: "1920x1080",
-          type: "image/png",
-          form_factor: "wide",
-          label: "Desktop view",
-        },
-        {
-          src: "/screenshots/mobile.png",
-          sizes: "750x1334",
+          src: "/screenshots/mobile-home.png",
+          sizes: "390x844",
           type: "image/png",
           form_factor: "narrow",
-          label: "Mobile view",
+          label: "Home: start a thought record",
+        },
+        {
+          src: "/screenshots/mobile-thought-record.png",
+          sizes: "390x844",
+          type: "image/png",
+          form_factor: "narrow",
+          label: "Answer a worrying thought with a clearer view",
+        },
+        {
+          src: "/screenshots/desktop-home.png",
+          sizes: "1280x800",
+          type: "image/png",
+          form_factor: "wide",
+          label: "Cogni on desktop",
         },
       ],
     },
     workbox: {
       navigateFallback: "/",
       navigateFallbackDenylist: [/^\/__nuxt_devtools__/],
+      // Precache the app shell, fonts and artwork so it opens offline; audio is streamed.
+      globPatterns: ["**/*.{js,css,html,png,svg,jpg,webp,ico,woff2,webmanifest}"],
+      globIgnores: ["screenshots/**"],
     },
+    client: {
+      installPrompt: false,
+    },
+    // Off in dev: a dev service worker caches old pages and causes blank screens after restarts.
     devOptions: {
-      enabled: true,
+      enabled: false,
       type: "module",
     },
+  },
+
+  // Used by @nuxtjs/seo for the sitemap and share links.
+  site: {
+    url: "https://cogni-app.com",
+    name: "Cogni",
   },
 
   runtimeConfig: {
@@ -93,6 +156,10 @@ export default defineNuxtConfig({
   ssr: false,
   nitro: {
     preset: "static",
+    // Build each meditation page as a real file, so a shared link returns 200 instead of the 404 fallback.
+    prerender: {
+      routes: MEDITATIONS.map((meditation) => `/meditation/${meditation.id}`),
+    },
     // output: {
     //   dir: "dist",
     // },
@@ -107,27 +174,74 @@ export default defineNuxtConfig({
         {
           name: "viewport",
           content:
-            "width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no",
+            "width=device-width, initial-scale=1, viewport-fit=cover",
+        },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-title", content: "Cogni" },
+        {
+          name: "apple-mobile-web-app-status-bar-style",
+          content: "default",
         },
       ],
       link: [
         {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap",
-        },
-        {
           rel: "icon",
-          href: "/img/wavy-leaf.png",
+          type: "image/svg+xml",
+          href: "/img/logo-mark.svg",
         },
+        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
       ],
     },
   },
-  googleFonts: {
-    families: {
-      "Nunito+Sans": [400, 700],
-    },
-    display: "swap",
-    subsets: ["latin"],
-    preconnect: true,
+  fonts: {
+    // Each style names its fonts only through CSS variables, so load them all globally.
+    families: [
+      {
+        name: "Figtree",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        global: true,
+      },
+      {
+        name: "Bricolage Grotesque",
+        provider: "google",
+        weights: [600, 700, 800],
+        global: true,
+      },
+      {
+        name: "Schibsted Grotesk",
+        provider: "google",
+        weights: [400, 500, 600, 700, 800],
+        global: true,
+      },
+      { name: "Caveat", provider: "google", weights: [600, 700], global: true },
+      {
+        name: "Gabarito",
+        provider: "google",
+        weights: [600, 700, 800],
+        global: true,
+      },
+      {
+        name: "Onest",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        global: true,
+      },
+      {
+        name: "Hanken Grotesk",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        global: true,
+      },
+      // Margin sets only the user's own words in this serif italic.
+      {
+        name: "Newsreader",
+        provider: "google",
+        weights: [400],
+        styles: ["italic"],
+        global: true,
+      },
+    ],
   },
 });

@@ -1,9 +1,7 @@
 <template>
-  <div class="flex flex-col">
+  <div class="app-page flex flex-col gap-3">
     <GratitudeTopNav />
-    <div class="flex-1 overflow-hidden">
-      <GratitudeList />
-    </div>
+    <GratitudeList />
   </div>
 </template>
 

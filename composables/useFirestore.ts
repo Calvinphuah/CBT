@@ -9,6 +9,7 @@ import {
   deleteDoc,
   // type Query,
   type DocumentData,
+  type QueryConstraint,
 } from "firebase/firestore";
 
 export const useFirestore = () => {
@@ -19,7 +20,7 @@ export const useFirestore = () => {
   const subscribeToCollection = <T>(
     collectionName: string,
     callback: (data: T[]) => void,
-    queryConstraints: any[] = []
+    queryConstraints: QueryConstraint[] = []
   ) => {
     const collectionRef = collection($db, collectionName);
     const q = query(collectionRef, ...queryConstraints);

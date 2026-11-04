@@ -16,7 +16,7 @@ interface DataItem extends HasId {
   createdDate: Date;
   userId: string;
   createdBy: string;
-  [key: string]: any; // For any additional fields
+  [key: string]: unknown; // For any additional fields
 }
 
 interface DataState {
@@ -26,7 +26,7 @@ interface DataState {
 
 // Define type for new data input
 interface NewDataInput {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const useDataStore = defineStore("dataStore", {

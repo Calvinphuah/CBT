@@ -1,57 +1,31 @@
 <template>
-  <div class="w-full mx-auto">
-    <div
-      class="w-full p-4 transition-transform transform bg-white border border-black rounded-lg shadow-md hover:cursor-pointer hover:scale-105 hover:shadow-lg"
-      @click="$emit('click')"
+  <button
+    type="button"
+    class="card flex w-full items-center gap-3.5 px-4 py-3 text-left transition-colors hover:bg-sunken"
+    @click="$emit('click')"
+  >
+    <span
+      class="row-icon grid size-10 shrink-0 place-items-center rounded-full bg-sky-tint text-sun-icon"
     >
-      <div class="flex items-center gap-4">
-        <!-- image or Image (if provided) -->
-        <div v-if="image" class="flex-shrink-0 w-16 h-16">
-          <img
-            :src="image"
-            :alt="imageAlt || 'Gratitude icon'"
-            class="object-contain w-full h-full"
-            @error="onImageError"
-          />
-        </div>
-
-        <!-- Content -->
-        <p class="flex-grow text-base text-gray-800">
-          {{ content }}
-        </p>
-      </div>
-    </div>
-  </div>
+      <HeartIcon v-if="style === 'companion' || style === 'margin'" class="size-5" aria-hidden="true" />
+      <SunIcon v-else class="size-[22px]" aria-hidden="true" />
+    </span>
+    <span class="min-w-0 flex-1 text-[17px] leading-[25px]">{{ content }}</span>
+    <span v-if="time" class="shrink-0 text-[13px] tabular-nums text-ink-3">{{ time }}</span>
+  </button>
 </template>
 
 <script setup lang="ts">
-// Props
-interface Props {
+import { HeartIcon, SunIcon } from "@heroicons/vue/24/outline";
+
+defineProps<{
   content: string;
-  image?: string;
-  imageAlt?: string;
-}
+  time?: string;
+}>();
 
-defineProps<Props>();
-
-// Some older entries stored an image path that no longer ships.
-const FALLBACK_IMAGE = "/img/leaf.png";
-const onImageError = (e: Event) => {
-  const img = e.target as HTMLImageElement;
-  if (img.getAttribute("src") === FALLBACK_IMAGE) return;
-  img.src = FALLBACK_IMAGE;
-};
-
-// Emits
 defineEmits<{
   click: [];
 }>();
-</script>
 
-<style scoped>
-/* Adjust border radius and padding to match the image */
-.div {
-  border-radius: 12px;
-  padding: 16px;
-}
-</style>
+const { style } = useAppStyle();
+</script>

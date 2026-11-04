@@ -1,58 +1,66 @@
 <template>
-  <div class="flex flex-col min-h-screen text-white bg-black">
+  <div
+    class="mx-auto flex min-h-[100dvh] max-w-md flex-col gap-5 bg-page px-5 text-ink"
+    :style="{
+      paddingTop: 'max(0.75rem, env(safe-area-inset-top))',
+      paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
+    }"
+  >
     <!-- Header -->
-    <div class="flex items-center justify-between p-6">
-      <button class="p-2" @click="goBack">
-        <Icon name="heroicons:x-mark" class="w-6 h-6" />
+    <div class="flex h-11 items-center justify-between">
+      <button type="button" class="icon-btn -ml-2.5" aria-label="Close" @click="goBack">
+        <Icon name="heroicons:x-mark" class="size-6" />
       </button>
-      <div class="text-center">
-        <h2 class="text-xl font-semibold">{{ meditation?.title }}</h2>
-        <p class="text-sm text-gray-400">{{ meditation?.time }}</p>
-      </div>
-      <button class="p-2">
-        <Icon name="heroicons:heart" class="w-6 h-6" />
-      </button>
+      <span class="text-[15px] font-semibold text-ink-2">Now playing</span>
+      <span class="size-11" aria-hidden="true" />
     </div>
 
-    <!-- Description -->
-    <div class="p-6 text-sm text-gray-400">
-      <p>{{ meditation?.description }}</p>
+    <div class="art-frame h-[min(36vh,340px)] w-full shrink-0 overflow-hidden rounded-[28px]">
+      <CommonIllustration alt="" variant="player" />
     </div>
 
-    <!-- Audio Controls -->
-    <div class="px-6 pb-6 space-y-6">
-      <!-- Progress Bar -->
-      <div class="slider">
-        <input
-          v-model="currentTime"
-          type="range"
-          class="level"
-          min="0"
-          :max="duration"
-          step="0.1"
-          @input="seekAudio"
-        />
-        <div class="flex justify-between mt-2 text-xs text-gray-400">
-          <span>{{ formatTime(currentTime) }}</span>
-          <span>{{ formatTime(duration) }}</span>
-        </div>
-      </div>
+    <div>
+      <h1 class="text-title">{{ meditation?.title }}</h1>
+      <p class="mt-1 text-[15px] text-ink-3">{{ meditation?.description }}</p>
+    </div>
 
-      <!-- Playback Controls -->
-      <div class="flex items-center justify-center space-x-8">
-        <button class="p-2" @click="rewind">
-          <Icon name="heroicons:arrow-uturn-left" class="w-8 h-8" />
-        </button>
-        <button class="p-4 bg-gray-700 rounded-full" @click="togglePlay">
-          <Icon
-            :name="isPlaying ? 'heroicons:pause' : 'heroicons:play'"
-            class="w-8 h-8"
-          />
-        </button>
-        <button class="p-2" @click="forward">
-          <Icon name="heroicons:arrow-uturn-right" class="w-8 h-8" />
-        </button>
+    <!-- Progress Bar -->
+    <div>
+      <label for="meditation-progress" class="sr-only">Playback position</label>
+      <input
+        id="meditation-progress"
+        v-model="currentTime"
+        type="range"
+        class="w-full"
+        min="0"
+        :max="duration"
+        step="0.1"
+        :style="{ '--progress-value': duration ? `${(currentTime / duration) * 100}%` : '0%' }"
+        @input="isSeeking = true"
+        @change="seekAudio"
+      />
+      <div class="mt-1 flex justify-between text-[13px] font-semibold tabular-nums text-ink-3">
+        <span>{{ formatTime(currentTime) }}</span>
+        <span>{{ formatTime(duration) }}</span>
       </div>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="flex items-center justify-center gap-9">
+      <button type="button" class="icon-btn size-12" aria-label="Back 15 seconds" @click="rewind">
+        <Icon name="f7:gobackward-15" class="size-8" />
+      </button>
+      <button
+        type="button"
+        class="icon-btn-filled size-[76px]"
+        :aria-label="isPlaying ? 'Pause' : 'Play'"
+        @click="togglePlay"
+      >
+        <Icon :name="isPlaying ? 'heroicons:pause-solid' : 'heroicons:play-solid'" class="size-8" />
+      </button>
+      <button type="button" class="icon-btn size-12" aria-label="Forward 15 seconds" @click="forward">
+        <Icon name="f7:goforward-15" class="size-8" />
+      </button>
     </div>
   </div>
 </template>
@@ -67,53 +75,20 @@ definePageMeta({
 const route = useRoute();
 const router = useRouter();
 
-// Mock Data (Cards Array)
-const cards = [
-  {
-    id: "breathing-meditation",
-    title: "Breathing Meditation",
-    description:
-      "A meditation to help combat negative thoughts and ruminations.",
-    time: "5 mins",
-    audioSrc: "/audio/breathing-meditation.mp3",
-  },
-  {
-    id: "breath-sound-body-meditation",
-    title: "Breath, Sound, Body Meditation",
-    description:
-      "A guided meditation focusing on breath, sound, and body awareness.",
-    time: "12 mins",
-    audioSrc: "/audio/breath-sound-body-meditation.mp3",
-  },
-  {
-    id: "complete-meditation-instructions",
-    title: "Complete Meditation Instructions",
-    description: "Comprehensive guidance for a complete meditation practice.",
-    time: "19 mins",
-    audioSrc: "/audio/complete-meditation-instructions.mp3",
-  },
-  {
-    id: "working-with-difficulties",
-    title: "Meditation for Working with Difficulties",
-    description:
-      "Learn techniques to navigate challenging emotions and situations.",
-    time: "7 mins",
-    audioSrc: "/audio/meditation-working-with-difficulties.mp3",
-  },
-  // Add other cards here
-];
 
 // Fetch Current Meditation by Route Param ID
-const meditation = cards.find((card) => card.id === route.params.id) || {
+const meditation = MEDITATIONS.find((card) => card.id === route.params.id) || {
   title: "Meditation Not Found",
   description: "Unable to find the requested meditation.",
   time: "",
   audioSrc: "",
 };
 
+useHead({ title: meditation.title });
+
 // Navigation
 function goBack() {
-  router.push("/");
+  router.push("/meditation");
 }
 
 // Audio Player State
@@ -134,8 +109,11 @@ function togglePlay() {
   }
 }
 
+// While the slider is being dragged, playback ticks must not move it back.
+const isSeeking = ref(false);
+
 function updateTime() {
-  currentTime.value = audioPlayer.value.currentTime;
+  if (!isSeeking.value) currentTime.value = audioPlayer.value.currentTime;
 }
 
 function setDuration() {
@@ -143,7 +121,8 @@ function setDuration() {
 }
 
 function seekAudio() {
-  audioPlayer.value.currentTime = currentTime.value;
+  audioPlayer.value.currentTime = Number(currentTime.value);
+  isSeeking.value = false;
 }
 
 function rewind() {
@@ -207,84 +186,56 @@ function drawWaveform() {
 </script>
 
 <style scoped>
-/* Custom range input styles */
+/* Range input themed with the app tokens; the filled part follows --progress-value. */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  width: 100%;
-  margin: 10px 0;
-  position: relative;
+  /* A 44px touch area for fingers; the negative margin keeps the layout unchanged. */
+  height: 44px;
+  margin-block: -12px;
+  cursor: pointer;
 }
 
-/* Track styles */
 input[type="range"]::-webkit-slider-runnable-track {
-  width: 100%;
   height: 4px;
-  background: rgb(82, 82, 82);
   border-radius: 2px;
-  cursor: pointer;
   background: linear-gradient(
     to right,
-    white 0%,
-    white var(--progress-value, 0%),
-    rgb(82, 82, 82) var(--progress-value, 0%),
-    rgb(82, 82, 82) 100%
+    rgb(var(--c-btn)) 0%,
+    rgb(var(--c-btn)) var(--progress-value, 0%),
+    rgb(var(--c-rule)) var(--progress-value, 0%),
+    rgb(var(--c-rule)) 100%
   );
 }
 
 input[type="range"]::-moz-range-track {
-  width: 100%;
   height: 4px;
   border-radius: 2px;
-  cursor: pointer;
-  background: linear-gradient(
-    to right,
-    white 0%,
-    white var(--progress-value, 0%),
-    rgb(82, 82, 82) var(--progress-value, 0%),
-    rgb(82, 82, 82) 100%
-  );
+  background: rgb(var(--c-rule));
 }
 
-/* Thumb styles */
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(var(--c-btn));
+}
+
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 12px;
-  width: 12px;
-  margin-top: -4px;
-  background: white;
+  height: 16px;
+  width: 16px;
+  margin-top: -6px;
   border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  position: relative;
-  z-index: 1;
+  background: rgb(var(--c-btn));
 }
 
 input[type="range"]::-moz-range-thumb {
-  height: 12px;
-  width: 12px;
-  background: white;
+  height: 16px;
+  width: 16px;
   border: none;
   border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  position: relative;
-  z-index: 1;
-}
-
-/* Active state */
-input[type="range"]:active::-webkit-slider-thumb {
-  transform: scale(1.2);
-}
-
-input[type="range"]:active::-moz-range-thumb {
-  transform: scale(1.2);
-}
-
-/* Focus state */
-input[type="range"]:focus {
-  outline: none;
+  background: rgb(var(--c-btn));
 }
 </style>
