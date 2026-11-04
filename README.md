@@ -13,7 +13,7 @@ A Progressive Web Application (PWA) built with Nuxt 3, implementing Cognitive Be
 - **Framework:** [Nuxt 3](https://nuxt.com/)
 - **Language:** TypeScript
 - **State Management:** [Pinia](https://pinia.vuejs.org/)
-- **Hosting & Deployment:** Netlify
+- **Hosting & Deployment:** Cloudflare Pages (builds from GitHub; every PR gets a preview link)
 - **Authentication & Database:** Firebase (Auth & Firestore)
 - **Encryption:** Web Crypto API (AES-GCM with a shared app key; this obscures entries at rest but is not end-to-end encryption, since the key ships in the client bundle)
 - **UI Framework:** TailwindCSS
