@@ -225,6 +225,12 @@
     --c-line: 91 101 120;
   }
 
+  /* Desktop browsers draw a thick grey scrollbar; keep it thin and in the style's colours. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-line)) transparent;
+  }
+
   body {
     @apply bg-page font-sans text-ink antialiased;
     /* Long words or pasted links in entries wrap instead of pushing the layout wider. */
