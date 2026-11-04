@@ -4,6 +4,7 @@ export interface StyleCopy {
   thoughtLabel: string;
   answerLabel: string;
   answerQuestion: string;
+  answerHelp: string;
   saveLabel: string;
   savedTitle: string;
   loginTitle: string;
@@ -21,6 +22,7 @@ export const STYLE_COPY: Record<AppStyle, StyleCopy> = {
     thoughtLabel: "The storm",
     answerLabel: "The clearer view",
     answerQuestion: "What’s the clearer view?",
+    answerHelp: "Is the thought 100% true? What would you tell a friend who said it?",
     saveLabel: "Save record",
     savedTitle: "The sky’s a little clearer.",
     loginTitle: "Hard thoughts pass. Let’s help them along.",
@@ -29,6 +31,7 @@ export const STYLE_COPY: Record<AppStyle, StyleCopy> = {
     thoughtLabel: "You wrote",
     answerLabel: "Your answer",
     answerQuestion: "Is that 100% true?",
+    answerHelp: "Look for the facts that don’t fit it, even small ones.",
     saveLabel: "Save this page",
     savedTitle: "Page saved. You talked back.",
     loginTitle: "Write it down. Then talk back.",
@@ -37,6 +40,7 @@ export const STYLE_COPY: Record<AppStyle, StyleCopy> = {
     thoughtLabel: "Your thought",
     answerLabel: "Your reframe",
     answerQuestion: "Is that really true?",
+    answerHelp: "Look for what doesn’t fit, or think about what you’d tell a friend.",
     saveLabel: "Save my reframe",
     savedTitle: "Nice work. That thought has less grip now.",
     loginTitle: "Hey there. Let’s untangle things together.",

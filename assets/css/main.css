@@ -324,7 +324,9 @@
   background-color: rgb(var(--c-surface));
   background-image: linear-gradient(90deg, transparent 33px, rgb(var(--c-margin) / 0.6) 33px, rgb(var(--c-margin) / 0.6) 34px, transparent 34px),
     repeating-linear-gradient(transparent 0 27px, rgb(var(--c-pen) / 0.18) 27px 28px);
-  background-position: 0 0, 0 16px;
+  padding-top: 8px;
+  /* Rules sit just under each 28px line of text; the first one hides under the top border. */
+  background-position: 0 0, 0 4px;
 }
 
 [data-style="workbook"] .field-sky {

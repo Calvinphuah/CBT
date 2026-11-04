@@ -22,7 +22,7 @@
 
     <div v-else-if="!entries.length" class="clear-card mt-2 flex flex-col gap-3 p-5">
       <SunIcon class="size-7 text-ink" aria-hidden="true" />
-      <h2 class="text-heading">Start your first thought record</h2>
+      <h2 class="text-heading text-ink">Start your first thought record</h2>
       <p class="text-[15px] leading-[21px] text-ink-2">
         When a thought won&rsquo;t let go, write it down in four short steps
         and find a clearer view of it. It takes about 8 minutes.

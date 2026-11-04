@@ -8,7 +8,7 @@
       class="clear-card mt-2 flex flex-col gap-3 p-5"
     >
       <SunIcon class="size-7 text-sun-icon" aria-hidden="true" />
-      <h2 class="text-heading">Write your first bright spot</h2>
+      <h2 class="text-heading text-ink">Write your first bright spot</h2>
       <p class="text-[15px] leading-[21px] text-ink-2">
         One small good thing from today is enough. A warm drink, a kind word,
         a quiet minute.

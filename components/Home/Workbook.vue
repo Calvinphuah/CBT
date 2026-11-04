@@ -101,7 +101,7 @@ const emit = defineEmits<{
   (e: "open", entry: CBTEntry): void;
 }>();
 
-const shortDate = new Date().toLocaleDateString("en-GB", {
+const shortDate = new Date().toLocaleDateString("en-US", {
   weekday: "short",
   day: "numeric",
   month: "short",
