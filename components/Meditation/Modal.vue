@@ -32,7 +32,7 @@
           </button>
         </div>
 
-        <div class="h-[min(36vh,340px)] w-full shrink-0 overflow-hidden rounded-[28px]">
+        <div class="art-frame h-[min(36vh,340px)] w-full shrink-0 overflow-hidden rounded-[28px]">
           <CommonIllustration alt="" :position="style === 'clearing' ? '50% 45%' : undefined" />
         </div>
 
@@ -55,7 +55,8 @@
             :max="duration"
             step="0.1"
             :style="{ '--progress-value': progressPercent }"
-            @input="seekAudio"
+            @input="isSeeking = true"
+            @change="seekAudio"
           />
           <div class="mt-1 flex justify-between text-[13px] font-semibold tabular-nums text-ink-3">
             <span>{{ formatTime(currentTime) }}</span>
@@ -140,8 +141,11 @@ function handleAudioEnd() {
   isPlaying.value = false;
 }
 
+// While the slider is being dragged, playback ticks must not move it back.
+const isSeeking = ref(false);
+
 function updateTime() {
-  if (audioPlayer.value) {
+  if (audioPlayer.value && !isSeeking.value) {
     currentTime.value = audioPlayer.value.currentTime;
   }
 }
@@ -154,8 +158,9 @@ function setDuration() {
 
 function seekAudio() {
   if (audioPlayer.value) {
-    audioPlayer.value.currentTime = currentTime.value;
+    audioPlayer.value.currentTime = Number(currentTime.value);
   }
+  isSeeking.value = false;
 }
 
 function rewind() {
