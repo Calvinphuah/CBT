@@ -10,8 +10,8 @@
     --c-sunken: 237 241 245;
     --c-ink: 29 36 51;
     --c-ink-2: 86 96 116;
-    --c-ink-3: 107 116 134;
-    --c-rule: 225 230 237;
+    --c-ink-3: 90 100 120;
+    --c-rule: 214 220 229;
     --c-storm: 62 74 97;
     --c-on-storm: 255 255 255;
     --c-storm-label: 201 210 220;
@@ -19,7 +19,7 @@
     --c-sky-tint: 230 239 249;
     --c-sun: 255 201 77;
     --c-on-sun: 29 36 51;
-    --c-sun-icon: 201 154 30;
+    --c-sun-icon: 176 130 10;
     --c-btn: 62 74 97;
     --c-on-btn: 255 255 255;
     --c-danger: 196 67 47;
@@ -31,6 +31,7 @@
     --font-body: "Figtree", system-ui, sans-serif;
     --font-hand: "Figtree", system-ui, sans-serif;
     color-scheme: light;
+    --c-line: 214 220 229;
   }
 
   .dark {
@@ -40,18 +41,19 @@
     --c-ink: 236 239 244;
     --c-ink-2: 169 178 194;
     --c-ink-3: 143 152 169;
-    --c-rule: 39 48 66;
+    --c-rule: 46 56 78;
     --c-storm: 44 54 80;
     --c-on-storm: 236 239 244;
     --c-storm-label: 154 166 186;
-    --c-sky-tint: 28 42 64;
+    --c-sky-tint: 34 54 84;
     --c-sun-icon: 255 201 77;
     --c-btn: 191 217 242;
     --c-on-btn: 17 21 29;
     --c-danger: 240 138 120;
     --c-pen: 191 217 242;
-    --c-soft: 28 42 64;
+    --c-soft: 34 54 84;
     color-scheme: dark;
+    --c-line: 46 56 78;
   }
 
   /* Workbook: your own CBT notebook. Graphite thought, biro answer, highlighter on the thought being tested. */
@@ -67,10 +69,10 @@
     --c-on-storm: 28 28 31;
     --c-storm-label: 78 79 86;
     --c-sky: 43 69 212;
-    --c-sky-tint: 255 255 255;
+    --c-sky-tint: 241 243 252;
     --c-sun: 228 244 106;
     --c-on-sun: 28 28 31;
-    --c-sun-icon: 217 74 56;
+    --c-sun-icon: 43 69 212;
     --c-btn: 28 28 31;
     --c-on-btn: 255 255 255;
     --c-btn-shadow: 43 69 212;
@@ -78,6 +80,7 @@
     --c-pen: 43 69 212;
     --c-margin: 217 74 56;
     --c-soft: 241 243 252;
+    --c-line: 28 28 31;
     --font-display: "Schibsted Grotesk", system-ui, sans-serif;
     --font-body: "Schibsted Grotesk", system-ui, sans-serif;
     --font-hand: "Caveat", "Schibsted Grotesk", cursive;
@@ -91,28 +94,29 @@
     --c-ink-2: 180 180 186;
     --c-ink-3: 150 150 158;
     --c-rule: 48 48 56;
-    --c-storm: 214 234 76;
+    --c-storm: 186 206 68;
     --c-on-storm: 20 20 23;
     --c-storm-label: 60 62 30;
     --c-sky: 147 164 255;
     --c-sky-tint: 30 30 35;
-    --c-sun: 214 234 76;
+    --c-sun: 186 206 68;
     --c-on-sun: 20 20 23;
-    --c-sun-icon: 240 122 104;
-    --c-btn: 242 242 238;
+    --c-sun-icon: 147 164 255;
+    --c-btn: 147 164 255;
     --c-on-btn: 20 20 23;
-    --c-btn-shadow: 147 164 255;
+    --c-btn-shadow: 92 92 104;
     --c-danger: 240 122 104;
     --c-pen: 147 164 255;
     --c-margin: 240 122 104;
     --c-soft: 34 36 52;
+    --c-line: 92 92 104;
   }
 
   /* Companion: warm and friendly. Plum thought, mint reframe, tangerine to act. */
   :root[data-style="companion"] {
     --c-page: 251 248 255;
     --c-surface: 255 255 255;
-    --c-sunken: 241 236 253;
+    --c-sunken: 236 229 250;
     --c-ink: 43 33 80;
     --c-ink-2: 94 84 128;
     --c-ink-3: 108 100 138;
@@ -129,12 +133,13 @@
     --c-on-btn: 43 33 80;
     --c-btn-shadow: 196 94 30;
     --c-danger: 200 56 72;
-    --c-pen: 112 90 220;
+    --c-pen: 72 56 160;
     --c-margin: 255 138 61;
     --c-soft: 226 215 253;
     --font-display: "Gabarito", "Onest", system-ui, sans-serif;
     --font-body: "Onest", system-ui, sans-serif;
     --font-hand: "Onest", system-ui, sans-serif;
+    --c-line: 230 224 245;
   }
 
   .dark[data-style="companion"] {
@@ -144,12 +149,12 @@
     --c-ink: 241 238 252;
     --c-ink-2: 191 184 220;
     --c-ink-3: 160 152 190;
-    --c-rule: 58 50 96;
-    --c-storm: 52 43 96;
+    --c-rule: 72 62 116;
+    --c-storm: 62 52 112;
     --c-on-storm: 241 238 252;
     --c-storm-label: 191 179 240;
     --c-sky: 127 217 184;
-    --c-sky-tint: 31 58 51;
+    --c-sky-tint: 44 66 84;
     --c-sun: 255 154 87;
     --c-on-sun: 23 19 42;
     --c-sun-icon: 255 154 87;
@@ -159,11 +164,71 @@
     --c-danger: 255 130 140;
     --c-pen: 191 179 240;
     --c-margin: 255 154 87;
-    --c-soft: 46 39 82;
+    --c-soft: 66 56 112;
+    --c-line: 72 62 116;
+  }
+
+  /* Margin: a thought record page. Blue-black ink for what you wrote, green second ink for your answer, one vertical rule. */
+  :root[data-style="margin"] {
+    --c-page: 244 245 242;
+    --c-surface: 255 255 255;
+    --c-sunken: 236 238 234;
+    --c-ink: 26 34 51;
+    --c-ink-2: 74 85 102;
+    --c-ink-3: 100 110 125;
+    --c-rule: 217 220 214;
+    --c-storm: 230 236 248;
+    --c-on-storm: 26 34 51;
+    --c-storm-label: 74 85 102;
+    --c-sky: 15 110 92;
+    --c-sky-tint: 225 242 236;
+    --c-sun: 15 110 92;
+    --c-on-sun: 255 255 255;
+    --c-sun-icon: 168 50 79;
+    --c-btn: 36 64 122;
+    --c-on-btn: 255 255 255;
+    --c-btn-shadow: 36 64 122;
+    --c-danger: 178 58 46;
+    --c-pen: 15 110 92;
+    --c-margin: 15 110 92;
+    --c-soft: 230 236 248;
+    --c-line: 138 146 156;
+    --font-display: "Schibsted Grotesk", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, sans-serif;
+    --font-hand: "Newsreader", Georgia, serif;
+  }
+
+  /* A dark desk, not inverted paper: surfaces get lighter as they come forward. */
+  .dark[data-style="margin"] {
+    --c-page: 20 24 30;
+    --c-surface: 28 33 41;
+    --c-sunken: 36 43 53;
+    --c-ink: 238 240 243;
+    --c-ink-2: 180 187 199;
+    --c-ink-3: 134 144 160;
+    --c-rule: 48 56 69;
+    --c-storm: 31 42 68;
+    --c-on-storm: 238 240 243;
+    --c-storm-label: 180 187 199;
+    --c-sky: 95 209 178;
+    --c-sky-tint: 23 53 48;
+    --c-sun: 95 209 178;
+    --c-on-sun: 20 24 30;
+    --c-sun-icon: 240 138 163;
+    --c-btn: 157 180 238;
+    --c-on-btn: 20 24 30;
+    --c-btn-shadow: 157 180 238;
+    --c-danger: 240 124 110;
+    --c-pen: 95 209 178;
+    --c-margin: 95 209 178;
+    --c-soft: 31 42 68;
+    --c-line: 91 101 120;
   }
 
   body {
     @apply bg-page font-sans text-ink antialiased;
+    /* Long words or pasted links in entries wrap instead of pushing the layout wider. */
+    overflow-wrap: anywhere;
   }
 
   :focus-visible {
@@ -208,15 +273,15 @@
   }
 
   .btn-primary {
-    @apply btn bg-btn text-btn-on hover:bg-btn/90;
+    @apply btn bg-btn text-btn-on hover:brightness-110 active:translate-y-px;
   }
 
   .btn-sun {
-    @apply btn bg-sun font-bold text-sun-on hover:bg-sun/90;
+    @apply btn bg-sun font-bold text-sun-on hover:brightness-105 active:translate-y-px;
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-ink ring-[1.5px] ring-inset ring-rule hover:bg-sunken;
+    @apply btn bg-surface text-ink ring-[1.5px] ring-inset ring-ink-3/50 hover:bg-sunken;
   }
 
   .btn-danger {
@@ -275,14 +340,25 @@
   background-size: 20px 20px;
 }
 
+/* A real border, not an inset shadow, so a picture inside a card can't paint over it. */
 [data-style="workbook"] .card,
 [data-style="workbook"] .clear-card {
   border-radius: 6px;
-  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+  border: 1.5px solid rgb(var(--c-line));
 }
 
 [data-style="workbook"] .card-pop {
-  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink)), 4px 4px 0 rgb(var(--c-ink));
+  box-shadow: 4px 4px 0 rgb(var(--c-line));
+}
+
+/* List icons become small ruled boxes in Workbook. */
+[data-style="workbook"] .row-icon {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
+}
+
+[data-style="workbook"] .card-art {
+  border-bottom: 1.5px solid rgb(var(--c-line));
 }
 
 [data-style="workbook"] .clear-card {
@@ -309,18 +385,18 @@
 }
 
 [data-style="workbook"] .btn-sun {
-  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink)), 4px 4px 0 rgb(var(--c-ink));
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line)), 4px 4px 0 rgb(var(--c-line));
 }
 
 [data-style="workbook"] .btn-ghost {
-  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
 }
 
 [data-style="workbook"] .field {
   border-radius: 6px;
   padding-left: 46px;
   line-height: 28px;
-  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
   background-color: rgb(var(--c-surface));
   background-image: linear-gradient(90deg, transparent 33px, rgb(var(--c-margin) / 0.6) 33px, rgb(var(--c-margin) / 0.6) 34px, transparent 34px),
     repeating-linear-gradient(transparent 0 27px, rgb(var(--c-pen) / 0.18) 27px 28px);
@@ -339,7 +415,7 @@
 
 [data-style="workbook"] .chip {
   border-radius: 6px;
-  box-shadow: inset 0 0 0 1.5px rgb(var(--c-ink));
+  box-shadow: inset 0 0 0 1.5px rgb(var(--c-line));
 }
 
 [data-style="workbook"] .chip-on {
@@ -358,9 +434,12 @@
 }
 
 [data-style="companion"] .btn-primary,
-[data-style="companion"] .btn-sun,
-[data-style="companion"] .icon-btn-filled {
+[data-style="companion"] .btn-sun {
   box-shadow: 0 5px 0 rgb(var(--c-btn-shadow));
+}
+
+[data-style="companion"] .icon-btn-filled {
+  box-shadow: 0 2px 0 rgb(var(--c-btn-shadow));
 }
 
 [data-style="companion"] .btn-primary:active,
@@ -372,6 +451,10 @@
 [data-style="companion"] .field {
   border-radius: 24px;
   box-shadow: inset 0 0 0 2px rgb(var(--c-ink) / 0.85);
+}
+
+.dark[data-style="companion"] .field {
+  box-shadow: inset 0 0 0 2px rgb(var(--c-ink) / 0.35);
 }
 
 [data-style="companion"] .field-sky {
@@ -390,14 +473,28 @@
   color: rgb(var(--c-on-storm));
 }
 
-/* Active tab marker: none for Clearing, a highlighter for Workbook, a lilac pill for Companion. */
-[data-style="workbook"] .tab-on {
+/* Phone cards need an edge: white on the pale page is too faint on its own. */
+[data-style="clearing"] .card,
+[data-style="companion"] .card {
+  box-shadow: 0 0 0 1px rgb(var(--c-rule)), 0 1px 2px rgb(var(--c-ink) / 0.04);
+}
+
+[data-style="clearing"] .tab-on,
+[data-style="clearing"] .tab-on:hover {
+  background: rgb(var(--c-sky-tint));
+}
+
+/* Active tab marker: a sky tint for Clearing, a highlighter for Workbook, a lilac pill for Companion. */
+/* The active tab keeps its marker on hover, so it never dims to a muddy colour. */
+[data-style="workbook"] .tab-on,
+[data-style="workbook"] .tab-on:hover {
   background: rgb(var(--c-sun));
   color: rgb(var(--c-on-sun));
   border-radius: 8px;
 }
 
-[data-style="companion"] .tab-on {
+[data-style="companion"] .tab-on,
+[data-style="companion"] .tab-on:hover {
   background: rgb(var(--c-soft));
   border-radius: 14px;
 }
@@ -411,8 +508,8 @@
 /* Picture frames: soft rounded in Clearing, a pasted-in photo in Workbook, a rounded tile in Companion. */
 [data-style="workbook"] .art-frame {
   border-radius: 4px;
-  border: 1.5px solid rgb(var(--c-ink));
-  box-shadow: 4px 4px 0 rgb(var(--c-ink));
+  border: 1.5px solid rgb(var(--c-line));
+  box-shadow: 4px 4px 0 rgb(var(--c-line));
   transform: rotate(-1deg);
 }
 
@@ -428,4 +525,67 @@
 
 [data-style="companion"] .art-frame.art-flat {
   border-radius: 0 0 36px 36px;
+}
+
+/* Margin: page, not card. The thought and the answer sit beside one vertical rule; your own words are in serif italic. */
+[data-style="margin"] .card {
+  border-radius: 16px;
+}
+
+[data-style="margin"] .btn {
+  border-radius: 10px;
+}
+
+[data-style="margin"] .btn:active {
+  transform: scale(0.98);
+}
+
+[data-style="margin"] .storm-card,
+[data-style="margin"] .clear-card {
+  border-radius: 0 10px 10px 0;
+  border-left: 2px solid rgb(var(--c-line));
+  padding-left: 16px;
+}
+
+[data-style="margin"] .storm-card {
+  background: transparent;
+  color: rgb(var(--c-ink));
+}
+
+[data-style="margin"] .clear-card {
+  border-left-color: rgb(var(--c-pen));
+}
+
+[data-style="margin"] .storm-card > :not(.card-label),
+[data-style="margin"] .clear-card > :not(.card-label),
+[data-style="margin"] .note-text {
+  font-family: var(--font-hand);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 26px;
+}
+
+[data-style="margin"] .clear-card > :not(.card-label) {
+  color: rgb(var(--c-pen));
+}
+
+[data-style="margin"] .field {
+  border-radius: 10px;
+}
+
+[data-style="margin"] .chip {
+  border-radius: 6px;
+}
+
+[data-style="margin"] .tab-on {
+  color: rgb(var(--c-btn));
+}
+
+[data-style="margin"] .art-frame {
+  border-radius: 16px;
+}
+
+[data-style="margin"] :focus-visible {
+  outline-color: rgb(var(--c-btn));
 }

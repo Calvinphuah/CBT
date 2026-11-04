@@ -1,4 +1,4 @@
-export type AppStyle = "clearing" | "workbook" | "companion";
+export type AppStyle = "clearing" | "workbook" | "companion" | "margin";
 
 export interface StyleCopy {
   thoughtLabel: string;
@@ -14,6 +14,7 @@ export const APP_STYLES: { value: AppStyle; label: string }[] = [
   { value: "clearing", label: "Clearing" },
   { value: "workbook", label: "Workbook" },
   { value: "companion", label: "Companion" },
+  { value: "margin", label: "Margin" },
 ];
 
 // The words that change with each style; the steps and data stay the same.
@@ -33,8 +34,8 @@ export const STYLE_COPY: Record<AppStyle, StyleCopy> = {
     answerQuestion: "Is that 100% true?",
     answerHelp: "Look for the facts that don’t fit it, even small ones.",
     saveLabel: "Save this page",
-    savedTitle: "Page saved. You talked back.",
-    loginTitle: "Write it down. Then talk back.",
+    savedTitle: "Page saved. You questioned the thought.",
+    loginTitle: "Write it down. Then question it.",
   },
   companion: {
     thoughtLabel: "Your thought",
@@ -45,10 +46,19 @@ export const STYLE_COPY: Record<AppStyle, StyleCopy> = {
     savedTitle: "Nice work. That thought has less grip now.",
     loginTitle: "Hey there. Let’s untangle things together.",
   },
+  margin: {
+    thoughtLabel: "What went through your head",
+    answerLabel: "Another way to see it",
+    answerQuestion: "What’s another way to see it?",
+    answerHelp: "Look at it the way a fair friend would. What doesn’t fit the thought?",
+    saveLabel: "Save record",
+    savedTitle: "Written down. It looks different on the page.",
+    loginTitle: "Write the thought down. Then look at it again.",
+  },
 };
 
 export function isAppStyle(value: unknown): value is AppStyle {
-  return value === "clearing" || value === "workbook" || value === "companion";
+  return APP_STYLES.some((option) => option.value === value);
 }
 
 // Saved on this device, so the sign-in page can show the last style picked.

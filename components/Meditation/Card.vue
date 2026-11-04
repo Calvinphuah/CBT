@@ -5,7 +5,7 @@
     @click="emit('openModal', card)"
   >
     <span
-      class="grid size-10 shrink-0 place-items-center rounded-full bg-sky-tint text-pen"
+      class="row-icon grid size-10 shrink-0 place-items-center rounded-full bg-surface text-pen ring-[1.5px] ring-inset ring-pen/40"
     >
       <PlayIcon class="size-[18px]" aria-hidden="true" />
     </span>

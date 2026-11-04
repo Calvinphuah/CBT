@@ -15,8 +15,9 @@
       </button>
     </div>
 
-    <div class="grid gap-5 md:grid-cols-[1.15fr_1fr] md:gap-10">
-      <section class="flex flex-col gap-5">
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-10">
+      <section class="flex min-w-0 flex-col gap-5">
+        <h1 class="text-display hidden md:block md:text-[40px] md:leading-[44px]">{{ prompt }}</h1>
         <div class="flex flex-col items-center rounded-[32px] bg-soft px-5 pt-5 pb-1">
           <p
             class="w-full rounded-[20px] rounded-bl-md bg-surface px-4 py-3 text-[17px] font-medium leading-6 md:text-[19px]"
@@ -33,19 +34,19 @@
         </button>
       </section>
 
-      <section class="flex flex-col gap-5">
+      <section class="flex min-w-0 flex-col gap-5">
         <div class="grid grid-cols-2 gap-3">
-          <NuxtLink to="/gratitude" class="flex flex-col gap-2.5 rounded-[24px] bg-sky p-4 text-sun-on">
-            <HeartIcon class="size-6" aria-hidden="true" />
+          <NuxtLink to="/gratitude" class="flex flex-col gap-2.5 rounded-[24px] bg-sky p-4 text-sun-on dark:bg-sky-tint dark:text-ink">
+            <HeartIcon class="size-6 dark:text-sky" aria-hidden="true" />
             <span>
-              <span class="block font-display text-[18px] font-bold">Gratitude</span>
+              <span class="block font-display text-[19px] font-bold">Gratitude</span>
               <span class="block text-[13px] font-medium">2 min</span>
             </span>
           </NuxtLink>
           <NuxtLink to="/meditation" class="flex flex-col gap-2.5 rounded-[24px] bg-storm p-4 text-storm-on">
             <MoonIcon class="size-6" aria-hidden="true" />
             <span>
-              <span class="block font-display text-[18px] font-bold">Meditate</span>
+              <span class="block font-display text-[19px] font-bold">Meditate</span>
               <span class="block text-[13px] font-medium">3 to 19 min</span>
             </span>
           </NuxtLink>
@@ -53,7 +54,7 @@
 
         <div v-if="latestEntry" class="clear-card">
           <p class="card-label text-ink-2">Your last reframe, {{ latestDay }}</p>
-          <p class="text-[16px] font-medium leading-[23px]">{{ latestEntry.disputes }}</p>
+          <p class="text-[17px] font-medium leading-[25px]">{{ latestEntry.disputes }}</p>
         </div>
 
         <div v-if="recentEntries.length" class="card hidden px-5 pb-1.5 md:block">
@@ -68,7 +69,7 @@
             class="flex w-full flex-col items-start gap-0.5 border-b border-rule py-3 text-left last:border-b-0"
             @click="emit('open', entry)"
           >
-            <span class="max-w-full truncate text-[16px] font-semibold">{{ entry.beliefs }}</span>
+            <span class="max-w-full truncate text-[17px] font-semibold">{{ entry.beliefs }}</span>
             <span class="max-w-full truncate text-[15px] text-ink-2">{{ entry.disputes }}</span>
           </button>
         </div>

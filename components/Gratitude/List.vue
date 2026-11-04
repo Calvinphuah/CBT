@@ -29,6 +29,7 @@
           v-for="entry in group.entries"
           :key="entry.id"
           :content="entry.entry"
+          :time="formatTime(entry.createdAt.toDate())"
           @click="gratitudeStore.handleEditEntry(entry)"
         />
       </section>
@@ -55,6 +56,9 @@ import type { GratitudeEntry } from "@/types/gratitude";
 
 const gratitudeStore = useGratitudeStore();
 const sentinel = ref<HTMLElement | null>(null);
+
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).toLowerCase();
 
 // Group by the local calendar day, newest first.
 const groupedEntries = computed(() => {

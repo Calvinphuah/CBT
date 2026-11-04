@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import type { CBTEntry } from "@/types/cbt";
-import { HomeClearing, HomeCompanion, HomeWorkbook } from "#components";
+import { HomeClearing, HomeCompanion, HomeMargin, HomeWorkbook } from "#components";
 
 useHead({ title: "Home" });
 
@@ -31,6 +31,7 @@ const homeByStyle = {
   clearing: HomeClearing,
   workbook: HomeWorkbook,
   companion: HomeCompanion,
+  margin: HomeMargin,
 };
 
 const now = new Date();

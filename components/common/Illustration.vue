@@ -1,8 +1,8 @@
 <template>
   <img
-    :src="art.src"
+    :src="isDark && 'srcDark' in art ? art.srcDark : art.src"
     :alt="alt ?? art.alt"
-    class="size-full object-cover dark:brightness-[.85] dark:saturate-[.9]"
+    class="size-full object-cover dark:brightness-[.72] dark:saturate-[.8]"
     :style="{ objectPosition: position ?? art.position }"
   />
 </template>
@@ -14,6 +14,8 @@ const { alt, position } = defineProps<{
 }>();
 
 const { style } = useAppStyle();
+const colorMode = useColorMode();
+const isDark = computed(() => colorMode.value === "dark");
 
 // One picture per style, reused across screens by cropping.
 const ARTWORK = {
@@ -31,6 +33,13 @@ const ARTWORK = {
     src: "/img/companion-mascot.jpg",
     alt: "Cog, a small lilac character holding a glowing lightbulb",
     position: "50% 50%",
+  },
+  // Placeholder line drawing until the Figma art is ready.
+  margin: {
+    src: "/img/margin-desk.svg",
+    srcDark: "/img/margin-desk-dark.svg",
+    alt: "A desk lamp lighting an open notebook with a pen",
+    position: "50% 72%",
   },
 } as const;
 

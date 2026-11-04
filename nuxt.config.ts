@@ -214,6 +214,20 @@ export default defineNuxtConfig({
         weights: [400, 500, 600, 700],
         global: true,
       },
+      {
+        name: "Hanken Grotesk",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        global: true,
+      },
+      // Margin sets only the user's own words in this serif italic.
+      {
+        name: "Newsreader",
+        provider: "google",
+        weights: [400],
+        styles: ["italic"],
+        global: true,
+      },
     ],
   },
 });

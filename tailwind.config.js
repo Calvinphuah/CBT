@@ -31,6 +31,7 @@ export default {
           3: token("ink-3"),
         },
         rule: token("rule"),
+        line: token("line"),
         storm: {
           DEFAULT: token("storm"),
           on: token("on-storm"),

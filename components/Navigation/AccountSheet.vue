@@ -14,24 +14,29 @@
 
       <div>
         <p class="mb-2 text-[13px] font-semibold text-ink-3">Style</p>
-        <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Style">
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="Style">
           <button
             v-for="option in APP_STYLES"
             :key="option.value"
             type="button"
             role="radio"
             :aria-checked="style === option.value"
-            class="flex flex-col items-center gap-2 rounded-2xl bg-surface px-2 py-3 text-[14px] font-semibold ring-inset transition-shadow"
-            :class="style === option.value ? 'ring-2 ring-ink' : 'ring-1 ring-rule'"
+            class="flex flex-col gap-2 rounded-2xl bg-surface p-2 pb-2.5 text-center text-[15px] font-semibold ring-inset transition-shadow"
+            :class="style === option.value ? 'ring-2 ring-pen' : 'ring-1 ring-rule'"
             @click="style = option.value"
           >
-            <span class="flex gap-1" aria-hidden="true">
-              <i
-                v-for="swatch in STYLE_SWATCHES[option.value]"
-                :key="swatch"
-                class="block size-4 rounded-full ring-1 ring-black/10"
-                :style="{ background: swatch }"
-              />
+            <span
+              class="relative flex h-[68px] flex-col justify-end gap-1 overflow-hidden rounded-xl p-2 dark:brightness-[.8]"
+              :style="STYLE_PREVIEWS[option.value].page"
+              aria-hidden="true"
+            >
+              <span
+                class="absolute left-2 top-1.5 text-[19px] font-bold leading-none"
+                :style="STYLE_PREVIEWS[option.value].type"
+                >Aa</span
+              >
+              <i class="block h-2.5 w-4/5" :style="STYLE_PREVIEWS[option.value].thought" />
+              <i class="block h-2.5 w-3/5" :style="STYLE_PREVIEWS[option.value].answer" />
             </span>
             {{ option.label }}
           </button>
@@ -54,7 +59,7 @@
             class="h-10 rounded-[10px] text-[15px] font-semibold transition-colors"
             :class="
               savedTheme === option.value
-                ? 'bg-surface text-ink shadow-sm'
+                ? 'bg-surface text-ink shadow-sm dark:bg-ink/15'
                 : 'text-ink-2'
             "
             @click="setTheme(option.value)"
@@ -99,14 +104,41 @@ const authStore = useAuthStore();
 const isOpen = useState("account-sheet-open", () => false);
 const { style } = useAppStyle();
 
-// Fixed preview colours so each option shows its own palette, whatever style is active.
-const STYLE_SWATCHES: Record<AppStyle, string[]> = {
-  clearing: ["#3E4A61", "#BFD9F2", "#FFC94D"],
-  workbook: ["#1C1C1F", "#2B45D4", "#E4F46A"],
-  companion: ["#2B2150", "#8FE3C3", "#FF8A3D"],
+// Fixed mini previews so each option shows its own paper, font and colours, whatever style is active.
+const STYLE_PREVIEWS: Record<AppStyle, Record<"page" | "type" | "thought" | "answer", Record<string, string>>> = {
+  clearing: {
+    page: { background: "#F5F7FA", boxShadow: "inset 0 0 0 1px #E1E6ED" },
+    type: { fontFamily: "'Bricolage Grotesque'", color: "#1D2433" },
+    thought: { background: "#3E4A61", borderRadius: "4px" },
+    answer: { background: "#BFD9F2", borderRadius: "4px", boxShadow: "inset 3px 0 #FFC94D" },
+  },
+  workbook: {
+    page: {
+      backgroundColor: "#FBFBF8",
+      backgroundImage: "linear-gradient(#E2E4EA 1px, transparent 1px), linear-gradient(90deg, #E2E4EA 1px, transparent 1px)",
+      backgroundSize: "8px 8px",
+      boxShadow: "inset 0 0 0 1.5px #1C1C1F",
+      borderRadius: "4px",
+    },
+    type: { fontFamily: "'Schibsted Grotesk'", color: "#1C1C1F" },
+    thought: { background: "#E4F46A", borderRadius: "1px" },
+    answer: { background: "#2B45D4", height: "3px", borderRadius: "2px", marginTop: "4px" },
+  },
+  companion: {
+    page: { background: "#FBF8FF", boxShadow: "inset 0 0 0 1px #E6E0F5", borderRadius: "16px" },
+    type: { fontFamily: "Gabarito", color: "#2B2150" },
+    thought: { background: "#2B2150", borderRadius: "999px" },
+    answer: { background: "#8FE3C3", borderRadius: "999px" },
+  },
+  margin: {
+    page: { background: "#F4F5F2", boxShadow: "inset 0 0 0 1px #D9DCD6", borderRadius: "10px" },
+    type: { fontFamily: "Newsreader", fontStyle: "italic", fontWeight: "400", color: "#1A2233" },
+    thought: { background: "#1A2233", height: "3px", borderRadius: "2px", boxShadow: "-6px 0 0 -1px #D9DCD6" },
+    answer: { background: "#0F6E5C", height: "3px", borderRadius: "2px", boxShadow: "-6px 0 0 -1px #0F6E5C" },
+  },
 };
 
-// The saved choice ("auto" means match the phone), kept separate from the resolved light or dark.
+// The saved choice ("auto" follows the device setting), kept separate from the resolved light or dark.
 const savedTheme = useColorMode().store;
 
 type ThemeChoice = "light" | "dark" | "auto";
@@ -118,7 +150,7 @@ const setTheme = (value: ThemeChoice) => {
 const themeOptions: { value: ThemeChoice; label: string }[] = [
   { value: "light", label: "Light" },
   { value: "dark", label: "Dark" },
-  { value: "auto", label: "Match phone" },
+  { value: "auto", label: "Auto" },
 ];
 
 const displayName = computed(

@@ -12,8 +12,8 @@
       </button>
     </div>
 
-    <div class="grid gap-5 md:grid-cols-[1.25fr_1fr] md:gap-10">
-      <section class="flex flex-col gap-5">
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] md:gap-10">
+      <section class="flex min-w-0 flex-col gap-5">
         <div>
           <p class="text-[15px] font-medium text-ink-3">{{ dayAndTime }}</p>
           <h1
@@ -37,7 +37,7 @@
         </div>
       </section>
 
-      <section class="flex flex-col gap-5">
+      <section class="flex min-w-0 flex-col gap-5">
         <div class="card flex items-center justify-between p-4 md:ring-1 md:ring-rule">
           <div>
             <p class="text-[13px] font-semibold text-ink-3">This week</p>

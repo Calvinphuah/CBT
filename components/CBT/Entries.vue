@@ -42,8 +42,8 @@
         @click="cbtStore.handleViewEntry(entry)"
       >
         <span
-          v-if="style !== 'workbook'"
-          class="grid size-10 shrink-0 place-items-center rounded-full bg-sky-tint text-pen"
+          v-if="style === 'clearing' || style === 'companion'"
+          class="row-icon grid size-10 shrink-0 place-items-center rounded-full bg-sky-tint text-pen"
         >
           <LightBulbIcon v-if="style === 'companion'" class="size-[22px]" aria-hidden="true" />
           <SunIcon v-else class="size-[22px]" aria-hidden="true" />
@@ -57,7 +57,11 @@
           </span>
           <span
             class="mt-0.5 block truncate text-[15px]"
-            :class="style === 'workbook' ? 'text-pen' : 'text-ink-2'"
+            :class="{
+              'text-pen': style === 'workbook' || style === 'margin',
+              'note-text': style === 'margin',
+              'text-ink-2': style === 'clearing' || style === 'companion',
+            }"
           >
             {{ entry.disputes }}
           </span>

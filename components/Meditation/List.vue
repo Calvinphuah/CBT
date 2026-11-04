@@ -15,7 +15,7 @@
       class="card overflow-hidden text-left"
       @click="openModal(featured)"
     >
-      <span class="block h-[150px]">
+      <span class="card-art block h-[150px]">
         <CommonIllustration alt="" :position="style === 'clearing' ? '50% 18%' : undefined" />
       </span>
       <span class="flex items-center gap-3 px-4 py-3.5">

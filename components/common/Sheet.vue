@@ -21,7 +21,7 @@
             class="mx-auto mb-4 block h-[5px] w-[38px] rounded-full bg-rule md:hidden"
             aria-hidden="true"
           />
-          <h2 v-if="title" :id="titleId" class="text-title mb-2 text-[24px]">
+          <h2 v-if="title" :id="titleId" class="text-title mb-2">
             {{ title }}
           </h2>
           <slot />

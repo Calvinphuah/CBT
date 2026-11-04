@@ -5,7 +5,7 @@
       <CommonHandNote :tilt="3">{{ shortDate }}</CommonHandNote>
       <button
         type="button"
-        class="icon-btn rounded-lg bg-surface text-[15px] font-bold ring-[1.5px] ring-ink"
+        class="icon-btn rounded-lg bg-surface text-[15px] font-bold ring-[1.5px] ring-line"
         aria-label="Account"
         @click="emit('account')"
       >
@@ -13,25 +13,25 @@
       </button>
     </div>
 
-    <div class="grid gap-5 md:grid-cols-[1.2fr_1fr] md:gap-10">
-      <section class="flex flex-col gap-5">
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-10">
+      <section class="flex min-w-0 flex-col gap-5">
         <div class="hidden md:block">
           <CommonHandNote :tilt="-2">{{ shortDate }}</CommonHandNote>
         </div>
         <h1
           class="font-display text-[34px] font-extrabold leading-[36px] tracking-[-0.04em] md:text-[48px] md:leading-[50px]"
         >
-          Write it down. Then talk back.
+          Write it down. Then question it.
         </h1>
 
         <div class="art-frame mx-1 h-[196px] overflow-hidden md:h-[300px]">
           <CommonIllustration />
         </div>
 
-        <div class="card card-pop rotate-1 p-5 md:max-w-md">
-          <h2 class="text-[21px] font-bold">New thought record</h2>
+        <div class="card card-pop p-5 md:max-w-md">
+          <h2 class="text-heading">New thought record</h2>
           <p class="mt-1 text-[15px] text-ink-2">4 questions, about 8 minutes</p>
-          <button type="button" class="btn-primary mt-4 h-11 px-5 text-[15px]" @click="emit('start')">
+          <button type="button" class="btn-primary mt-4 w-full md:w-auto" @click="emit('start')">
             Open a fresh page
           </button>
         </div>
@@ -40,7 +40,7 @@
         </div>
       </section>
 
-      <section class="flex flex-col gap-5">
+      <section class="flex min-w-0 flex-col gap-5">
         <div class="card flex items-center justify-between bg-surface p-4">
           <div>
             <p class="text-[13px] font-semibold text-ink-3">This week</p>
@@ -52,7 +52,7 @@
         </div>
 
         <div v-if="latestEntry" class="flex flex-col gap-1.5">
-          <CommonHandNote>last time you talked back:</CommonHandNote>
+          <CommonHandNote>last time you saw it differently:</CommonHandNote>
           <div class="clear-card">
             <p class="text-[17px] leading-[25px]">{{ latestEntry.disputes }}</p>
           </div>
@@ -70,7 +70,7 @@
             class="flex w-full flex-col items-start gap-1 border-b border-rule py-3 text-left last:border-b-0"
             @click="emit('open', entry)"
           >
-            <span class="max-w-full truncate bg-sun px-1 text-[16px] font-semibold text-sun-on">{{
+            <span class="max-w-full truncate bg-sun px-1 text-[17px] font-semibold text-sun-on">{{
               entry.beliefs
             }}</span>
             <span class="max-w-full truncate text-[15px] text-pen">{{ entry.disputes }}</span>

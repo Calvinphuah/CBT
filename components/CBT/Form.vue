@@ -41,7 +41,7 @@
         <CloudIcon v-if="style === 'clearing'" class="size-4" aria-hidden="true" />
         {{ copy.thoughtLabel }}
       </p>
-      <p class="text-[16px] font-medium leading-[23px]">
+      <p class="text-[17px] font-medium leading-[25px]">
         {{ cbtStore.formData.beliefs }}
       </p>
     </div>
