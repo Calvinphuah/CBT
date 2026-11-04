@@ -36,7 +36,7 @@
 
       <section class="flex min-w-0 flex-col gap-5">
         <div class="grid grid-cols-2 gap-3">
-          <NuxtLink to="/gratitude" class="flex flex-col gap-2.5 rounded-[24px] bg-sky p-4 text-sun-on dark:bg-sky-tint dark:text-ink">
+          <NuxtLink to="/gratitude" class="flex flex-col gap-2.5 rounded-[24px] bg-sky p-4 text-ink dark:bg-sky-tint">
             <HeartIcon class="size-6 dark:text-sky" aria-hidden="true" />
             <span>
               <span class="block font-display text-[19px] font-bold">Gratitude</span>
