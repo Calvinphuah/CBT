@@ -1,109 +1,93 @@
 <template>
-  <div class="max-w-lg pb-32 mx-auto">
-    <!-- Title -->
-    <div class="flex items-center justify-between px-10 py-4">
-      <img src="../../public/img/landing-cbt.png" alt="CBT" class="w-32" />
-      <h2 class="text-lg font-semibold">
-        <span class="block md:inline">Challenge your</span>
-        <span class="block md:inline"> negative thoughts</span>
-      </h2>
-    </div>
-
-    <!-- Grouped Entries by Date -->
-    <div v-if="Object.keys(sortedGroupedEntries).length > 0">
-      <div
-        v-for="(group, date) in sortedGroupedEntries"
-        :key="date"
-        class="px-4 pt-4"
+  <div class="app-page flex flex-col gap-3">
+    <div class="flex min-h-14 items-center justify-between">
+      <h1 class="text-display">Thoughts</h1>
+      <button
+        type="button"
+        class="icon-btn-filled"
+        aria-label="New thought record"
+        @click="cbtStore.handleNewEntry"
       >
-        <!-- Date Header -->
-        <h2 class="px-2 pb-2 text-lg font-medium text-gray-800">
-          {{ formatDate(new Date(date)) }}
-        </h2>
-
-        <!-- Entries for the Date -->
-        <div
-          v-for="entry in group"
-          :key="entry.id"
-          class="relative mb-4 overflow-hidden transition-transform transform bg-white border border-black rounded-lg shadow-md hover:cursor-pointer hover:scale-105 hover:shadow-lg"
-          @click="cbtStore.handleViewEntry(entry)"
-        >
-          <div class="flex items-center justify-between p-6 pr-12">
-            <!-- Left Side -->
-            <div class="w-full min-w-0">
-              <div class="flex items-center justify-between mb-2">
-                <!-- Title -->
-                <h3 class="pr-2 text-base font-semibold truncate">
-                  {{ entry.activatingEvent }}
-                </h3>
-                <!-- Time -->
-                <CommonPill
-                  :time="formatFirestoreTimestampTime(entry.createdAt)"
-                  :bg-color="'bg-accent-orange'"
-                />
-              </div>
-              <div>
-                <!-- Content -->
-                <p class="text-sm text-gray-600 truncate">
-                  {{ entry.disputes }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Chevron - Absolutely positioned within the container -->
-          <div class="absolute transform -translate-y-1/2 top-1/2 right-4">
-            <ChevronRightIcon class="w-6 h-6 text-gray-500" />
-          </div>
-        </div>
-      </div>
+        <PlusIcon class="size-6" aria-hidden="true" />
+      </button>
     </div>
-    <p v-else class="px-4 pt-4 text-center text-gray-600">
-      No entries yet. Add some!
+
+    <p v-if="entries.length" class="-mt-2 text-[15px] text-ink-3">
+      {{ entries.length }} {{ entries.length === 1 ? "record" : "records" }}
     </p>
+
+    <p v-if="cbtStore.loading && !entries.length" class="py-10 text-center text-ink-2">
+      Loading your records&hellip;
+    </p>
+
+    <div v-else-if="!entries.length" class="clear-card mt-2 flex flex-col gap-3 p-5">
+      <SunIcon class="size-7 text-ink" aria-hidden="true" />
+      <h2 class="text-heading">Start your first thought record</h2>
+      <p class="text-[15px] leading-[21px] text-ink-2">
+        When a thought won&rsquo;t let go, write it down in four short steps
+        and find a clearer view of it. It takes about 8 minutes.
+      </p>
+      <button type="button" class="btn-primary mt-1" @click="cbtStore.handleNewEntry">
+        Start a thought record
+      </button>
+    </div>
+
+    <section v-for="group in groupedEntries" :key="group.key" class="pt-1">
+      <h2 class="day-label pt-1">{{ group.heading }}</h2>
+      <button
+        v-for="entry in group.entries"
+        :key="entry.id"
+        type="button"
+        class="flex w-full items-start gap-3.5 border-b border-rule py-3.5 text-left last:border-b-0"
+        @click="cbtStore.handleViewEntry(entry)"
+      >
+        <span
+          class="grid size-10 shrink-0 place-items-center rounded-full bg-sky-tint text-storm dark:text-sky"
+        >
+          <SunIcon class="size-[22px]" aria-hidden="true" />
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="line-clamp-2 block text-[17px] font-semibold leading-[25px]">
+            {{ entry.beliefs }}
+          </span>
+          <span class="mt-0.5 block truncate text-[15px] text-ink-2">
+            {{ entry.disputes }}
+          </span>
+        </span>
+        <span class="shrink-0 pt-0.5 text-[13px] text-ink-3">
+          {{ formatTime(entry.createdAt.toDate()) }}
+        </span>
+      </button>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ChevronRightIcon } from "@heroicons/vue/24/solid";
+import { PlusIcon, SunIcon } from "@heroicons/vue/24/outline";
 import type { CBTEntry } from "@/types/cbt";
 
-const props = defineProps<{
+const { entries } = defineProps<{
   entries: CBTEntry[];
 }>();
 
 const cbtStore = useCBTStore();
 
-// Group entries by date
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).toLowerCase();
+
+// Group by the local calendar day, newest first.
 const groupedEntries = computed(() => {
-  return props.entries.reduce((acc, entry) => {
-    const createdAt = entry.createdAt.toDate();
-    const dateOnly = createdAt.toISOString().split("T")[0];
-
-    if (!acc[dateOnly]) {
-      acc[dateOnly] = [];
-    }
-    acc[dateOnly].push({ ...entry });
-    return acc;
-  }, {} as Record<string, CBTEntry[]>);
-});
-
-// Sort grouped entries by date and time
-const sortedGroupedEntries = computed(() => {
-  const sorted = Object.entries(groupedEntries.value)
-    .sort(
-      ([dateA], [dateB]) =>
-        new Date(dateB).getTime() - new Date(dateA).getTime()
-    )
-    .reduce((acc, [date, group]) => {
-      acc[date] = group.sort((a, b) => {
-        const dateA = a.createdAt.toDate();
-        const dateB = b.createdAt.toDate();
-        return dateB.getTime() - dateA.getTime();
-      });
-      return acc;
-    }, {} as Record<string, CBTEntry[]>);
-
-  return sorted;
+  const sorted = [...entries].sort(
+    (a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime()
+  );
+  const groups: { key: string; heading: string; entries: CBTEntry[] }[] = [];
+  for (const entry of sorted) {
+    const date = entry.createdAt.toDate();
+    const key = date.toDateString();
+    const last = groups[groups.length - 1];
+    if (last?.key === key) last.entries.push(entry);
+    else groups.push({ key, heading: formatDayHeading(date), entries: [entry] });
+  }
+  return groups;
 });
 </script>

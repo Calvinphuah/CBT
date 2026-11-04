@@ -1,76 +1,45 @@
 <template>
-  <div
-    class="sticky top-0 z-10 flex items-center justify-between p-4 px-4 bg-white sm:px-6 lg:px-8"
-  >
-    <!-- Back Icon -->
-    <ArrowLeftIcon
-      v-if="cbtStore.isNewEntry || cbtStore.isViewing"
-      class="size-7 text-light-100 hover:cursor-pointer"
-      @click="cbtStore.handleCancelEntry"
-    />
-
-    <NuxtLink
-      v-else-if="
-        !cbtStore.isEditing && !cbtStore.isNewEntry && !cbtStore.isViewing
-      "
-      to="/"
-    >
-      <ArrowLeftIcon class="size-7 text-light-100 hover:cursor-pointer" />
-    </NuxtLink>
-
-    <div
-      v-else-if="cbtStore.isEditing"
-      class="hover:cursor-pointer"
-      @click="cbtStore.cancelUpdateEntry"
-    >
-      Cancel
+  <div class="flex flex-col gap-1">
+    <div class="flex h-11 items-center justify-between">
+      <button
+        type="button"
+        class="icon-btn -ml-2.5"
+        :aria-label="isEditing ? 'Stop editing' : 'Close'"
+        @click="emit('close')"
+      >
+        <XMarkIcon class="size-6" aria-hidden="true" />
+      </button>
+      <p class="text-[15px] font-semibold text-ink-2" aria-live="polite">
+        {{ isEditing ? "Editing" : "New record" }}, step {{ step }} of {{ total }}
+      </p>
+      <span class="size-11" aria-hidden="true" />
     </div>
-
-    <!-- Title -->
-    <h1
-      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry"
-      class="flex-1 text-xl font-medium text-center"
-    >
-      CBT
-    </h1>
-    <h1
-      v-if="cbtStore.isEditing"
-      class="flex-1 text-xl font-medium text-center"
-    >
-      Editing Entry
-    </h1>
-    <h1
-      v-if="cbtStore.isNewEntry"
-      class="flex-1 text-xl font-medium text-center"
-    >
-      New Entry
-    </h1>
-
-    <!-- Action Icons -->
-    <PlusIcon
-      v-if="!cbtStore.isEditing && !cbtStore.isNewEntry && !cbtStore.isViewing"
-      class="size-7 text-light-100 hover:cursor-pointer"
-      @click="cbtStore.handleNewEntry"
-    />
-    <div
-      v-else-if="cbtStore.isEditing || cbtStore.isNewEntry"
-      class="hover:cursor-pointer"
-      @click="cbtStore.submitCurrentEntry"
-    >
-      Save
-    </div>
-    <div
-      v-else-if="cbtStore.isViewing"
-      class="hover:cursor-pointer"
-      @click="cbtStore.handleUpdateEntry"
-    >
-      Edit
+    <div class="grid gap-[5px]" :style="{ gridTemplateColumns: `repeat(${total}, 1fr)` }">
+      <i
+        v-for="index in total"
+        :key="index"
+        class="h-1 rounded-full"
+        :class="segmentClass(index)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ArrowLeftIcon, PlusIcon } from "@heroicons/vue/24/solid";
+import { XMarkIcon } from "@heroicons/vue/24/outline";
 
-const cbtStore = useCBTStore();
+const { step, total, isEditing = false } = defineProps<{
+  step: number;
+  total: number;
+  isEditing?: boolean;
+}>();
+
+const emit = defineEmits<{ (e: "close"): void }>();
+
+// The sun only appears on the last step, when the thought gets reframed.
+const segmentClass = (index: number) => {
+  if (index > step) return "bg-rule";
+  if (index === total) return "bg-sun";
+  return "bg-storm dark:bg-sky";
+};
 </script>
