@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { MEDITATIONS } from "./utils/meditations";
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
@@ -155,6 +156,10 @@ export default defineNuxtConfig({
   ssr: false,
   nitro: {
     preset: "static",
+    // Build each meditation page as a real file, so a shared link returns 200 instead of the 404 fallback.
+    prerender: {
+      routes: MEDITATIONS.map((meditation) => `/meditation/${meditation.id}`),
+    },
     // output: {
     //   dir: "dist",
     // },
