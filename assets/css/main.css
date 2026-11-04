@@ -2,16 +2,151 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* background-color: #ffffff; */
-  /* background-color: #f5f4ef; */
-  background-color: #f9fafb;
+/* Clearing: slate is the storm (the worrying thought), sky blue is the clearer view, sun yellow only marks the moment of reframing. Values are RGB triplets so Tailwind opacity modifiers work. */
+@layer base {
+  :root {
+    --c-page: 245 247 250;
+    --c-surface: 255 255 255;
+    --c-sunken: 237 241 245;
+    --c-ink: 29 36 51;
+    --c-ink-2: 86 96 116;
+    --c-ink-3: 107 116 134;
+    --c-rule: 225 230 237;
+    --c-storm: 62 74 97;
+    --c-on-storm: 255 255 255;
+    --c-storm-label: 201 210 220;
+    --c-sky: 191 217 242;
+    --c-sky-tint: 230 239 249;
+    --c-sun: 255 201 77;
+    --c-on-sun: 29 36 51;
+    --c-sun-icon: 201 154 30;
+    --c-btn: 62 74 97;
+    --c-on-btn: 255 255 255;
+    --c-danger: 196 67 47;
+    color-scheme: light;
+  }
 
-  @apply font-sans;
+  .dark {
+    --c-page: 17 21 29;
+    --c-surface: 26 32 48;
+    --c-sunken: 32 40 58;
+    --c-ink: 236 239 244;
+    --c-ink-2: 169 178 194;
+    --c-ink-3: 143 152 169;
+    --c-rule: 39 48 66;
+    --c-storm: 44 54 80;
+    --c-on-storm: 236 239 244;
+    --c-storm-label: 154 166 186;
+    --c-sky-tint: 28 42 64;
+    --c-sun-icon: 255 201 77;
+    --c-btn: 191 217 242;
+    --c-on-btn: 17 21 29;
+    --c-danger: 240 138 120;
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-page font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-storm));
+    outline-offset: 2px;
+  }
+
+  .dark :focus-visible {
+    outline-color: rgb(var(--c-sky));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 @layer components {
+  .app-page {
+    @apply mx-auto w-full max-w-[680px] px-5 pb-8 md:px-10 md:pt-10;
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .text-display {
+    @apply font-display text-[31px] font-bold leading-[35px] tracking-[-0.03em];
+  }
+
+  .text-title {
+    @apply font-display text-[27px] font-bold leading-[31px] tracking-[-0.025em];
+  }
+
+  .text-heading {
+    @apply font-display text-[19px] font-bold leading-6 tracking-[-0.015em];
+  }
+
   .btn {
-    @apply px-4 py-2 font-bold text-white transition duration-300 bg-orange-500 rounded shadow-md cursor-pointer hover:bg-orange-600 focus:ring-2 focus:ring-orange-300 focus:ring-offset-2;
+    @apply inline-flex h-[54px] items-center justify-center gap-2 whitespace-nowrap rounded-2xl px-6 text-[17px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-btn text-btn-on hover:bg-btn/90;
+  }
+
+  .btn-sun {
+    @apply btn bg-sun font-bold text-sun-on hover:bg-sun/90;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-ink ring-[1.5px] ring-inset ring-rule hover:bg-sunken;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger text-white hover:bg-danger/90 dark:text-page;
+  }
+
+  .icon-btn {
+    @apply grid size-11 shrink-0 place-items-center rounded-full text-ink transition-colors hover:bg-sunken;
+  }
+
+  .icon-btn-filled {
+    @apply icon-btn bg-btn text-btn-on hover:bg-btn/90;
+  }
+
+  .card {
+    @apply rounded-card bg-surface;
+  }
+
+  .storm-card {
+    @apply rounded-card bg-storm px-4 pb-4 pt-3.5 text-storm-on;
+  }
+
+  .clear-card {
+    @apply rounded-card bg-sky-tint px-4 pb-4 pt-3.5 text-ink;
+  }
+
+  .card-label {
+    @apply mb-1 flex items-center gap-1.5 text-[13px] font-semibold;
+  }
+
+  .field {
+    @apply w-full resize-none rounded-card bg-surface p-4 text-[17px] leading-[25px] text-ink ring-[1.5px] ring-inset ring-rule placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-storm dark:focus:ring-sky;
+  }
+
+  .field-sky {
+    @apply bg-sky-tint ring-0;
+  }
+
+  .chip {
+    @apply inline-flex h-9 items-center rounded-xl bg-surface px-3.5 text-[15px] font-medium text-ink ring-[1.5px] ring-inset ring-rule transition-colors hover:bg-sunken;
+  }
+
+  .chip-on {
+    @apply bg-storm text-storm-on ring-0 hover:bg-storm;
+  }
+
+  .day-label {
+    @apply text-[13px] font-semibold text-ink-3;
   }
 }

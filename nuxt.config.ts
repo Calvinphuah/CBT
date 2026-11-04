@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@pinia/nuxt",
     "@vueuse/nuxt",
-    "@nuxtjs/google-fonts",
     "@vite-pwa/nuxt",
     "@nuxt/test-utils/module",
   ],
@@ -22,7 +21,8 @@ export default defineNuxtConfig({
       name: "Cogni",
       short_name: "Cogni",
       description: "Cognitive behavioural therapy app",
-      theme_color: "#ffffff",
+      theme_color: "#F5F7FA",
+      background_color: "#F5F7FA",
       icons: [
         {
           src: "/icons/icon-144x144.png",
@@ -107,27 +107,26 @@ export default defineNuxtConfig({
         {
           name: "viewport",
           content:
-            "width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no",
+            "width=device-width, initial-scale=1, viewport-fit=cover",
         },
       ],
       link: [
         {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap",
-        },
-        {
           rel: "icon",
-          href: "/img/wavy-leaf.png",
+          type: "image/svg+xml",
+          href: "/img/logo-mark.svg",
         },
       ],
     },
   },
-  googleFonts: {
-    families: {
-      "Nunito+Sans": [400, 700],
-    },
-    display: "swap",
-    subsets: ["latin"],
-    preconnect: true,
+  fonts: {
+    families: [
+      { name: "Figtree", provider: "google", weights: [400, 500, 600, 700] },
+      {
+        name: "Bricolage Grotesque",
+        provider: "google",
+        weights: [600, 700, 800],
+      },
+    ],
   },
 });
