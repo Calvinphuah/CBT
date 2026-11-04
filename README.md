@@ -58,7 +58,3 @@ _All screenshots use made-up example entries._
 - **Sign-in and data:** Firebase Auth and Firestore
 - **Hosting:** Cloudflare Pages, with a preview link for every PR
 - **Encryption:** entries are encrypted with AES-GCM before saving
-
-### Security rules
-
-`firestore.rules` makes sure people can only read their own entries. Deploy with `npx firebase-tools deploy --only firestore:rules`. This overwrites the rules in the Firebase console.
