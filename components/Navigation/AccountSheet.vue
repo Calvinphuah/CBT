@@ -73,6 +73,8 @@
         <a
           href="/pdf/cbt_exercise.pdf"
           download
+          target="_blank"
+          rel="noopener"
           class="flex min-h-14 items-center gap-3.5 border-b border-rule"
         >
           <DocumentTextIcon class="size-6 text-ink-2" aria-hidden="true" />
