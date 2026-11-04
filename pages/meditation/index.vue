@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="app-page flex flex-col gap-4">
     <MeditationTopNav />
     <MeditationList :cards="cards" />
     <!-- Credits -->
-    <footer class="p-4 mb-20 text-xs text-center text-gray-500">
+    <footer class="pt-2 text-[11px] leading-4 text-ink-3">
       The guided meditation in this app are from "Mindful meditation," created
       by Diana Winston and others for UCLA Mindful, ©2011–2024 The Regents of
       the University of California (The UC Regents). Licensed under the Creative
