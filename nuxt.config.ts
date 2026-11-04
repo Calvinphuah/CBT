@@ -17,12 +17,22 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
   ],
   pwa: {
+    // Apply new versions on the next launch; the app has no "update available" prompt.
+    registerType: "autoUpdate",
     manifest: {
-      name: "Cogni",
+      id: "/",
+      name: "Cogni: CBT, gratitude and meditation",
       short_name: "Cogni",
-      description: "Cognitive behavioural therapy app",
+      description:
+        "Work through anxious thoughts with CBT, keep track of small good things, and listen to guided meditations.",
+      lang: "en",
+      start_url: "/",
+      scope: "/",
+      display: "standalone",
+      orientation: "portrait",
       theme_color: "#F5F7FA",
       background_color: "#F5F7FA",
+      categories: ["health", "lifestyle", "medical"],
       icons: [
         {
           src: "/icons/icon-144x144.png",
@@ -42,27 +52,70 @@ export default defineNuxtConfig({
           type: "image/png",
           purpose: "any",
         },
+        {
+          src: "/icons/icon-maskable-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "maskable",
+        },
+        {
+          src: "/icons/icon-maskable-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+      ],
+      shortcuts: [
+        {
+          name: "New thought record",
+          short_name: "New record",
+          url: "/cbt?new=1",
+          icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
+        },
+        {
+          name: "Gratitude",
+          url: "/gratitude",
+          icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
+        },
+        {
+          name: "Meditate",
+          url: "/meditation",
+          icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
+        },
       ],
       screenshots: [
         {
-          src: "/screenshots/desktop.png",
-          sizes: "1920x1080",
-          type: "image/png",
-          form_factor: "wide",
-          label: "Desktop view",
-        },
-        {
-          src: "/screenshots/mobile.png",
-          sizes: "750x1334",
+          src: "/screenshots/mobile-home.png",
+          sizes: "390x844",
           type: "image/png",
           form_factor: "narrow",
-          label: "Mobile view",
+          label: "Home: start a thought record",
+        },
+        {
+          src: "/screenshots/mobile-thought-record.png",
+          sizes: "390x844",
+          type: "image/png",
+          form_factor: "narrow",
+          label: "Answer a worrying thought with a clearer view",
+        },
+        {
+          src: "/screenshots/desktop-home.png",
+          sizes: "1280x800",
+          type: "image/png",
+          form_factor: "wide",
+          label: "Cogni on desktop",
         },
       ],
     },
     workbox: {
       navigateFallback: "/",
       navigateFallbackDenylist: [/^\/__nuxt_devtools__/],
+      // Precache the app shell, fonts and artwork so it opens offline; audio is streamed.
+      globPatterns: ["**/*.{js,css,html,png,svg,jpg,ico,woff2,webmanifest}"],
+      globIgnores: ["screenshots/**"],
+    },
+    client: {
+      installPrompt: false,
     },
     devOptions: {
       enabled: true,
@@ -109,6 +162,13 @@ export default defineNuxtConfig({
           content:
             "width=device-width, initial-scale=1, viewport-fit=cover",
         },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-title", content: "Cogni" },
+        {
+          name: "apple-mobile-web-app-status-bar-style",
+          content: "default",
+        },
       ],
       link: [
         {
@@ -116,6 +176,7 @@ export default defineNuxtConfig({
           type: "image/svg+xml",
           href: "/img/logo-mark.svg",
         },
+        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
       ],
     },
   },

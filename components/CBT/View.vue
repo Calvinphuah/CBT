@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 const cbtStore = useCBTStore();
+const route = useRoute();
 
 // Shown once, right after a new record is saved.
 const savedClearerView = ref("");
@@ -36,5 +37,11 @@ const viewSavedEntry = () => {
 
 onMounted(() => {
   cbtStore.fetchEntries();
+
+  // The installed app's "New thought record" shortcut opens /cbt?new=1.
+  if (route.query.new) {
+    cbtStore.handleNewEntry();
+    navigateTo("/cbt", { replace: true });
+  }
 });
 </script>
