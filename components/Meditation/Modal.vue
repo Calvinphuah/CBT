@@ -242,7 +242,9 @@ input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  height: 20px;
+  /* A 44px touch area for fingers; the negative margin keeps the layout unchanged. */
+  height: 44px;
+  margin-block: -12px;
   cursor: pointer;
 }
 

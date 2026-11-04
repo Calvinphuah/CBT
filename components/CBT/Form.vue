@@ -87,7 +87,7 @@
     <div v-if="currentStep.example">
       <button
         type="button"
-        class="text-[15px] font-semibold underline decoration-storm-label underline-offset-4"
+        class="-my-3 py-3 text-[15px] font-semibold underline decoration-storm-label underline-offset-4"
         :aria-expanded="showExample"
         @click="showExample = !showExample"
       >

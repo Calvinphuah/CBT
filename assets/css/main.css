@@ -557,8 +557,9 @@
   border-left-color: rgb(var(--c-pen));
 }
 
-[data-style="margin"] .storm-card > :not(.card-label),
-[data-style="margin"] .clear-card > :not(.card-label),
+/* Only the user's own words get the serif: text in a quote card, never buttons or empty-state help. */
+[data-style="margin"] .storm-card:not(:has(> button, > .btn)) > :is(p, span):not(.card-label),
+[data-style="margin"] .clear-card:not(:has(> button, > .btn)) > :is(p, span):not(.card-label),
 [data-style="margin"] .note-text {
   font-family: var(--font-hand);
   font-style: italic;
@@ -567,7 +568,7 @@
   line-height: 26px;
 }
 
-[data-style="margin"] .clear-card > :not(.card-label) {
+[data-style="margin"] .clear-card:not(:has(> button, > .btn)) > :is(p, span):not(.card-label) {
   color: rgb(var(--c-pen));
 }
 

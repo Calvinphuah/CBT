@@ -49,7 +49,7 @@
           <SunIcon v-else class="size-[22px]" aria-hidden="true" />
         </span>
         <span class="min-w-0 flex-1">
-          <span class="line-clamp-2 block text-[17px] font-semibold leading-[25px]">
+          <span class="line-clamp-2 text-[17px] font-semibold leading-[25px]">
             <span
               :class="{ 'bg-sun px-1 text-sun-on [box-decoration-break:clone]': style === 'workbook' }"
               >{{ entry.beliefs }}</span

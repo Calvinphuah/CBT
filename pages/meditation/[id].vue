@@ -76,53 +76,20 @@ const route = useRoute();
 const { style } = useAppStyle();
 const router = useRouter();
 
-// Mock Data (Cards Array)
-const cards = [
-  {
-    id: "breathing-meditation",
-    title: "Breathing Meditation",
-    description:
-      "A meditation to help combat negative thoughts and ruminations.",
-    time: "5 mins",
-    audioSrc: "/audio/breathing-meditation.mp3",
-  },
-  {
-    id: "breath-sound-body-meditation",
-    title: "Breath, Sound, Body Meditation",
-    description:
-      "A guided meditation focusing on breath, sound, and body awareness.",
-    time: "12 mins",
-    audioSrc: "/audio/breath-sound-body-meditation.mp3",
-  },
-  {
-    id: "complete-meditation-instructions",
-    title: "Complete Meditation Instructions",
-    description: "Comprehensive guidance for a complete meditation practice.",
-    time: "19 mins",
-    audioSrc: "/audio/complete-meditation-instructions.mp3",
-  },
-  {
-    id: "working-with-difficulties",
-    title: "Meditation for Working with Difficulties",
-    description:
-      "Learn techniques to navigate challenging emotions and situations.",
-    time: "7 mins",
-    audioSrc: "/audio/meditation-working-with-difficulties.mp3",
-  },
-  // Add other cards here
-];
 
 // Fetch Current Meditation by Route Param ID
-const meditation = cards.find((card) => card.id === route.params.id) || {
+const meditation = MEDITATIONS.find((card) => card.id === route.params.id) || {
   title: "Meditation Not Found",
   description: "Unable to find the requested meditation.",
   time: "",
   audioSrc: "",
 };
 
+useHead({ title: meditation.title });
+
 // Navigation
 function goBack() {
-  router.push("/");
+  router.push("/meditation");
 }
 
 // Audio Player State
@@ -225,7 +192,9 @@ input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  height: 20px;
+  /* A 44px touch area for fingers; the negative margin keeps the layout unchanged. */
+  height: 44px;
+  margin-block: -12px;
   cursor: pointer;
 }
 
