@@ -24,10 +24,22 @@
       <span class="text-[13px] font-semibold text-ink-2">Edit</span>
     </button>
 
+    <div
+      v-if="style === 'companion' && isLastStep"
+      class="flex items-center gap-2.5"
+    >
+      <span class="size-12 shrink-0 overflow-hidden rounded-full ring-[3px] ring-surface">
+        <CommonIllustration alt="" />
+      </span>
+      <p class="rounded-[18px] rounded-bl-md bg-surface px-3.5 py-2.5 text-[15px] font-medium">
+        Let&rsquo;s check that thought together.
+      </p>
+    </div>
+
     <div v-if="stepIndex >= 2" class="storm-card">
       <p class="card-label text-storm-label">
-        <CloudIcon class="size-4" aria-hidden="true" />
-        The storm
+        <CloudIcon v-if="style === 'clearing'" class="size-4" aria-hidden="true" />
+        {{ copy.thoughtLabel }}
       </p>
       <p class="text-[16px] font-medium leading-[23px]">
         {{ cbtStore.formData.beliefs }}
@@ -35,8 +47,13 @@
     </div>
 
     <div>
-      <h1 class="text-title">{{ currentStep.title }}</h1>
+      <h1 class="text-title">
+        {{ currentStep.model === "dispute" ? copy.answerQuestion : currentStep.title }}
+      </h1>
       <p class="mt-2 text-[17px] leading-[25px] text-ink-2">{{ currentStep.help }}</p>
+      <CommonHandNote v-if="currentStep.note" class="mt-2" :tilt="-3">
+        {{ currentStep.note }}
+      </CommonHandNote>
     </div>
 
     <div v-if="currentStep.chips" class="flex flex-wrap gap-2">
@@ -138,6 +155,7 @@ import { CloudIcon } from "@heroicons/vue/24/outline";
 const emit = defineEmits<{ (e: "saved", clearerView: string): void }>();
 
 const cbtStore = useCBTStore();
+const { style, copy } = useAppStyle();
 
 interface Chip {
   label: string;
@@ -150,6 +168,7 @@ interface Step {
   help: string;
   placeholder: string;
   example?: string;
+  note?: string;
   chips?: Chip[];
 }
 
@@ -159,6 +178,7 @@ const steps: Step[] = [
     title: "What happened?",
     help: "Just the facts. Where were you, and what set it off?",
     placeholder: "My manager replied “ok” to my update.",
+    note: "just the facts, like a camera would see it",
     example:
       "There’s a science test on Monday and I haven’t finished revising.",
   },
@@ -184,6 +204,7 @@ const steps: Step[] = [
     title: "What’s the clearer view?",
     help: "Is the thought 100% true? What would you tell a friend who said it?",
     placeholder: "She replies “ok” to everyone.",
+    note: "what would you tell a friend?",
     chips: [
       { label: "Evidence against it", text: "One thing that doesn’t fit the thought:" },
       { label: "A friend’s view", text: "If a friend said this, I’d tell them:" },
@@ -204,7 +225,7 @@ const isLastStep = computed(() => stepIndex.value === steps.length - 1);
 const currentValue = computed(() => cbtStore.formData[currentStep.value.model] || "");
 const saveLabel = computed(() => {
   if (isSaving.value) return "Saving…";
-  return cbtStore.isEditing ? "Save changes" : "Save record";
+  return cbtStore.isEditing ? "Save changes" : copy.value.saveLabel;
 });
 
 watch(stepIndex, () => {

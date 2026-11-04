@@ -31,8 +31,8 @@
 
     <section class="storm-card">
       <h2 class="card-label text-storm-label">
-        <CloudIcon class="size-4" aria-hidden="true" />
-        The storm
+        <CloudIcon v-if="style === 'clearing'" class="size-4" aria-hidden="true" />
+        {{ copy.thoughtLabel }}
       </h2>
       <p class="text-[17px] font-medium leading-[25px]">{{ cbtStore.formData.beliefs }}</p>
     </section>
@@ -46,8 +46,8 @@
 
     <section class="clear-card">
       <h2 class="card-label text-ink-2">
-        <SunIcon class="size-4 text-ink" aria-hidden="true" />
-        The clearer view
+        <SunIcon v-if="style === 'clearing'" class="size-4 text-ink" aria-hidden="true" />
+        {{ copy.answerLabel }}
       </h2>
       <p class="text-[17px] font-medium leading-[25px]">{{ cbtStore.formData.dispute }}</p>
     </section>
@@ -93,6 +93,7 @@ import {
 } from "@heroicons/vue/24/outline";
 
 const cbtStore = useCBTStore();
+const { style, copy } = useAppStyle();
 
 const showOptions = ref(false);
 const showDeleteModal = ref(false);
