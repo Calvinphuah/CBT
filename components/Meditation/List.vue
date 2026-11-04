@@ -74,12 +74,12 @@ const isModalVisible = ref(false);
 const selectedMeditation = ref<Card | null>(null);
 const favorites = ref<string[]>([]);
 
-// Suggest the sleep track in the evening and a short breathing track during the day.
+// Suggest the sleep track in the evening and the short body scan during the day.
 const evening = isEvening(new Date());
 const featuredLabel = evening ? "Tonight" : "Today";
 const featured = computed(() =>
   cards.find((card) =>
-    card.id === (evening ? "body-scan-for-sleep" : "breathing-meditation")
+    card.id === (evening ? "body-scan-for-sleep" : "short-body-scan")
   )
 );
 
