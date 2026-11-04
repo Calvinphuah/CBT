@@ -13,6 +13,32 @@
       </div>
 
       <div>
+        <p class="mb-2 text-[13px] font-semibold text-ink-3">Style</p>
+        <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Style">
+          <button
+            v-for="option in APP_STYLES"
+            :key="option.value"
+            type="button"
+            role="radio"
+            :aria-checked="style === option.value"
+            class="flex flex-col items-center gap-2 rounded-2xl bg-surface px-2 py-3 text-[14px] font-semibold ring-inset transition-shadow"
+            :class="style === option.value ? 'ring-2 ring-ink' : 'ring-1 ring-rule'"
+            @click="style = option.value"
+          >
+            <span class="flex gap-1" aria-hidden="true">
+              <i
+                v-for="swatch in STYLE_SWATCHES[option.value]"
+                :key="swatch"
+                class="block size-4 rounded-full ring-1 ring-black/10"
+                :style="{ background: swatch }"
+              />
+            </span>
+            {{ option.label }}
+          </button>
+        </div>
+      </div>
+
+      <div>
         <p class="mb-2 text-[13px] font-semibold text-ink-3">Appearance</p>
         <div
           class="grid grid-cols-3 rounded-xl bg-sunken p-[3px]"
@@ -67,9 +93,19 @@ import {
   ArrowRightStartOnRectangleIcon,
   DocumentTextIcon,
 } from "@heroicons/vue/24/outline";
+import { APP_STYLES, type AppStyle } from "~/composables/useAppStyle";
 
 const authStore = useAuthStore();
 const isOpen = useState("account-sheet-open", () => false);
+const { style } = useAppStyle();
+
+// Fixed preview colours so each option shows its own palette, whatever style is active.
+const STYLE_SWATCHES: Record<AppStyle, string[]> = {
+  clearing: ["#3E4A61", "#BFD9F2", "#FFC94D"],
+  workbook: ["#1C1C1F", "#2B45D4", "#E4F46A"],
+  companion: ["#2B2150", "#8FE3C3", "#FF8A3D"],
+};
+
 // The saved choice ("auto" means match the phone), kept separate from the resolved light or dark.
 const savedTheme = useColorMode().store;
 

@@ -10,7 +10,7 @@
       :key="item.to"
       :to="item.to"
       class="flex min-h-11 w-[76px] flex-col items-center gap-0.5 rounded-xl py-1 text-[11px] font-semibold"
-      :class="isActive(item.to) ? 'text-ink' : 'text-ink-3'"
+      :class="isActive(item.to) ? 'tab-on text-ink' : 'text-ink-3'"
       :aria-current="isActive(item.to) ? 'page' : undefined"
     >
       <component

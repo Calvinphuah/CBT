@@ -5,7 +5,7 @@
   >
     <CommonLogo size="lg" />
     <h1 class="text-display md:text-[40px] md:leading-[44px]">
-      Hard thoughts pass. Let&rsquo;s help them along.
+      {{ copy.loginTitle }}
     </h1>
     <p class="text-[15px] leading-[21px] text-ink-2">
       Work through anxious thoughts with CBT, gratitude and guided meditation.
@@ -31,6 +31,7 @@
 import { useAuthStore } from "@/stores/auth.store";
 
 const authStore = useAuthStore();
+const { copy } = useAppStyle();
 
 const isSigningIn = ref(false);
 const loginError = ref("");

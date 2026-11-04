@@ -9,7 +9,7 @@
       :key="item.to"
       :to="item.to"
       class="flex h-11 items-center gap-3 rounded-xl px-3.5 text-[15px] font-semibold text-ink-2 transition-colors hover:bg-sunken"
-      :class="{ 'bg-surface text-ink ring-1 ring-rule': isActive(item.to) }"
+      :class="{ 'tab-on bg-surface text-ink ring-1 ring-rule': isActive(item.to) }"
     >
       <component :is="item.icon" class="size-6" aria-hidden="true" />
       {{ item.label }}
