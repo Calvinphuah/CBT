@@ -16,11 +16,7 @@
       @click="openModal(featured)"
     >
       <span class="block h-[150px]">
-        <img
-          src="/img/clearing-hero.jpg"
-          alt=""
-          class="size-full object-cover object-[50%_18%] dark:brightness-[.82] dark:saturate-[.9]"
-        />
+        <CommonIllustration alt="" :position="style === 'clearing' ? '50% 18%' : undefined" />
       </span>
       <span class="flex items-center gap-3 px-4 py-3.5">
         <span class="min-w-0 flex-1">
@@ -60,6 +56,8 @@
 
 <script setup lang="ts">
 import { PlayIcon } from "@heroicons/vue/24/solid";
+
+const { style } = useAppStyle();
 
 interface Card {
   id: string;

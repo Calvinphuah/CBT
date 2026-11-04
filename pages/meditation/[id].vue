@@ -16,11 +16,7 @@
     </div>
 
     <div class="h-[min(36vh,340px)] w-full shrink-0 overflow-hidden rounded-[28px]">
-      <img
-        src="/img/clearing-hero.jpg"
-        alt=""
-        class="size-full object-cover object-[50%_45%] dark:brightness-[.82] dark:saturate-[.9]"
-      />
+      <CommonIllustration alt="" :position="style === 'clearing' ? '50% 45%' : undefined" />
     </div>
 
     <div>
@@ -76,6 +72,7 @@ definePageMeta({
 
 // Router
 const route = useRoute();
+const { style } = useAppStyle();
 const router = useRouter();
 
 // Mock Data (Cards Array)
