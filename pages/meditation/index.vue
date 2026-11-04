@@ -16,6 +16,14 @@
 <script setup lang="ts">
 const cards = [
   {
+    id: "short-body-scan",
+    title: "Short Body Scan",
+    description: "A brief body scan to relax and refocus.",
+    time: "3 mins",
+    link: "/meditation/short-body-scan",
+    audioSrc: "/audio/short-body-scan-meditation.mp3",
+  },
+  {
     id: "breathing-meditation",
     title: "Breathing Meditation",
     description:
@@ -65,14 +73,6 @@ const cards = [
     time: "3 mins",
     link: "/meditation/body-and-sound-meditation",
     audioSrc: "/audio/body-sound-meditation.mp3",
-  },
-  {
-    id: "short-body-scan",
-    title: "Short Body Scan",
-    description: "A brief body scan to relax and refocus.",
-    time: "3 mins",
-    link: "/meditation/short-body-scan",
-    audioSrc: "/audio/short-body-scan-meditation.mp3",
   },
   {
     id: "body-scan-for-sleep",
