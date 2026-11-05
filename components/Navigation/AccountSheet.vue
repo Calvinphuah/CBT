@@ -77,11 +77,12 @@
 
       <div class="card px-4">
         <a
-          href="/pdf/cbt_exercise.pdf"
+          :href="TEMPLATE_URL"
           download
           target="_blank"
           rel="noopener"
           class="flex min-h-14 items-center gap-3.5 border-b border-rule"
+          @click="shareTemplate"
         >
           <DocumentTextIcon class="size-6 text-ink-2" aria-hidden="true" />
           <span class="flex-1 text-[17px] font-medium">Paper template (PDF)</span>
@@ -225,6 +226,42 @@ const moveStyle = (event: KeyboardEvent) => {
   const next = APP_STYLES[(index + step + APP_STYLES.length) % APP_STYLES.length];
   style.value = next.value;
   nextTick(() => group.querySelector<HTMLElement>('[aria-checked="true"]')?.focus());
+};
+
+const TEMPLATE_URL = "/pdf/cbt_exercise.pdf";
+const templateFile = ref<File | null>(null);
+
+// An installed iPhone app opens same-site PDFs in its own window with no way back, so it shares the file instead.
+const isInstalledApp = () =>
+  window.matchMedia("(display-mode: standalone)").matches ||
+  (navigator as Navigator & { standalone?: boolean }).standalone === true;
+
+// Loaded when the sheet opens, because iOS only allows the share sheet straight after the tap.
+watch(isOpen, async (open) => {
+  if (!open || templateFile.value || !isInstalledApp() || !navigator.canShare) return;
+
+  try {
+    const response = await fetch(TEMPLATE_URL);
+    if (!response.ok) return;
+
+    const file = new File([await response.blob()], "cogni-thought-record.pdf", {
+      type: "application/pdf",
+    });
+    if (navigator.canShare({ files: [file] })) templateFile.value = file;
+  } catch {
+    // Offline: the link opens the file the normal way.
+  }
+});
+
+const shareTemplate = async (event: MouseEvent) => {
+  if (!templateFile.value) return;
+
+  event.preventDefault();
+  try {
+    await navigator.share({ files: [templateFile.value] });
+  } catch {
+    // Closing the share sheet is not an error.
+  }
 };
 
 const handleSignOut = async () => {
