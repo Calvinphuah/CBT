@@ -20,6 +20,13 @@
       Loading your records&hellip;
     </p>
 
+    <CommonLoadError
+      v-else-if="cbtStore.error && !entries.length"
+      class="mt-2"
+      what="records"
+      @retry="cbtStore.fetchEntries()"
+    />
+
     <div v-else-if="!entries.length" class="clear-card mt-2 flex flex-col gap-3 p-5">
       <SunIcon class="size-7 text-ink" aria-hidden="true" />
       <h2 class="text-heading text-ink">Start your first thought record</h2>
@@ -48,22 +55,19 @@
           <LightBulbIcon v-if="style === 'companion'" class="size-[22px]" aria-hidden="true" />
           <SunIcon v-else class="size-[22px]" aria-hidden="true" />
         </span>
+        <!-- The clearer view leads, so looking back doesn't replay the worry first. -->
         <span class="min-w-0 flex-1">
-          <span class="line-clamp-2 text-[17px] font-semibold leading-[25px]">
-            <span
-              :class="{ 'bg-sun px-1 text-sun-on [box-decoration-break:clone]': style === 'workbook' }"
-              >{{ entry.beliefs }}</span
-            >
-          </span>
           <span
-            class="mt-0.5 block truncate text-[15px]"
+            class="line-clamp-2 text-[17px] font-semibold leading-[25px]"
             :class="{
               'text-pen': style === 'workbook' || style === 'margin',
               'note-text': style === 'margin',
-              'text-ink-2': style === 'clearing' || style === 'companion',
             }"
           >
             {{ entry.disputes }}
+          </span>
+          <span class="mt-0.5 block truncate text-[15px] text-ink-2">
+            {{ entry.beliefs }}
           </span>
         </span>
         <span class="shrink-0 pt-0.5 text-[13px] text-ink-3">

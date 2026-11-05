@@ -4,22 +4,24 @@
   >
     <div class="px-3.5 pb-6"><CommonLogo /></div>
 
-    <NuxtLink
-      v-for="item in navItems"
-      :key="item.to"
-      :to="item.to"
-      class="flex h-11 items-center gap-2.5 rounded-xl px-3.5 text-[15px] font-semibold text-ink-2 transition-colors hover:bg-sunken"
-      :class="{ 'tab-on bg-surface text-ink ring-1 ring-rule': isActive(item.to) }"
-      :aria-current="isActive(item.to) ? 'page' : undefined"
-    >
-      <component
-        :is="item.icon"
-        class="size-5"
-        :stroke-width="isActive(item.to) ? 2 : 1.6"
-        aria-hidden="true"
-      />
-      {{ item.label }}
-    </NuxtLink>
+    <nav class="flex flex-col gap-1" aria-label="Main">
+      <NuxtLink
+        v-for="item in navItems"
+        :key="item.to"
+        :to="item.to"
+        class="flex h-11 items-center gap-2.5 rounded-xl px-3.5 text-[15px] font-semibold text-ink-2 transition-colors hover:bg-sunken"
+        :class="{ 'tab-on bg-surface text-ink ring-1 ring-rule': isActive(item.to) }"
+        :aria-current="isActive(item.to) ? 'page' : undefined"
+      >
+        <component
+          :is="item.icon"
+          class="size-5"
+          :stroke-width="isActive(item.to) ? 2 : 1.6"
+          aria-hidden="true"
+        />
+        {{ item.label }}
+      </NuxtLink>
+    </nav>
 
     <div class="flex-1" />
 

@@ -17,7 +17,7 @@
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-10">
       <section class="flex min-w-0 flex-col gap-5">
-        <h1 class="text-display hidden md:block md:text-[40px] md:leading-[44px]">{{ prompt }}</h1>
+        <h1 class="text-display sr-only md:not-sr-only md:text-[40px] md:leading-[44px]">{{ prompt }}</h1>
         <div class="flex flex-col items-center rounded-[32px] bg-soft px-5 pt-5 pb-1">
           <p
             class="w-full rounded-[20px] rounded-bl-md bg-surface px-4 py-3 text-[17px] font-medium leading-6 md:text-[19px]"
@@ -25,16 +25,19 @@
             Hey {{ firstName }}. Want to untangle something together?
           </p>
           <div class="my-3 h-[210px] w-[210px] dark:overflow-hidden dark:rounded-[28px] md:h-[270px] md:w-[270px]">
-            <CommonIllustration />
+            <CommonIllustration alt="" />
           </div>
         </div>
 
         <button type="button" class="btn-primary h-[60px] w-full font-display text-[19px] font-bold" @click="emit('start')">
           Let&rsquo;s talk it through
         </button>
+        <p class="-mt-2 text-center text-[15px] text-ink-2">4 short steps, about 8 minutes</p>
       </section>
 
       <section class="flex min-w-0 flex-col gap-5">
+        <CommonLoadError v-if="loadFailed" what="records" @retry="emit('retry')" />
+
         <div class="grid grid-cols-2 gap-3">
           <NuxtLink to="/gratitude" class="flex flex-col gap-2.5 rounded-[24px] bg-sky p-4 text-ink dark:bg-sky-tint">
             <HeartIcon class="size-6 dark:text-sky" aria-hidden="true" />
@@ -82,7 +85,7 @@
 import { HeartIcon, MoonIcon } from "@heroicons/vue/24/outline";
 import type { CBTEntry } from "@/types/cbt";
 
-const { weekCount } = defineProps<{
+const { weekCount, latestEntry, isLoading } = defineProps<{
   dayAndTime: string;
   prompt: string;
   weekDays: boolean[];
@@ -92,16 +95,18 @@ const { weekCount } = defineProps<{
   recentEntries: CBTEntry[];
   firstName: string;
   initial: string;
+  isLoading: boolean;
+  loadFailed: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: "start" | "account"): void;
+  (e: "start" | "account" | "retry"): void;
   (e: "open", entry: CBTEntry): void;
 }>();
 
-const reframeChip = computed(() =>
-  weekCount === 0
-    ? "Your first reframe awaits"
-    : `${weekCount} ${weekCount === 1 ? "reframe" : "reframes"} this week`
-);
+const reframeChip = computed(() => {
+  if (isLoading) return "Loading…";
+  if (weekCount > 0) return `${weekCount} ${weekCount === 1 ? "reframe" : "reframes"} this week`;
+  return latestEntry ? "Quiet week so far" : "Your first reframe awaits";
+});
 </script>

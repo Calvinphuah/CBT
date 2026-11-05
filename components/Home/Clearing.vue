@@ -24,29 +24,27 @@
         </div>
 
         <div class="art-frame h-[206px] overflow-hidden rounded-[22px] md:h-[330px] md:rounded-[26px]">
-          <CommonIllustration position="50% 62%" />
+          <CommonIllustration alt="" position="50% 62%" />
         </div>
 
         <div class="flex flex-col gap-3 md:flex-row md:items-center">
           <button type="button" class="btn-primary w-full md:w-auto" @click="emit('start')">
             Start a thought record
           </button>
-          <p class="hidden text-[15px] text-ink-2 md:block">
+          <p class="text-center text-[15px] text-ink-2 md:text-left">
             4 short steps, about 8 minutes
           </p>
         </div>
       </section>
 
       <section class="flex min-w-0 flex-col gap-5">
+        <CommonLoadError v-if="loadFailed" what="records" @retry="emit('retry')" />
+
         <div class="card flex items-center justify-between p-4 md:ring-1 md:ring-rule">
           <div>
             <p class="text-[13px] font-semibold text-ink-3">This week</p>
             <p class="text-[17px] font-bold">
-              {{
-                weekCount === 0
-                  ? "No records yet"
-                  : `${weekCount} ${weekCount === 1 ? "storm" : "storms"} cleared`
-              }}
+              {{ weekSummary }}
             </p>
           </div>
           <HomeWeekDots :week-days="weekDays" />
@@ -118,7 +116,7 @@
 import { MoonIcon, SunIcon } from "@heroicons/vue/24/outline";
 import type { CBTEntry } from "@/types/cbt";
 
-defineProps<{
+const { weekCount, latestEntry, isLoading } = defineProps<{
   dayAndTime: string;
   prompt: string;
   weekDays: boolean[];
@@ -128,10 +126,18 @@ defineProps<{
   recentEntries: CBTEntry[];
   firstName: string;
   initial: string;
+  isLoading: boolean;
+  loadFailed: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: "start" | "account"): void;
+  (e: "start" | "account" | "retry"): void;
   (e: "open", entry: CBTEntry): void;
 }>();
+
+const weekSummary = computed(() => {
+  if (isLoading) return "Loading your week…";
+  if (weekCount > 0) return `${weekCount} ${weekCount === 1 ? "storm" : "storms"} cleared`;
+  return latestEntry ? "Nothing this week, and that’s okay" : "No records yet";
+});
 </script>

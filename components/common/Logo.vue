@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink to="/" class="inline-flex items-center gap-2" aria-label="Cogni home">
+  <NuxtLink to="/" class="inline-flex min-h-11 items-center gap-2" aria-label="Cogni home">
     <template v-if="style === 'margin'">
       <!-- The margin mark: a bracket (the thought) with a note beside it. -->
       <svg :width="markSize - 4" :height="markSize - 4" viewBox="0 0 24 24" aria-hidden="true">
