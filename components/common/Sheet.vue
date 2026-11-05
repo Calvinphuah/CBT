@@ -3,7 +3,8 @@
     <Transition name="sheet">
       <div
         v-if="open"
-        class="fixed inset-0 z-[200] flex items-end justify-center md:items-center md:p-6"
+        class="fixed inset-x-0 top-0 z-[200] flex h-[100dvh] items-end justify-center md:items-center md:p-6"
+        :style="visibleAreaStyle"
         role="dialog"
         aria-modal="true"
         :aria-labelledby="title ? titleId : undefined"
@@ -14,7 +15,7 @@
           @click="emit('close')"
         />
         <div
-          class="sheet-panel relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-sheet bg-page px-5 pt-2.5 md:rounded-sheet md:px-7 md:pt-7"
+          class="sheet-panel relative max-h-[92%] w-full max-w-lg overflow-y-auto rounded-t-sheet bg-page px-5 pt-2.5 md:rounded-sheet md:px-7 md:pt-7"
           :style="{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }"
         >
           <span
@@ -49,6 +50,20 @@ watch(
 onBeforeUnmount(() => {
   isBodyLocked.value = false;
 });
+
+// iOS leaves fixed layers behind the keyboard, so pin the sheet to the area still visible
+const visibleAreaStyle = ref<{ top?: string; height?: string }>({});
+const visualViewport = import.meta.client ? window.visualViewport : null;
+const syncToVisibleArea = () => {
+  if (!open || !visualViewport) return;
+  visibleAreaStyle.value = {
+    top: `${visualViewport.offsetTop}px`,
+    height: `${visualViewport.height}px`,
+  };
+};
+useEventListener(visualViewport, "resize", syncToVisibleArea);
+useEventListener(visualViewport, "scroll", syncToVisibleArea);
+watch(() => open, syncToVisibleArea, { immediate: true });
 
 useEventListener("keydown", (event: KeyboardEvent) => {
   if (open && event.key === "Escape") emit("close");

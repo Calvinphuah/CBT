@@ -112,7 +112,8 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: "/",
-      navigateFallbackDenylist: [/^\/__nuxt_devtools__/],
+      // Files (PDF template, audio) must reach the network, not get the app shell
+      navigateFallbackDenylist: [/^\/__nuxt_devtools__/, /\/[^/?]+\.[^/]+$/],
       // Precache the app shell, fonts and artwork so it opens offline; audio is streamed.
       globPatterns: ["**/*.{js,css,html,png,svg,jpg,webp,ico,woff2,webmanifest}"],
       globIgnores: ["screenshots/**"],

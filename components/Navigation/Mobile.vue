@@ -52,17 +52,21 @@ const isInRecordFlow = computed(
 
 const isKeyboardOpen = ref(false);
 
+// iOS keeps window.innerHeight fixed when the keyboard opens; only visualViewport shrinks
 const handleResize = () => {
-  isKeyboardOpen.value = window.innerHeight < screen.height * 0.7;
+  const visibleHeight = window.visualViewport?.height ?? window.innerHeight;
+  isKeyboardOpen.value = visibleHeight < screen.height * 0.7;
 };
 
 const isVisible = computed(() => !isKeyboardOpen.value && !isInRecordFlow.value);
 
 onMounted(() => {
+  window.visualViewport?.addEventListener("resize", handleResize);
   window.addEventListener("resize", handleResize);
 });
 
 onUnmounted(() => {
+  window.visualViewport?.removeEventListener("resize", handleResize);
   window.removeEventListener("resize", handleResize);
 });
 </script>

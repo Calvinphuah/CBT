@@ -1,6 +1,7 @@
 <template>
+  <!-- -mb-24 cancels the layout's bottom-nav padding; the nav is hidden here, so the page fits one screen -->
   <div
-    class="app-page flex min-h-[100dvh] flex-col gap-5 pb-0 md:min-h-screen md:max-w-[640px]"
+    class="app-page -mb-24 flex min-h-[100dvh] flex-col gap-5 pb-0 md:mb-0 md:min-h-screen md:max-w-[640px]"
     @keydown.meta.enter.prevent="goForward"
     @keydown.ctrl.enter.prevent="goForward"
   >
@@ -14,7 +15,7 @@
     <button
       v-if="stepIndex === 1"
       type="button"
-      class="card flex items-center gap-2.5 px-3.5 py-3 text-left ring-1 ring-rule"
+      class="card flex items-center gap-2.5 px-4 py-3 text-left ring-1 ring-rule"
       @click="stepIndex = 0"
     >
       <span class="min-w-0 flex-1">
@@ -231,10 +232,16 @@ const saveLabel = computed(() => {
   return cbtStore.isEditing ? "Save changes" : copy.value.saveLabel;
 });
 
+// On phones, focusing without a tap pops the keyboard and shoves the page up
+const autoFocusField = () => {
+  if (!window.matchMedia("(pointer: fine) and (hover: hover)").matches) return;
+  field.value?.focus();
+};
+
 watch(stepIndex, () => {
   showExample.value = false;
   nudge.value = "";
-  nextTick(() => field.value?.focus());
+  nextTick(autoFocusField);
 });
 
 const isChipOn = (text: string) =>
@@ -303,5 +310,5 @@ const discard = () => {
   cbtStore.handleBackToList();
 };
 
-onMounted(() => field.value?.focus());
+onMounted(autoFocusField);
 </script>
