@@ -78,8 +78,8 @@ const router = useRouter();
 
 // Fetch Current Meditation by Route Param ID
 const meditation = MEDITATIONS.find((card) => card.id === route.params.id) || {
-  title: "Meditation Not Found",
-  description: "Unable to find the requested meditation.",
+  title: "We couldn’t find that meditation",
+  description: "Go back to see the full list.",
   time: "",
   audioSrc: "",
 };
@@ -157,6 +157,11 @@ onMounted(() => {
   audioPlayer.value.addEventListener("timeupdate", updateTime);
 
   drawWaveform();
+});
+
+// Leaving the page must stop the sound; otherwise it plays on with no way to stop it.
+onBeforeUnmount(() => {
+  audioPlayer.value?.pause();
 });
 
 // Waveform Visualization

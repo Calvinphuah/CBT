@@ -8,7 +8,9 @@
       :aria-label="meditation.title"
     >
       <div
-        class="flex w-full flex-col gap-5 overflow-y-auto bg-page px-5 text-ink md:max-w-md md:rounded-sheet md:px-7 md:pb-7"
+        ref="panel"
+        tabindex="-1"
+        class="flex w-full flex-col gap-5 overflow-y-auto bg-page outline-none px-5 text-ink md:max-w-md md:rounded-sheet md:px-7 md:pb-7"
         :style="{
           paddingTop: 'max(0.75rem, env(safe-area-inset-top))',
           paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
@@ -54,28 +56,42 @@
             min="0"
             :max="duration"
             step="0.1"
+            :aria-valuetext="`${formatTime(currentTime)} of ${formatTime(duration)}`"
             :style="{ '--progress-value': progressPercent }"
             @input="isSeeking = true"
             @change="seekAudio"
           />
           <div class="mt-1 flex justify-between text-[13px] font-semibold tabular-nums text-ink-3">
             <span>{{ formatTime(currentTime) }}</span>
-            <span>{{ formatTime(duration) }}</span>
+            <span>{{ duration ? `${formatTime(duration - currentTime)} left` : "" }}</span>
           </div>
         </div>
 
+        <p v-if="playError" class="text-center text-[15px] text-ink-2" role="status">{{ playError }}</p>
+
+        <div v-if="hasEnded" class="flex flex-col gap-2.5 pb-2" role="status">
+          <p class="text-center text-[17px] font-medium">
+            Nice work. Take a moment before you move on.
+          </p>
+          <button type="button" class="btn-primary w-full" @click="emit('close')">Done</button>
+          <button type="button" class="h-11 text-[15px] font-semibold" @click="playAgain">
+            Play again
+          </button>
+        </div>
+
         <!-- Playback Controls -->
-        <div class="flex items-center justify-center gap-9 pb-2">
+        <div v-else class="flex items-center justify-center gap-9 pb-2">
           <button type="button" class="icon-btn size-12" aria-label="Back 15 seconds" @click="rewind">
             <Icon name="f7:gobackward-15" class="size-8" />
           </button>
           <button
             type="button"
             class="icon-btn-filled size-[76px]"
-            :aria-label="isPlaying ? 'Pause' : 'Play'"
+            :aria-label="isLoading ? 'Loading' : isPlaying ? 'Pause' : 'Play'"
             @click="togglePlay"
           >
-            <PauseIcon v-if="isPlaying" class="size-8" aria-hidden="true" />
+            <ArrowPathIcon v-if="isLoading" class="size-8 motion-safe:animate-spin" aria-hidden="true" />
+            <PauseIcon v-else-if="isPlaying" class="size-8" aria-hidden="true" />
             <PlayIcon v-else class="size-8" aria-hidden="true" />
           </button>
           <button type="button" class="icon-btn size-12" aria-label="Forward 15 seconds" @click="forward">
@@ -88,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronDownIcon, HeartIcon } from "@heroicons/vue/24/outline";
+import { ArrowPathIcon, ChevronDownIcon, HeartIcon } from "@heroicons/vue/24/outline";
 import {
   HeartIcon as HeartSolidIcon,
   PauseIcon,
@@ -113,6 +129,12 @@ const emit = defineEmits<{
   (e: "toggleFavorite", id: string): void;
 }>();
 
+const panel = ref<HTMLElement | null>(null);
+useDialogFocus(panel, () => props.isVisible);
+useEventListener("keydown", (event: KeyboardEvent) => {
+  if (props.isVisible && event.key === "Escape") emit("close");
+});
+
 // Audio player state
 const audioPlayer = ref<HTMLAudioElement | null>(null);
 const isPlaying = ref(false);
@@ -122,22 +144,94 @@ const progressPercent = computed(() =>
   duration.value ? `${(currentTime.value / duration.value) * 100}%` : "0%"
 );
 
-// Audio control methods
-function togglePlay() {
-  if (audioPlayer.value) {
-    if (audioPlayer.value.paused) {
-      audioPlayer.value.play();
-      isPlaying.value = true;
-    } else {
-      audioPlayer.value.pause();
-      isPlaying.value = false;
-    }
+const isLoading = ref(false);
+const hasEnded = ref(false);
+const playError = ref("");
+
+// The audio is streamed, so playing can wait on the network or fail without one.
+async function togglePlay() {
+  const audio = audioPlayer.value;
+  if (!audio) return;
+  if (!audio.paused) {
+    audio.pause();
+    return;
   }
+
+  playError.value = "";
+  isLoading.value = true;
+  try {
+    await audio.play();
+  } catch {
+    showPlayError();
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+function showPlayError() {
+  isLoading.value = false;
+  playError.value = navigator.onLine
+    ? "Couldn’t play this one. Please try again."
+    : "This needs a connection to play.";
+}
+
+function handlePlaying() {
+  isPlaying.value = true;
+  isLoading.value = false;
+  setMediaSession();
+}
+
+function handlePause() {
+  isPlaying.value = false;
+}
+
+function handleWaiting() {
+  isLoading.value = true;
 }
 
 function handleAudioEnd() {
   isPlaying.value = false;
+  hasEnded.value = true;
 }
+
+function playAgain() {
+  hasEnded.value = false;
+  if (audioPlayer.value) audioPlayer.value.currentTime = 0;
+  togglePlay();
+}
+
+// Lock-screen and headphone controls, so people can stay in bed with the screen off.
+function setMediaSession() {
+  if (!("mediaSession" in navigator)) return;
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: props.meditation.title,
+    artist: "UCLA Mindful",
+    album: "Cogni",
+    artwork: [{ src: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" }],
+  });
+  navigator.mediaSession.setActionHandler("play", () => togglePlay());
+  navigator.mediaSession.setActionHandler("pause", () => audioPlayer.value?.pause());
+  navigator.mediaSession.setActionHandler("seekbackward", rewind);
+  navigator.mediaSession.setActionHandler("seekforward", forward);
+}
+
+function clearMediaSession() {
+  if (!("mediaSession" in navigator)) return;
+  navigator.mediaSession.metadata = null;
+  for (const action of ["play", "pause", "seekbackward", "seekforward"] as const) {
+    navigator.mediaSession.setActionHandler(action, null);
+  }
+}
+
+const AUDIO_EVENTS = {
+  loadedmetadata: setDuration,
+  timeupdate: updateTime,
+  ended: handleAudioEnd,
+  playing: handlePlaying,
+  pause: handlePause,
+  waiting: handleWaiting,
+  error: showPlayError,
+} as const;
 
 // While the slider is being dragged, playback ticks must not move it back.
 const isSeeking = ref(false);
@@ -195,21 +289,19 @@ onMounted(() => {
     props.meditation.audioSrc || "/audio/breathing-meditation.mp3"
   );
 
-  if (audioPlayer.value) {
-    audioPlayer.value.addEventListener("loadedmetadata", setDuration);
-    audioPlayer.value.addEventListener("timeupdate", updateTime);
-    audioPlayer.value.addEventListener("ended", handleAudioEnd);
+  for (const [name, handler] of Object.entries(AUDIO_EVENTS)) {
+    audioPlayer.value.addEventListener(name, handler);
   }
 });
 
 onBeforeUnmount(() => {
   if (audioPlayer.value) {
     audioPlayer.value.pause();
-    audioPlayer.value.removeEventListener("loadedmetadata", setDuration);
-    audioPlayer.value.removeEventListener("timeupdate", updateTime);
-    audioPlayer.value.removeEventListener("ended", handleAudioEnd);
+    for (const [name, handler] of Object.entries(AUDIO_EVENTS)) {
+      audioPlayer.value.removeEventListener(name, handler);
+    }
   }
-
+  clearMediaSession();
 });
 
 // Keep the page behind still while the player is open.
