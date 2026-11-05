@@ -1,9 +1,7 @@
 import { defineStore } from "pinia";
 import {
-  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   type User,
@@ -11,16 +9,12 @@ import {
 
 interface AuthState {
   user: User | null;
-  loginError: string | null;
-  signupError: string | null;
   initialAuthValueReady: boolean;
 }
 
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
     user: null,
-    loginError: null,
-    signupError: null,
     initialAuthValueReady: false,
   }),
 
@@ -39,20 +33,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async signup(email: string, password: string): Promise<void> {
-      const { $auth } = useNuxtApp();
-
-      this.signupError = null;
-
-      try {
-        await createUserWithEmailAndPassword($auth, email, password);
-      } catch (err) {
-        this.signupError =
-          err instanceof Error ? err.message : "An unknown error occurred";
-        throw err;
-      }
-    },
-
     async logout(): Promise<void> {
       const { $auth } = useNuxtApp();
 
@@ -63,19 +43,6 @@ export const useAuthStore = defineStore("auth", {
           "Logout error:",
           err instanceof Error ? err.message : "An unknown error occurred"
         );
-        throw err;
-      }
-    },
-
-    async login(email: string, password: string): Promise<void> {
-      const { $auth } = useNuxtApp();
-
-      this.loginError = null;
-      try {
-        await signInWithEmailAndPassword($auth, email, password);
-      } catch (err) {
-        this.loginError =
-          err instanceof Error ? err.message : "An unknown error occurred";
         throw err;
       }
     },
