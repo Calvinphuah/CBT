@@ -14,7 +14,7 @@
           class="field"
           rows="4"
           maxlength="400"
-          placeholder="The barista remembered my order."
+          placeholder="e.g. The barista remembered my order."
           @input="nudge = ''"
         ></textarea>
         <p v-if="nudge" class="mt-1.5 text-[15px] text-ink-2" role="status">{{ nudge }}</p>

@@ -191,7 +191,7 @@ const steps: Step[] = [
     model: "activating",
     title: "What happened?",
     help: "Just the facts. Where were you, and what set it off?",
-    placeholder: "A friend hasn’t replied to my message yet.",
+    placeholder: "e.g. A friend hasn’t replied to my message yet.",
     note: "like a camera would see it",
     example: "My plans for tonight got cancelled at the last minute.",
   },
@@ -199,7 +199,7 @@ const steps: Step[] = [
     model: "beliefs",
     title: "What went through your mind?",
     help: "Write the thought word for word, the way it sounded in your head.",
-    placeholder: "They must be upset with me.",
+    placeholder: "e.g. They must be upset with me.",
     example:
       "“I’m not smart enough.” “Everyone will laugh at me.” “I always mess things up.”",
   },
@@ -207,7 +207,7 @@ const steps: Step[] = [
     model: "consequentFeelings",
     title: "How did that make you feel?",
     help: "Name each feeling and how strong it was, out of 10.",
-    placeholder: "Worried, 6 out of 10. Restless.",
+    placeholder: "e.g. Worried, 6 out of 10. Restless.",
     chips: ["Anxious", "Sad", "Angry", "Ashamed", "Guilty", "Hopeless", "Lonely"].map(
       (feeling) => ({ label: feeling, text: feeling })
     ),
@@ -216,7 +216,7 @@ const steps: Step[] = [
     model: "dispute",
     title: "What’s the clearer view?",
     help: "What doesn’t quite fit the thought? What would you tell a friend who said it?",
-    placeholder: "They often reply late when they’re busy.",
+    placeholder: "e.g. They often reply late when they’re busy.",
     note: "what would you tell a friend?",
     chips: [
       { label: "Evidence against it", text: "One thing that doesn’t fit the thought:" },
