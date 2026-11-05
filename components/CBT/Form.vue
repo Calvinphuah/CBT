@@ -15,7 +15,7 @@
     <button
       v-if="stepIndex === 1"
       type="button"
-      class="card flex items-center gap-2.5 px-3.5 py-3 text-left ring-1 ring-rule"
+      class="card flex items-center gap-2.5 px-4 py-3 text-left ring-1 ring-rule"
       @click="stepIndex = 0"
     >
       <span class="min-w-0 flex-1">
