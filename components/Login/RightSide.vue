@@ -7,7 +7,7 @@
     <h1 class="text-display md:text-[40px] md:leading-[44px]">
       {{ copy.loginTitle }}
     </h1>
-    <p class="text-[15px] leading-[21px] text-ink-2">
+    <p class="text-[15px] leading-[21px] text-ink-2 [text-wrap:pretty]">
       Work through anxious thoughts with CBT, gratitude and guided meditation.
       Your entries are encrypted, and only you can read them.
     </p>
@@ -31,7 +31,7 @@
 
     <button
       type="button"
-      class="btn mt-2 w-full bg-surface text-ink ring-[1.5px] ring-inset ring-rule hover:bg-sunken"
+      class="btn-ghost mt-2 w-full"
       :disabled="isSigningIn"
       @click="handleGoogleLogin"
     >
@@ -39,6 +39,7 @@
       {{ isSigningIn ? "Signing in…" : "Continue with Google" }}
     </button>
     <p v-if="loginError" class="text-[15px] text-danger" role="alert">{{ loginError }}</p>
+    <CommonHelpLine class="mt-1" />
   </div>
 </template>
 
@@ -57,11 +58,13 @@ const handleGoogleLogin = async () => {
   isSigningIn.value = true;
   loginError.value = "";
   try {
-    await authStore.loginWithGoogle?.();
+    await authStore.loginWithGoogle();
   } catch (error) {
     // Closing the Google popup on purpose is not an error worth showing.
     const code = (error as { code?: string }).code;
-    if (code !== "auth/popup-closed-by-user" && code !== "auth/cancelled-popup-request") {
+    if (code === "auth/popup-blocked") {
+      loginError.value = "Your browser blocked the Google window. Allow pop-ups for Cogni, then try again.";
+    } else if (code !== "auth/popup-closed-by-user" && code !== "auth/cancelled-popup-request") {
       loginError.value = "Couldn’t sign in with Google. Check your connection and try again.";
     }
     if (error instanceof Error) {

@@ -112,7 +112,7 @@
     --c-line: 92 92 104;
   }
 
-  /* Companion: warm and friendly. Plum thought, mint reframe, tangerine to act. */
+  /* Companion: warm and friendly. Plum thought, mint reframe, purple to act. */
   :root[data-style="companion"] {
     --c-page: 251 248 255;
     --c-surface: 255 255 255;
@@ -126,7 +126,7 @@
     --c-storm-label: 191 179 240;
     --c-sky: 250 200 220;
     --c-sky-tint: 253 236 243;
-    --c-sun: 124 99 232;
+    --c-sun: 112 86 220;
     --c-on-sun: 255 255 255;
     --c-sun-icon: 108 80 220;
     --c-btn: 92 70 214;
@@ -287,7 +287,7 @@
   }
 
   .btn-ghost {
-    @apply btn bg-surface text-ink ring-[1.5px] ring-inset ring-ink-3/50 hover:bg-sunken;
+    @apply btn bg-surface text-ink ring-[1.5px] ring-inset ring-ink-3/75 hover:bg-sunken;
   }
 
   .btn-danger {
@@ -319,7 +319,7 @@
   }
 
   .field {
-    @apply w-full resize-none rounded-card bg-surface p-4 text-[17px] leading-[25px] text-ink ring-[1.5px] ring-inset ring-rule placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-storm dark:focus:ring-sky;
+    @apply w-full resize-none rounded-card bg-surface p-4 text-[17px] leading-[25px] text-ink ring-[1.5px] ring-inset ring-ink-3/75 placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-pen;
   }
 
   .field-sky {
@@ -327,7 +327,7 @@
   }
 
   .chip {
-    @apply inline-flex h-9 items-center rounded-xl bg-surface px-3.5 text-[15px] font-medium text-ink ring-[1.5px] ring-inset ring-rule transition-colors hover:bg-sunken;
+    @apply inline-flex h-11 items-center rounded-xl bg-surface px-3.5 text-[15px] font-medium text-ink ring-[1.5px] ring-inset ring-ink-3/75 transition-colors hover:bg-sunken;
   }
 
   .chip-on {
@@ -439,7 +439,7 @@
   border-radius: 20px;
 }
 
-/* The darker orange edge gives the light tangerine button a 3:1 outline against the page. */
+/* The darker edge gives the light purple button a 3:1 outline against the page. */
 [data-style="companion"] .btn-primary,
 [data-style="companion"] .btn-sun {
   box-shadow: inset 0 0 0 1.5px rgb(var(--c-btn-shadow)), 0 5px 0 rgb(var(--c-btn-shadow));
@@ -506,7 +506,7 @@
   border-radius: 14px;
 }
 
-/* The highlighter and tangerine are too light for a focus outline, so use the pen colour. */
+/* The highlighter and purple are too light for a focus outline, so use the pen colour. */
 [data-style="workbook"] :focus-visible,
 [data-style="companion"] :focus-visible {
   outline-color: rgb(var(--c-pen));
