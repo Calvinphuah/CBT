@@ -21,11 +21,11 @@
         <h1
           class="font-display text-[34px] font-extrabold leading-[36px] tracking-[-0.04em] md:text-[48px] md:leading-[50px]"
         >
-          Write it down. Then question it.
+          Write it down. Then look again.
         </h1>
 
         <div class="art-frame mx-1 h-[196px] overflow-hidden md:h-[300px]">
-          <CommonIllustration />
+          <CommonIllustration alt="" />
         </div>
 
         <div class="card card-pop p-5 md:max-w-md">
@@ -41,11 +41,13 @@
       </section>
 
       <section class="flex min-w-0 flex-col gap-5">
+        <CommonLoadError v-if="loadFailed" what="pages" @retry="emit('retry')" />
+
         <div class="card flex items-center justify-between bg-surface p-4">
           <div>
             <p class="text-[13px] font-semibold text-ink-3">This week</p>
             <p class="text-[17px] font-bold">
-              {{ weekCount === 0 ? "No pages yet" : `${weekCount} ${weekCount === 1 ? "page" : "pages"} written` }}
+              {{ weekSummary }}
             </p>
           </div>
           <HomeWeekDots :week-days="weekDays" />
@@ -84,7 +86,7 @@
 <script setup lang="ts">
 import type { CBTEntry } from "@/types/cbt";
 
-defineProps<{
+const { weekCount, latestEntry, isLoading } = defineProps<{
   dayAndTime: string;
   prompt: string;
   weekDays: boolean[];
@@ -94,10 +96,12 @@ defineProps<{
   recentEntries: CBTEntry[];
   firstName: string;
   initial: string;
+  isLoading: boolean;
+  loadFailed: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: "start" | "account"): void;
+  (e: "start" | "account" | "retry"): void;
   (e: "open", entry: CBTEntry): void;
 }>();
 
@@ -105,5 +109,11 @@ const shortDate = new Date().toLocaleDateString("en-US", {
   weekday: "short",
   day: "numeric",
   month: "short",
+});
+
+const weekSummary = computed(() => {
+  if (isLoading) return "Loading your week…";
+  if (weekCount > 0) return `${weekCount} ${weekCount === 1 ? "page" : "pages"} written`;
+  return latestEntry ? "Nothing this week, and that’s okay" : "No pages yet";
 });
 </script>

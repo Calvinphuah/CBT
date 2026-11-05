@@ -1,5 +1,5 @@
 <template>
-  <CommonSheet :open="isOpen" @close="isOpen = false">
+  <CommonSheet :open="isOpen" label="Account" @close="isOpen = false">
     <div class="flex flex-col gap-5">
       <div class="flex items-center gap-3.5">
         <span
@@ -14,13 +14,19 @@
 
       <div>
         <p class="mb-2 text-[13px] font-semibold text-ink-3">Style</p>
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="Style">
+        <div
+          class="grid grid-cols-2 gap-2 sm:grid-cols-4"
+          role="radiogroup"
+          aria-label="Style"
+          @keydown="moveStyle"
+        >
           <button
             v-for="option in APP_STYLES"
             :key="option.value"
             type="button"
             role="radio"
             :aria-checked="style === option.value"
+            :tabindex="style === option.value ? 0 : -1"
             class="flex flex-col gap-2 rounded-2xl bg-surface p-2 pb-2.5 text-center text-[15px] font-semibold ring-inset transition-shadow"
             :class="style === option.value ? 'ring-2 ring-pen' : 'ring-1 ring-rule'"
             @click="style = option.value"
@@ -56,7 +62,7 @@
             type="button"
             role="radio"
             :aria-checked="savedTheme === option.value"
-            class="h-10 rounded-[10px] text-[15px] font-semibold transition-colors"
+            class="h-11 rounded-[10px] text-[15px] font-semibold transition-colors"
             :class="
               savedTheme === option.value
                 ? 'bg-surface text-ink shadow-sm dark:bg-ink/15'
@@ -84,13 +90,17 @@
         </a>
         <button
           type="button"
-          class="flex min-h-14 w-full items-center gap-3.5 text-danger"
+          class="flex min-h-14 w-full items-center gap-3.5"
           @click="handleSignOut"
         >
-          <ArrowRightStartOnRectangleIcon class="size-6" aria-hidden="true" />
-          <span class="text-[17px] font-semibold">Sign out</span>
+          <ArrowRightStartOnRectangleIcon class="size-6 text-ink-2" aria-hidden="true" />
+          <span class="text-[17px] font-medium">Sign out</span>
         </button>
       </div>
+
+      <CommonHelpLine />
+
+      <button type="button" class="btn-ghost w-full" @click="isOpen = false">Done</button>
     </div>
   </CommonSheet>
 </template>
@@ -204,6 +214,19 @@ const signInMethod = computed(() =>
     ? "Signed in with Google"
     : authStore.user?.email || ""
 );
+
+// Arrow keys move between styles, as a radio group should.
+const moveStyle = (event: KeyboardEvent) => {
+  const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+  if (!step) return;
+
+  event.preventDefault();
+  const group = event.currentTarget as HTMLElement;
+  const index = APP_STYLES.findIndex((option) => option.value === style.value);
+  const next = APP_STYLES[(index + step + APP_STYLES.length) % APP_STYLES.length];
+  style.value = next.value;
+  nextTick(() => group.querySelector<HTMLElement>('[aria-checked="true"]')?.focus());
+};
 
 const TEMPLATE_URL = "/pdf/cbt_exercise.pdf";
 const templateFile = ref<File | null>(null);

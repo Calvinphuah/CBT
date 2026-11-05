@@ -10,7 +10,10 @@
     :recent-entries="recentEntries"
     :first-name="firstName"
     :initial="initial"
+    :is-loading="cbtStore.loading && !cbtStore.cbtEntries.length"
+    :load-failed="!!cbtStore.error && !cbtStore.cbtEntries.length"
     @start="startRecord"
+    @retry="cbtStore.fetchEntries()"
     @open="openEntry"
     @account="isAccountOpen = true"
   />
@@ -34,17 +37,18 @@ const homeByStyle = {
   margin: HomeMargin,
 };
 
-const now = new Date();
-const dayAndTime = formatDayAndTime(now);
-const prompt = isEvening(now)
-  ? "What’s clouding your mind tonight?"
-  : "What’s on your mind today?";
+// Ticks each minute, so an app left open in the morning still greets the evening correctly.
+const now = useNow({ interval: 60_000 });
+const dayAndTime = computed(() => formatDayAndTime(now.value));
+const prompt = computed(() =>
+  isEvening(now.value) ? "What’s clouding your mind tonight?" : "What’s on your mind today?"
+);
 
 const entryDates = computed(() =>
   cbtStore.cbtEntries.map((entry) => entry.createdAt.toDate())
 );
-const weekDays = computed(() => weekDaysWithEntries(entryDates.value, now));
-const weekCount = computed(() => countThisWeek(entryDates.value, now));
+const weekDays = computed(() => weekDaysWithEntries(entryDates.value, now.value));
+const weekCount = computed(() => countThisWeek(entryDates.value, now.value));
 
 const latestEntry = computed(() => cbtStore.cbtEntries[0]);
 const latestDay = computed(() =>

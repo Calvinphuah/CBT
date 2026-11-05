@@ -6,7 +6,7 @@
       </div>
 
       <div class="flex flex-1 flex-col gap-4 px-5 pt-7 md:px-0">
-        <h1 class="text-display">{{ copy.savedTitle }}</h1>
+        <h1 ref="heading" tabindex="-1" class="text-display outline-none">{{ copy.savedTitle }}</h1>
         <div class="clear-card">
           <p class="card-label text-ink-2">
             <SunIcon v-if="style === 'clearing'" class="size-4 text-ink" aria-hidden="true" />
@@ -35,4 +35,8 @@ const { clearerView } = defineProps<{ clearerView: string }>();
 const emit = defineEmits<{ (e: "done" | "view"): void }>();
 
 const { style, copy } = useAppStyle();
+
+// The form that had focus is gone, so start screen readers at the good news.
+const heading = ref<HTMLElement | null>(null);
+onMounted(() => heading.value?.focus());
 </script>

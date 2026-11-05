@@ -3,8 +3,15 @@
     <GratitudeNewEntryModal />
     <GratitudeEditEntryModal />
 
+    <CommonLoadError
+      v-if="gratitudeStore.error && !gratitudeStore.gratitudeEntries.length"
+      class="mt-2"
+      what="bright spots"
+      @retry="gratitudeStore.fetchEntries()"
+    />
+
     <div
-      v-if="!gratitudeStore.gratitudeEntries.length && !gratitudeStore.loading"
+      v-else-if="!gratitudeStore.gratitudeEntries.length && !gratitudeStore.loading"
       class="clear-card mt-2 flex flex-col gap-3 p-5"
     >
       <SunIcon class="size-7 text-sun-icon" aria-hidden="true" />

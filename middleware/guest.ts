@@ -17,7 +17,6 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // Redirect if the user is not authenticated
   if (authStore.user) {
-    console.log("Middleware pushing to landing");
     return navigateTo("/");
   }
 });

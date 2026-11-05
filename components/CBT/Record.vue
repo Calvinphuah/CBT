@@ -53,7 +53,7 @@
     </section>
   </div>
 
-  <CommonSheet :open="showOptions" @close="showOptions = false">
+  <CommonSheet :open="showOptions" label="Record options" @close="showOptions = false">
     <div class="card px-4">
       <button
         type="button"
@@ -77,8 +77,9 @@
   <CBTDeleteModal
     :is-open="showDeleteModal"
     :loading="cbtStore.loading"
+    :error="deleteError"
     @confirm="handleDeleteConfirm"
-    @cancel="showDeleteModal = false"
+    @cancel="closeDelete"
   />
 </template>
 
@@ -97,6 +98,7 @@ const { style, copy } = useAppStyle();
 
 const showOptions = ref(false);
 const showDeleteModal = ref(false);
+const deleteError = ref("");
 
 const createdAt = computed(() => cbtStore.selectedEntry?.createdAt.toDate());
 const dateHeading = computed(() =>
@@ -122,8 +124,18 @@ const askDelete = () => {
   showDeleteModal.value = true;
 };
 
-const handleDeleteConfirm = async () => {
-  await cbtStore.deleteEntry();
+const closeDelete = () => {
   showDeleteModal.value = false;
+  deleteError.value = "";
+};
+
+const handleDeleteConfirm = async () => {
+  deleteError.value = "";
+  try {
+    await cbtStore.deleteEntry();
+    closeDelete();
+  } catch (error) {
+    deleteError.value = deleteErrorMessage(error);
+  }
 };
 </script>

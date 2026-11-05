@@ -8,6 +8,7 @@
         role="dialog"
         aria-modal="true"
         :aria-labelledby="title ? titleId : undefined"
+        :aria-label="title ? undefined : label"
       >
         <div
           class="absolute inset-0 bg-black/45"
@@ -15,7 +16,9 @@
           @click="emit('close')"
         />
         <div
-          class="sheet-panel relative max-h-[92%] w-full max-w-lg overflow-y-auto rounded-t-sheet bg-page px-5 pt-2.5 md:rounded-sheet md:px-7 md:pt-7"
+          ref="panel"
+          tabindex="-1"
+          class="sheet-panel relative outline-none max-h-[92%] w-full max-w-lg overflow-y-auto rounded-t-sheet bg-page px-5 pt-2.5 md:rounded-sheet md:px-7 md:pt-7"
           :style="{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }"
         >
           <span
@@ -33,10 +36,17 @@
 </template>
 
 <script setup lang="ts">
-const { open, title = "" } = defineProps<{ open: boolean; title?: string }>();
+// `label` names the dialog for screen readers when it has no visible title.
+const { open, title = "", label = "" } = defineProps<{
+  open: boolean;
+  title?: string;
+  label?: string;
+}>();
 const emit = defineEmits<{ (e: "close"): void }>();
 
 const titleId = useId();
+const panel = ref<HTMLElement | null>(null);
+useDialogFocus(panel, () => open);
 
 // Keep the page behind still while the sheet is open.
 const isBodyLocked = useScrollLock(import.meta.client ? document.body : null);

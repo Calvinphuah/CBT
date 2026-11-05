@@ -13,6 +13,11 @@ import {
 } from "firebase/firestore";
 import type { CBTEntry, CBTState } from "@/types/cbt";
 
+const FORM_FIELDS = ["activating", "beliefs", "consequentFeelings", "dispute"];
+
+// One draft per account, so a shared phone never shows someone else's words.
+const draftKey = (userId: string) => `cogni-cbt-draft-${userId}`;
+
 export const useCBTStore = defineStore("cbtStore", {
   state: (): CBTState => ({
     cbtEntries: [],
@@ -120,9 +125,9 @@ export const useCBTStore = defineStore("cbtStore", {
     // Adds to firestore and resets form
     async submitCurrentEntry() {
       if (!this.isFormValid) {
-        alert("Form is invalid, please fill out all fields.");
-        return;
+        throw new Error("Form is incomplete");
       }
+      assertOnline();
 
       const entry = {
         activatingEvent: this.formData.activating,
@@ -159,7 +164,6 @@ export const useCBTStore = defineStore("cbtStore", {
 
     async addEntry(entry: Omit<CBTEntry, "id" | "createdAt" | "userId">) {
       this.loading = true;
-      this.error = null;
 
       const { $db, $auth } = useNuxtApp();
 
@@ -185,8 +189,6 @@ export const useCBTStore = defineStore("cbtStore", {
         this.cbtEntries.unshift(decryptedEntry); // ✅ Store the decrypted version
         return docRef.id;
       } catch (error) {
-        this.error =
-          error instanceof Error ? error.message : "Failed to add entry";
         console.error("❌ Error adding CBT entry:", error);
         throw error;
       } finally {
@@ -200,7 +202,6 @@ export const useCBTStore = defineStore("cbtStore", {
       entry: Partial<CBTEntry>
     ) {
       this.loading = true;
-      this.error = null;
 
       const { $db } = useNuxtApp();
       const docRef = doc($db, "cbtEntries", id);
@@ -212,8 +213,6 @@ export const useCBTStore = defineStore("cbtStore", {
           this.cbtEntries[index] = { ...this.cbtEntries[index], ...entry };
         }
       } catch (error) {
-        this.error =
-          error instanceof Error ? error.message : "Failed to update entry";
         console.error("Error updating CBT entry:", error);
         throw error;
       } finally {
@@ -225,11 +224,10 @@ export const useCBTStore = defineStore("cbtStore", {
       if (!this.selectedEntry?.id) {
         throw new Error("No entry selected for deletion");
       }
+      assertOnline();
       const id = this.selectedEntry.id;
-      console.log("Deleting entry with ID:", id);
 
       this.loading = true;
-      this.error = null;
 
       const { $db } = useNuxtApp();
       const docRef = doc($db, "cbtEntries", id);
@@ -245,15 +243,51 @@ export const useCBTStore = defineStore("cbtStore", {
         this.handleBackToList();
         console.log("Entry successfully deleted!");
       } catch (error) {
-        this.error =
-          error instanceof Error
-            ? error.message
-            : "Failed to delete the entry from Firestore.";
         console.error("Error deleting CBT entry:", error);
         throw error;
       } finally {
         this.loading = false;
       }
+    },
+
+    // Keeps a new record on this device, encrypted, so a reload or lost signal doesn't wipe it.
+    async saveDraft(stepIndex: number) {
+      const userId = useNuxtApp().$auth.currentUser?.uid;
+      if (!userId || !this.isNewEntry) return;
+
+      const hasText = Object.values(this.formData).some((value) => value.trim());
+      if (!hasText) {
+        this.clearDraft();
+        return;
+      }
+
+      const draft = await secureEncrypt({ ...this.formData }, FORM_FIELDS);
+      localStorage.setItem(draftKey(userId), JSON.stringify({ ...draft, stepIndex }));
+    },
+
+    // Returns the step to resume at, or null when there is no draft.
+    async loadDraft(): Promise<number | null> {
+      const userId = useNuxtApp().$auth.currentUser?.uid;
+      const saved = userId ? localStorage.getItem(draftKey(userId)) : null;
+      if (!saved) return null;
+
+      try {
+        const { stepIndex, ...fields } = JSON.parse(saved);
+        const draft = await serverDecrypt(fields, FORM_FIELDS);
+        this.formData = FORM_FIELDS.reduce(
+          (form, field) => ({ ...form, [field]: String(draft[field] ?? "") }),
+          {}
+        );
+        return Number(stepIndex) || 0;
+      } catch {
+        this.clearDraft();
+        return null;
+      }
+    },
+
+    clearDraft() {
+      const userId = useNuxtApp().$auth.currentUser?.uid;
+      if (userId) localStorage.removeItem(draftKey(userId));
     },
 
     handleBackToList() {
@@ -308,32 +342,6 @@ export const useCBTStore = defineStore("cbtStore", {
         this.populateForm(entry);
       } catch (error) {
         console.error("Error handling update entry:", error);
-      }
-    },
-
-    handleCancelEntry() {
-      if (this.isViewing) {
-        // For editing, simply reset the state and form without a prompt
-        this.handleBackToList();
-      } else if (this.isNewEntry) {
-        // For new entries, check for unsaved changes
-        const hasUnsavedChanges = Object.values(this.formData).some(
-          (value) => value.trim().length > 0
-        );
-
-        if (hasUnsavedChanges) {
-          // Ask for confirmation before discarding changes
-          const confirmDiscard = confirm(
-            "You have unsaved changes. Are you sure you want to cancel?"
-          );
-          if (!confirmDiscard) {
-            return; // Do nothing if the user cancels the prompt
-          }
-        }
-
-        // Reset states and form if confirmed or no changes
-        this.isNewEntry = false;
-        this.resetForm();
       }
     },
   },

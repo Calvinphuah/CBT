@@ -8,6 +8,7 @@
       :placeholder="placeholder"
       :maxlength="maxlength"
       :rows="rows"
+      :aria-describedby="describedBy || undefined"
       class="field"
       :class="{ 'field-sky': tone === 'sky' }"
       @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
@@ -31,6 +32,7 @@ const {
   maxlength = 400,
   rows = 5,
   tone = "plain",
+  describedBy = "",
 } = defineProps<{
   modelValue?: string;
   id: string;
@@ -39,6 +41,7 @@ const {
   maxlength?: number;
   rows?: number;
   tone?: "plain" | "sky";
+  describedBy?: string;
 }>();
 
 const emit = defineEmits<{ (e: "update:modelValue", value: string): void }>();

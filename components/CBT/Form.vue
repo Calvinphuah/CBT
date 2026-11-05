@@ -12,6 +12,13 @@
       @close="handleClose"
     />
 
+    <div v-if="restoredDraft" class="card flex items-center gap-3 px-4 py-3 ring-1 ring-rule" role="status">
+      <p class="flex-1 text-[15px] text-ink-2">We kept what you wrote last time.</p>
+      <button type="button" class="text-[15px] font-semibold underline underline-offset-4" @click="startFresh">
+        Start fresh
+      </button>
+    </div>
+
     <button
       v-if="stepIndex === 1"
       type="button"
@@ -48,10 +55,10 @@
     </div>
 
     <div>
-      <h1 class="text-title">
+      <h1 ref="heading" tabindex="-1" class="text-title outline-none">
         {{ currentStep.model === "dispute" ? copy.answerQuestion : currentStep.title }}
       </h1>
-      <p class="mt-2 text-[17px] leading-[25px] text-ink-2">
+      <p id="cbt-step-help" class="mt-2 text-[17px] leading-[25px] text-ink-2">
         {{ currentStep.model === "dispute" ? copy.answerHelp : currentStep.help }}
       </p>
       <CommonHandNote v-if="currentStep.note" class="mt-2" :tilt="-3">
@@ -67,7 +74,7 @@
         class="chip"
         :class="{ 'chip-on': isChipOn(chip.text) }"
         :aria-pressed="currentStep.model === 'consequentFeelings' ? isChipOn(chip.text) : undefined"
-        @click="addChip(chip.text)"
+        @click="toggleChip(chip.text)"
       >
         {{ chip.label }}
       </button>
@@ -80,10 +87,13 @@
       :label="currentStep.title"
       :placeholder="currentStep.placeholder"
       :tone="currentStep.model === 'dispute' ? 'sky' : 'plain'"
+      :described-by="nudge ? 'cbt-step-help cbt-step-nudge' : 'cbt-step-help'"
       @update:model-value="nudge = ''"
     />
 
-    <p v-if="nudge" class="-mt-2 text-[15px] text-danger" role="alert">{{ nudge }}</p>
+    <p v-if="nudge" id="cbt-step-nudge" class="-mt-2 text-[15px] text-ink-2" role="status">
+      {{ nudge }}
+    </p>
 
     <div v-if="currentStep.example">
       <button
@@ -181,16 +191,15 @@ const steps: Step[] = [
     model: "activating",
     title: "What happened?",
     help: "Just the facts. Where were you, and what set it off?",
-    placeholder: "My manager replied “ok” to my update.",
-    note: "just the facts, like a camera would see it",
-    example:
-      "There’s a science test on Monday and I haven’t finished revising.",
+    placeholder: "e.g. A friend hasn’t replied to my message yet.",
+    note: "like a camera would see it",
+    example: "My plans for tonight got cancelled at the last minute.",
   },
   {
     model: "beliefs",
     title: "What went through your mind?",
     help: "Write the thought word for word, the way it sounded in your head.",
-    placeholder: "She thinks my work is bad.",
+    placeholder: "e.g. They must be upset with me.",
     example:
       "“I’m not smart enough.” “Everyone will laugh at me.” “I always mess things up.”",
   },
@@ -198,7 +207,7 @@ const steps: Step[] = [
     model: "consequentFeelings",
     title: "How did that make you feel?",
     help: "Name each feeling and how strong it was, out of 10.",
-    placeholder: "Anxious, 8 out of 10. Tight chest.",
+    placeholder: "e.g. Worried, 6 out of 10. Restless.",
     chips: ["Anxious", "Sad", "Angry", "Ashamed", "Guilty", "Hopeless", "Lonely"].map(
       (feeling) => ({ label: feeling, text: feeling })
     ),
@@ -206,8 +215,8 @@ const steps: Step[] = [
   {
     model: "dispute",
     title: "What’s the clearer view?",
-    help: "Is the thought 100% true? What would you tell a friend who said it?",
-    placeholder: "She replies “ok” to everyone.",
+    help: "What doesn’t quite fit the thought? What would you tell a friend who said it?",
+    placeholder: "e.g. They often reply late when they’re busy.",
     note: "what would you tell a friend?",
     chips: [
       { label: "Evidence against it", text: "One thing that doesn’t fit the thought:" },
@@ -221,14 +230,17 @@ const stepIndex = ref(0);
 const showExample = ref(false);
 const showDiscard = ref(false);
 const isSaving = ref(false);
+const isSlowSave = ref(false);
+const restoredDraft = ref(false);
 const nudge = ref("");
 const field = ref<{ focus: () => void } | null>(null);
+const heading = ref<HTMLElement | null>(null);
 
 const currentStep = computed(() => steps[stepIndex.value]);
 const isLastStep = computed(() => stepIndex.value === steps.length - 1);
 const currentValue = computed(() => cbtStore.formData[currentStep.value.model] || "");
 const saveLabel = computed(() => {
-  if (isSaving.value) return "Saving…";
+  if (isSaving.value) return isSlowSave.value ? "Still saving…" : "Saving…";
   return cbtStore.isEditing ? "Save changes" : copy.value.saveLabel;
 });
 
@@ -238,20 +250,36 @@ const autoFocusField = () => {
   field.value?.focus();
 };
 
+// Each new step moves focus: the box on a computer, the question on a phone so screen readers read it.
+const focusStep = () => {
+  if (window.matchMedia("(pointer: fine) and (hover: hover)").matches) field.value?.focus();
+  else heading.value?.focus();
+};
+
 watch(stepIndex, () => {
   showExample.value = false;
   nudge.value = "";
-  nextTick(autoFocusField);
+  nextTick(focusStep);
 });
 
 const isChipOn = (text: string) =>
   currentStep.value.model === "consequentFeelings" &&
   currentValue.value.toLowerCase().includes(text.toLowerCase());
 
-const addChip = (text: string) => {
+const removeFeeling = (text: string) => {
+  cbtStore.formData.consequentFeelings = currentValue.value
+    .split(/,\s*/)
+    .filter((part) => !part.toLowerCase().startsWith(text.toLowerCase()))
+    .join(", ");
+};
+
+const toggleChip = (text: string) => {
   const model = currentStep.value.model;
   const value = currentValue.value.trim();
-  if (model === "consequentFeelings" && isChipOn(text)) return;
+  if (model === "consequentFeelings" && isChipOn(text)) {
+    removeFeeling(text);
+    return;
+  }
 
   const separator = model === "consequentFeelings" ? ", " : " ";
   cbtStore.formData[model] = value ? `${value}${separator}${text}` : text;
@@ -280,13 +308,17 @@ const goForward = async () => {
 const save = async () => {
   if (cbtStore.isNewEntry) savedClearerView.value = cbtStore.formData.dispute.trim();
   isSaving.value = true;
+  const slowTimer = setTimeout(() => (isSlowSave.value = true), 8000);
   try {
     await cbtStore.submitCurrentEntry();
-  } catch {
+    cbtStore.clearDraft();
+  } catch (error) {
     savedClearerView.value = "";
-    nudge.value = "Couldn’t save. Your words are still here, so try again.";
+    nudge.value = saveErrorMessage(error);
   } finally {
+    clearTimeout(slowTimer);
     isSaving.value = false;
+    isSlowSave.value = false;
   }
 };
 
@@ -307,8 +339,28 @@ const handleClose = () => {
 
 const discard = () => {
   showDiscard.value = false;
+  cbtStore.clearDraft();
   cbtStore.handleBackToList();
 };
 
-onMounted(autoFocusField);
+const startFresh = () => {
+  restoredDraft.value = false;
+  cbtStore.clearDraft();
+  cbtStore.resetForm();
+  stepIndex.value = 0;
+};
+
+const saveDraft = useDebounceFn(() => cbtStore.saveDraft(stepIndex.value), 500);
+watch([() => ({ ...cbtStore.formData }), stepIndex], saveDraft);
+
+onMounted(async () => {
+  if (cbtStore.isNewEntry) {
+    const draftStep = await cbtStore.loadDraft();
+    if (draftStep !== null) {
+      stepIndex.value = draftStep;
+      restoredDraft.value = true;
+    }
+  }
+  autoFocusField();
+});
 </script>

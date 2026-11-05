@@ -7,7 +7,7 @@
     >
       <span
         class="block size-3.5 rounded-full"
-        :class="hasEntry ? 'bg-sun' : 'ring-[1.5px] ring-inset ring-rule'"
+        :class="hasEntry ? 'bg-sun ring-[1.5px] ring-inset ring-pen' : 'ring-[1.5px] ring-inset ring-ink-3/75'"
       />
       <span aria-hidden="true">{{ DAY_LETTERS[index] }}</span>
       <span class="sr-only">{{ DAY_NAMES[index] }}: {{ hasEntry ? "record written" : "none" }}</span>

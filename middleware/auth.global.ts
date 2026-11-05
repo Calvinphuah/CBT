@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore();
 
   // Public routes where middleware should not run
-  const publicPages = ["/login", "/signup"];
+  const publicPages = ["/login"];
 
   // If the route is public, skip the middleware
   if (publicPages.includes(to.path)) {
