@@ -55,7 +55,7 @@ onBeforeUnmount(() => {
 const visibleAreaStyle = ref<{ top?: string; height?: string }>({});
 const visualViewport = import.meta.client ? window.visualViewport : null;
 const syncToVisibleArea = () => {
-  if (!visualViewport) return;
+  if (!open || !visualViewport) return;
   visibleAreaStyle.value = {
     top: `${visualViewport.offsetTop}px`,
     height: `${visualViewport.height}px`,

@@ -234,7 +234,7 @@ const saveLabel = computed(() => {
 
 // On phones, focusing without a tap pops the keyboard and shoves the page up
 const autoFocusField = () => {
-  if (!window.matchMedia("(pointer: fine)").matches) return;
+  if (!window.matchMedia("(pointer: fine) and (hover: hover)").matches) return;
   field.value?.focus();
 };
 
