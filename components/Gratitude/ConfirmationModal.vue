@@ -1,8 +1,9 @@
 <template>
   <CommonSheet :open="isOpen" title="Delete this bright spot?" @close="onCancel">
     <p class="text-[17px] leading-[25px] text-ink-2">
-      It&rsquo;ll be gone for good. This can&rsquo;t be undone.
+      It&rsquo;ll be gone for good.
     </p>
+    <p v-if="error" class="mt-3 text-[15px] text-ink" role="status">{{ error }}</p>
     <div class="mt-5 flex flex-col gap-2.5">
       <button type="button" class="btn-danger w-full" :disabled="loading" @click="onConfirm">
         {{ loading ? "Deleting…" : "Delete" }}
@@ -16,6 +17,7 @@
 defineProps<{
   isOpen: boolean;
   loading?: boolean;
+  error?: string;
 }>();
 
 const emit = defineEmits<{

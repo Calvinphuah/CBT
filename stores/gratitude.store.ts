@@ -139,13 +139,10 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
     },
 
     async addEntry(entry: string) {
-      this.loading = true;
-      this.error = null;
+      if (!entry.trim()) return;
+      assertOnline();
 
-      if (this.newEntry.trim() === "") {
-        alert("Entry cannot be empty");
-        return;
-      }
+      this.loading = true;
 
       const { $db, $auth } = useNuxtApp();
 
@@ -178,8 +175,6 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
         this.handleResetEntry();
         return docRef.id;
       } catch (error) {
-        this.error =
-          error instanceof Error ? error.message : "Failed to add entry";
         console.error("❌ Error adding Gratitude entry:", error);
         throw error;
       } finally {
@@ -216,12 +211,10 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
         throw new Error("No entry to update");
       }
 
-      if (!this.newEntry) {
-        alert("Entry cannot be empty");
-        return;
-      }
+      if (!this.newEntry.trim()) return;
+      assertOnline();
+
       this.loading = true;
-      this.error = null;
 
       const { $db } = useNuxtApp();
 
@@ -245,10 +238,6 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
         this.handleResetEntry();
         console.log("✅ Entry successfully updated!");
       } catch (error) {
-        this.error =
-          error instanceof Error
-            ? error.message
-            : "Failed to update the entry in Firestore.";
         console.error("❌ Error updating Gratitude entry:", error);
         throw error;
       } finally {
@@ -256,13 +245,13 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
       }
     },
 
-    async generateGratitudeEntry() {
+    // A random idea for people who are stuck; the sheet decides where to show it.
+    randomGratitudeIdea(): string {
       // List of gratitude ideas
       const gratitudeIdeas = [
         "I'm grateful for the warm sunshine today.",
         "I appreciate the kindness of my friends and family.",
         "I’m thankful for the delicious meal I had.",
-        "I’m grateful for my health and well-being.",
         "I appreciate the little moments of joy in my day.",
         "I’m thankful for the opportunity to learn and grow.",
         "I’m grateful for the beauty of nature around me.",
@@ -293,18 +282,16 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
 
       // Select a random gratitude idea
       const randomIndex = Math.floor(Math.random() * gratitudeIdeas.length);
-      const randomEntry = gratitudeIdeas[randomIndex];
-
-      this.newEntry = randomEntry;
+      return gratitudeIdeas[randomIndex];
     },
 
     async deleteEntry() {
       if (!this.currentEntry || !this.currentEntry.id) {
         throw new Error("No entry selected for deletion");
       }
+      assertOnline();
 
       this.loading = true;
-      this.error = null;
 
       const { $db } = useNuxtApp();
 
@@ -322,10 +309,6 @@ export const useGratitudeStore = defineStore("gratitudeStore", {
         this.handleResetEntry();
         console.log("Entry successfully deleted!");
       } catch (error) {
-        this.error =
-          error instanceof Error
-            ? error.message
-            : "Failed to delete the entry from Firestore.";
         console.error("Error deleting Gratitude entry:", error);
         throw error;
       } finally {
